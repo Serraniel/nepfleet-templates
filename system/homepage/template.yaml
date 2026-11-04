@@ -7,6 +7,7 @@ metadata:
   tier: system
   category: dashboard
   homepage: https://gethomepage.dev
+  source: https://github.com/gethomepage/homepage
 spec:
   version: 0.1.0
   compose: compose.yaml

@@ -7,6 +7,7 @@ metadata:
   tier: app
   category: storage
   homepage: https://rclone.org
+  source: https://github.com/rclone/rclone
 spec:
   version: 0.1.0
   compose: compose.yaml

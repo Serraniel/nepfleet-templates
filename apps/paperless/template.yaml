@@ -7,6 +7,7 @@ metadata:
   tier: app
   category: documents
   homepage: https://docs.paperless-ngx.com
+  source: https://github.com/paperless-ngx/paperless-ngx
 spec:
   version: 0.1.0
   compose: compose.yaml
