@@ -1,0 +1,96 @@
+x-db: &db
+  DB_HOSTNAME: database
+  DB_USERNAME: immich
+  DB_DATABASE_NAME: immich
+  DB_PASSWORD: ${DB_PASSWORD}
+
+services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:v3.3.5
+    restart: unless-stopped
+    environment:
+      <<: *db
+      REDIS_HOSTNAME: redis
+      TZ: ${TZ}
+    volumes:
+      - ${UPLOAD_PATH}:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks: [ingress, default]
+    depends_on:
+      redis: { condition: service_healthy }
+      database: { condition: service_healthy }
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 2283}}"
+      caddy.request_body.max_size: 0   # large video uploads
+      kuma.immich.http.name: Immich
+      kuma.immich.http.url: https://${DOMAIN}/api/server/ping
+      homepage.group: Media
+      homepage.name: Immich
+      homepage.icon: immich.svg
+      homepage.href: https://${DOMAIN}
+      docker-volume-backup.stop-during-backup: "true"
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.5
+    restart: unless-stopped
+    environment:
+      MACHINE_LEARNING_MODEL_REVISION: v2
+    volumes:
+      - model-cache:/cache
+
+  redis:
+    image: valkey/valkey:9.2-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      interval: 10s
+
+  database:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: immich
+      POSTGRES_DB: immich
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: --data-checksums
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "immich"]
+      interval: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"
+
+  power-tools:
+    image: ghcr.io/varun-raj/immich-power-tools:0.19.1
+    profiles: [power-tools]
+    restart: unless-stopped
+    environment:
+      IMMICH_URL: http://immich-server:2283
+      EXTERNAL_IMMICH_URL: https://${DOMAIN}
+      IMMICH_API_KEY: ${IMMICH_API_KEY}
+      DB_HOST: database
+      DB_PORT: "5432"
+      DB_USERNAME: immich
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE_NAME: immich
+    networks: [ingress, default]
+    depends_on: [immich-server]
+    labels:
+      caddy: ${POWER_TOOLS_DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      homepage.group: Media
+      homepage.name: Immich Power Tools
+      homepage.href: https://${POWER_TOOLS_DOMAIN}
+
+volumes:
+  db:
+  model-cache:
+
+networks:
+  default:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

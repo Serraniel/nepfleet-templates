@@ -20,19 +20,28 @@ Legend: 🌐 ingress (Caddy) · 📈 monitors (AutoKuma) · 🏠 dashboard (Home
 | [homepage](system/homepage) | system | 🌐 📈 🐝 💾 |
 | [neptide](system/neptide) | system | 🐝 · default updater: health-gated, with rollback |
 | [watchtower](system/watchtower) | system | alternative, notify-only by default (fork `nickfedor/watchtower`) |
+| [volume-backup](system/volume-backup) | system | default: scheduled, age-encrypted volume backups, local + SSH/SFTP |
+| [backrest](system/backrest) | system | 🌐 📈 🏠 💾 · restic: deduplicated offsite backups with a web UI |
 | [binfmt](system/binfmt) | system | run foreign-architecture images |
-| [frps](system/frps) / [frpc](system/frpc) | system | 🌐 · expose home services through a public host |
+| [frps](system/frps) | system | 🌐 · public side of tunnels to home services |
+| [frpc](system/frpc) | system | home side of tunnels |
 | [forgejo](apps/forgejo) | app | 🌐 📈 🏠 💾 · with an Actions runner in DinD |
 | [homeassistant](apps/homeassistant) | app | 🌐 📈 🏠 💾 |
+| [homebox](apps/homebox) | app | 🌐 📈 🏠 🐝 💾 |
+| [immich](apps/immich) | app | 🌐 📈 🏠 💾 · Power Tools as optional profile |
 | [jellyfin](apps/jellyfin) | app | 🌐 📈 🏠 💾 |
 | [kutt](apps/kutt) | app | 🌐 📈 🏠 💾 |
+| [metube](apps/metube) | app | 🌐 📈 🏠 · yt-dlp web UI |
+| [navidrome](apps/navidrome) | app | 🌐 📈 🏠 💾 |
+| [open-webui](apps/open-webui) | app | 🌐 📈 🏠 💾 · Ollama and LiteLLM as optional profiles |
 | [opencloud](apps/opencloud) | app | 🌐 📈 🏠 💾 |
 | [owncast](apps/owncast) | app | 🌐 📈 🏠 💾 |
 | [paperless](apps/paperless) | app | 🌐 📈 🏠 💾 |
-| [rclone](apps/rclone) | app | 🌐 📈 🏠 💾 |
+| [rclone](apps/rclone) | app | 🌐 📈 🏠 |
 | [registry](apps/registry) | app | 🌐 📈 🐝 💾 |
 | [sendan](apps/sendan) | app | 🌐 📈 🏠 💾 |
 | [sweetfolio](apps/sweetfolio) | app | 🌐 📈 🏠 🐝 |
+| [tdarr](apps/tdarr) | app | 🌐 📈 🏠 💾 · server + internal node |
 | [vaultwarden](apps/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 |
 
 ## Automation

@@ -1,0 +1,49 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: tdarr
+  title: Tdarr
+  description: Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Add GPU devices in compose.yaml for hardware transcoding.
+  tier: app
+  category: media
+  homepage: https://home.tdarr.io
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/haveagitgat/tdarr
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain for the web UI
+      required: true
+    - name: MEDIA_PATH
+      type: path
+      title: Host folder with media to transcode
+      required: true
+    - name: CACHE_PATH
+      type: path
+      title: Host folder for transcode cache (fast disk)
+      default: /srv/tdarr-cache
+      required: true
+    - name: SERVER_PORT
+      type: int
+      title: Host port for remote Tdarr nodes
+      default: "8266"
+      required: true
+    - name: PUID
+      type: int
+      title: User id owning the media
+      default: "1000"
+      required: true
+    - name: PGID
+      type: int
+      title: Group id owning the media
+      default: "1000"
+      required: true
+  volumes:
+    - { name: server, backup: true }
+    - { name: configs, backup: true }
+    - { name: logs, backup: false }

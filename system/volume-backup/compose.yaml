@@ -1,0 +1,47 @@
+services:
+  backup:
+    image: offen/docker-volume-backup:v2.50.1
+    restart: unless-stopped
+    environment:
+      BACKUP_CRON_EXPRESSION: ${SCHEDULE}
+      BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: ${RETENTION_DAYS}
+      # Encrypted to the fleet's age recipients: without the fleet key, a
+      # stolen archive is useless.
+      AGE_PUBLIC_KEYS: ${AGE_RECIPIENTS}
+      SSH_HOST_NAME: ${SSH_HOST_NAME}
+      SSH_PORT: ${SSH_PORT}
+      SSH_USER: ${SSH_USER}
+      SSH_PASSWORD: ${SSH_PASSWORD}
+      SSH_REMOTE_PATH: ${SSH_REMOTE_PATH}
+      NOTIFICATION_URLS: ${NOTIFICATION_URLS}
+      NOTIFICATION_LEVEL: error
+      DOCKER_HOST: tcp://socket-proxy:2375
+      TZ: ${TZ}
+    volumes:
+      - /var/lib/docker/volumes:/backup/volumes:ro
+      - ${ARCHIVE_PATH}:/archive
+    networks: [socket, default]
+    depends_on: [socket-proxy]
+
+  # Only what stop-during-backup and exec hooks need.
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/run]
+    environment:
+      CONTAINERS: 1
+      ALLOW_START: 1
+      ALLOW_STOP: 1
+      EXEC: 1
+      POST: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [socket]
+
+networks:
+  default:
+  socket:
+    internal: true

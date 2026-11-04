@@ -1,0 +1,37 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: metube
+  title: MeTube (yt-dlp web UI)
+  description: Download videos and audio with yt-dlp from the browser. No built-in login, so keep it on the home network or behind forward auth.
+  tier: app
+  category: media
+  homepage: https://github.com/alexta69/metube
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    # Date versions (2026.11.01) carry no compatibility meaning, and yt-dlp
+    # must stay current to keep working with the sites: follow every release.
+    - name: ghcr.io/alexta69/metube
+      track: major
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: DOWNLOAD_PATH
+      type: path
+      title: Host folder for downloads
+      required: true
+    - name: PUID
+      type: int
+      title: User id owning the downloads
+      default: "1000"
+      required: true
+    - name: PGID
+      type: int
+      title: Group id owning the downloads
+      default: "1000"
+      required: true

@@ -1,0 +1,52 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: immich
+  title: Immich (+ Power Tools)
+  description: Photo and video backup with machine learning. Enable Immich Power Tools (bulk management) with the power-tools profile after creating an API key in Immich.
+  tier: app
+  category: media
+  homepage: https://immich.app
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    # Server and machine learning must always run the same version.
+    - name: ghcr.io/immich-app/immich-server
+      track: minor
+    - name: ghcr.io/immich-app/immich-machine-learning
+      track: minor
+    - name: ghcr.io/immich-app/postgres
+      track: patch   # extension versions move with Immich; follow the official compose file
+    - name: valkey/valkey
+      track: minor
+    - name: ghcr.io/varun-raj/immich-power-tools
+      track: patch   # pre-1.0
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain for Immich
+      required: true
+    - name: UPLOAD_PATH
+      type: path
+      title: Host folder for photos and videos
+      required: true
+    - name: COMPOSE_PROFILES
+      type: enum
+      title: Optional parts
+      options: ["none", "power-tools"]
+      default: "none"
+    - name: POWER_TOOLS_DOMAIN
+      type: hostname
+      title: Domain for Power Tools
+      default: tools.localhost
+    - name: IMMICH_API_KEY
+      type: secret
+      title: Immich API key for Power Tools
+      description: Create it in Immich (Account settings → API keys), then enable the power-tools profile.
+  generate:
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: db, backup: true }
+    - { name: model-cache, backup: false }

@@ -1,0 +1,31 @@
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:0.27.1
+    restart: unless-stopped
+    environment:
+      HBOX_OPTIONS_ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
+      HBOX_LOG_LEVEL: info
+      HBOX_WEB_MAX_UPLOAD_SIZE: "50"
+      TZ: ${TZ}
+    volumes:
+      - data:/data
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 7745}}"
+      kuma.homebox.http.name: Homebox
+      kuma.homebox.http.url: https://${DOMAIN}/api/v1/status
+      homepage.group: Home
+      homepage.name: Homebox
+      homepage.icon: homebox.svg
+      homepage.href: https://${DOMAIN}
+    deploy:
+      replicas: 1   # SQLite
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
