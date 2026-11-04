@@ -63,7 +63,7 @@ Images built here are published as `ghcr.io/serraniel/nepfleet-<name>`. They are
 GHCR creates a new package as **private** on its first push, and there is no API to change that. When you add an image under `images/`:
 
 1. Let the **Images** workflow push it once. Its last step fails while the package is private.
-2. On GitHub, open the package (profile → Packages → `nepfleet-<name>`) → **Package settings** → **Change visibility** → **Public**.
+2. On GitHub, open the package (profile → Packages → `nepfleet-<name>`) → **Package settings** → **Change visibility** → **Public**. This cannot be undone: GitHub does not let a public package become private again.
 3. Re-run the workflow. The anonymous-pull check then passes, and so does the tag check in **Validate**.
 
 The `org.opencontainers.image.source` label links the package to this repository, so it shows up under the repository's packages.
