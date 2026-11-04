@@ -1,0 +1,29 @@
+services:
+  navidrome:
+    image: deluan/navidrome:0.64.2
+    restart: unless-stopped
+    environment:
+      ND_BASEURL: https://${DOMAIN}
+      ND_SCANSCHEDULE: ${SCAN_SCHEDULE}
+      ND_LOGLEVEL: info
+    volumes:
+      - data:/data
+      - ${MUSIC_PATH}:/music:ro
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 4533}}"
+      kuma.navidrome.http.name: Navidrome
+      kuma.navidrome.http.url: https://${DOMAIN}/ping
+      homepage.group: Media
+      homepage.name: Navidrome
+      homepage.icon: navidrome.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

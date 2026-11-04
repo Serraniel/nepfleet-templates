@@ -1,0 +1,47 @@
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:3.06.00
+    restart: unless-stopped
+    environment:
+      serverIP: 0.0.0.0
+      serverPort: "8266"
+      webUIPort: "8265"
+      internalNode: "true"
+      inContainer: "true"
+      ffmpegVersion: "7"
+      nodeName: ${NEPFLEET_STACK}-internal
+      # Authentication stays on (the server port is published). The seeded
+      # key also creates the "admin" user with this key as its password.
+      seededApiKey: tapi_${API_KEY}
+      apiKey: tapi_${API_KEY}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${SERVER_PORT}:8266"   # remote nodes
+    volumes:
+      - server:/app/server
+      - configs:/app/configs
+      - logs:/app/logs
+      - ${MEDIA_PATH}:/media
+      - ${CACHE_PATH}:/temp
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8265}}"
+      kuma.tdarr.http.name: Tdarr
+      kuma.tdarr.http.url: https://${DOMAIN}
+      homepage.group: Media
+      homepage.name: Tdarr
+      homepage.icon: tdarr.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  server:
+  configs:
+  logs:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

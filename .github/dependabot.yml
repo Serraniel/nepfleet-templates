@@ -13,11 +13,19 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "deluan/navidrome"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "ghcr.io/immich-app/postgres"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "ghcr.io/serraniel/neptide"
+        update-types: ["version-update:semver-minor"]
       - dependency-name: "ghcr.io/serraniel/sendan"
         update-types: ["version-update:semver-minor"]
       - dependency-name: "ghcr.io/serraniel/sweetfolio"
         update-types: ["version-update:semver-minor"]
-      - dependency-name: "ghcr.io/serraniel/neptide"
+      - dependency-name: "ghcr.io/sysadminsmedia/homebox"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "ghcr.io/immich-power-tools/immich-power-tools"
         update-types: ["version-update:semver-minor"]
       - dependency-name: "owncast/owncast"
         update-types: ["version-update:semver-minor"]

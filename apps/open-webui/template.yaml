@@ -1,0 +1,43 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: open-webui
+  title: Open WebUI (+ Ollama, LiteLLM)
+  description: Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. The first account becomes admin.
+  tier: app
+  category: ai
+  homepage: https://openwebui.com
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/open-webui/open-webui
+      track: minor
+    - name: ollama/ollama
+      track: minor
+    - name: ghcr.io/berriai/litellm
+      track: minor
+  supports: { ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: COMPOSE_PROFILES
+      type: enum
+      title: Model backends
+      options: ["ollama", "litellm", "ollama,litellm", "none"]
+      default: "ollama"
+    - name: ENABLE_SIGNUP
+      type: bool
+      title: Allow sign-ups
+      description: Applies on first start only; Open WebUI stores it, so later changes go through its Admin settings.
+      default: "true"
+  generate:
+    - { name: WEBUI_SECRET_KEY, kind: secret, length: 48, encoding: alnum }
+    - { name: LITELLM_KEY, kind: secret, length: 40, encoding: alnum }
+  files:
+    - { src: files/litellm.yaml, dest: litellm.yaml }
+  volumes:
+    - { name: webui, backup: true }
+    - { name: ollama, backup: false }

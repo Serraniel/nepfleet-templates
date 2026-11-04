@@ -1,0 +1,32 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: navidrome
+  title: Navidrome
+  description: Music streaming server with a Subsonic-compatible API. Music is mounted read-only.
+  tier: app
+  category: media
+  homepage: https://www.navidrome.org
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: deluan/navidrome
+      track: patch   # pre-1.0
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: MUSIC_PATH
+      type: path
+      title: Host folder with your music
+      required: true
+    - name: SCAN_SCHEDULE
+      type: string
+      title: Library scan interval
+      default: 1h
+      required: true
+  volumes:
+    - { name: data, backup: true }

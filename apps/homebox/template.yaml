@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: homebox
+  title: Homebox
+  description: Home inventory and organisation.
+  tier: app
+  category: home
+  homepage: https://homebox.software
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/sysadminsmedia/homebox
+      track: patch   # pre-1.0
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: ALLOW_REGISTRATION
+      type: bool
+      title: Allow registration
+      description: Needed to create the first account; turn off afterwards.
+      default: "true"
+  volumes:
+    - { name: data, backup: true }

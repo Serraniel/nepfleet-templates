@@ -1,0 +1,70 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: volume-backup
+  title: Volume backups (docker-volume-backup)
+  description: Scheduled, age-encrypted backups of the Docker volumes on this host, to a local folder and optionally over SSH/SFTP (e.g. a Storage Box). Containers labelled docker-volume-backup.stop-during-backup=true are stopped during the backup for consistency. Host folders (media, photos) are not included; back them up with backrest.
+  tier: system
+  category: backup
+  homepage: https://offen.github.io/docker-volume-backup/
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: offen/docker-volume-backup
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { arm64: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: SCHEDULE
+      type: string
+      title: Cron schedule
+      default: "0 3 * * *"
+      required: true
+    - name: RETENTION_DAYS
+      type: int
+      title: Keep backups for (days)
+      default: "14"
+      required: true
+    - name: AGE_RECIPIENTS
+      type: string
+      title: age public keys (comma separated)
+      description: Use the recipients from fleet.yaml spec.secrets.age, so the fleet's key can decrypt every backup.
+      pattern: "^age1[0-9a-z]+(,age1[0-9a-z]+)*$"
+      required: true
+    - name: ARCHIVE_PATH
+      type: path
+      title: Local folder for backup archives
+      default: /srv/backups
+      required: true
+    - name: SSH_HOST_NAME
+      type: string
+      title: SSH/SFTP host for off-host copies (empty = local only)
+    - name: SSH_PORT
+      type: int
+      title: SSH port
+      default: "22"
+    - name: SSH_USER
+      type: string
+      title: SSH user
+    - name: SSH_REMOTE_PATH
+      type: string
+      title: Remote folder
+      default: ./backups
+    - name: SSH_HOST_PUBLIC_KEY
+      type: string
+      title: SSH host public key
+      description: Required with SSH. One line from `ssh-keyscan -t ed25519 -p <port> <host>`, without the host name, e.g. "ssh-ed25519 AAAA…".
+    - name: SSH_PASSWORD
+      type: secret
+      title: SSH password
+    - name: EXCLUDE_REGEXP
+      type: string
+      title: Paths to skip (regular expression)
+      description: Volumes that hold only caches or downloadable data, matched against /backup/volumes/<name>/...
+      default: "/backup/volumes/[^/]*(model-cache|ollama|cache)/"
+    - name: NOTIFICATION_URLS
+      type: secret
+      title: Notification URLs (shoutrrr, comma separated)
+      description: Failed backups are always reported here, e.g. discord://token@webhookid

@@ -1,0 +1,11 @@
+# LiteLLM models, all exposed to Open WebUI as one OpenAI-compatible API.
+# Provider keys belong in the stack's secrets: reference them as
+# os.environ/NAME and add NAME to the litellm service's environment.
+# Docs: https://docs.litellm.ai/docs/proxy/configs
+model_list: []
+#  - model_name: gpt-4o
+#    litellm_params: { model: openai/gpt-4o, api_key: os.environ/OPENAI_API_KEY }
+#  - model_name: local-vllm
+#    litellm_params: { model: openai/my-model, api_base: http://vllm:8000/v1 }
+#  - model_name: llama-cpp
+#    litellm_params: { model: openai/local, api_base: http://llama-cpp:8080/v1 }

@@ -1,0 +1,30 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: backrest
+  title: Backrest (restic)
+  description: Deduplicated, encrypted restic backups with a web UI and schedules, e.g. offsite to a Storage Box over SFTP or any rclone remote. Docker volumes are mounted read-only under /userdata/volumes. Create the admin account on first start.
+  tier: system
+  category: backup
+  homepage: https://github.com/garethgeorge/backrest
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: garethgeorge/backrest
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: EXTRA_PATH
+      type: path
+      title: Additional host folder to back up (read-only)
+      default: /srv
+      required: true
+  volumes:
+    - { name: data, backup: true }
+    - { name: config, backup: true }
+    - { name: cache, backup: false }

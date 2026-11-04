@@ -1,0 +1,37 @@
+services:
+  backrest:
+    image: garethgeorge/backrest:v1.14.1
+    hostname: backrest   # restic snapshots are tagged with it; keep it stable
+    restart: unless-stopped
+    environment:
+      BACKREST_DATA: /data
+      BACKREST_CONFIG: /config/config.json
+      XDG_CACHE_HOME: /cache
+      TMPDIR: /tmp
+      TZ: ${TZ}
+    volumes:
+      - data:/data
+      - config:/config
+      - cache:/cache
+      - /var/lib/docker/volumes:/userdata/volumes:ro
+      - ${EXTRA_PATH}:/userdata/extra:ro
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9898}}"
+      kuma.backrest.http.name: Backrest
+      kuma.backrest.http.url: https://${DOMAIN}
+      homepage.group: System
+      homepage.name: Backups
+      homepage.icon: backrest.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+  config:
+  cache:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

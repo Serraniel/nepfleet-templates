@@ -1,0 +1,52 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.13.0
+    restart: unless-stopped
+    environment:
+      WEBUI_URL: https://${DOMAIN}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
+      ENABLE_SIGNUP: ${ENABLE_SIGNUP}
+      # Unused backends simply stay unreachable; Open WebUI shows them as offline.
+      OLLAMA_BASE_URL: http://ollama:11434
+      OPENAI_API_BASE_URL: http://litellm:4000/v1
+      OPENAI_API_KEY: sk-${LITELLM_KEY}
+    volumes:
+      - webui:/app/backend/data
+    networks: [ingress, default]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.open-webui.http.name: Open WebUI
+      kuma.open-webui.http.url: https://${DOMAIN}/health
+      homepage.group: AI
+      homepage.name: Open WebUI
+      homepage.icon: open-webui.svg
+      homepage.href: https://${DOMAIN}
+
+  ollama:
+    image: ollama/ollama:0.40.14
+    profiles: [ollama]
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+    # GPU: add `gpus: all` (NVIDIA) or the ROCm image with /dev/kfd and /dev/dri (AMD).
+
+  litellm:
+    image: ghcr.io/berriai/litellm:v1.83.14-stable
+    profiles: [litellm]
+    restart: unless-stopped
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    environment:
+      LITELLM_MASTER_KEY: sk-${LITELLM_KEY}
+    volumes:
+      - ./litellm.yaml:/app/config.yaml:ro
+
+volumes:
+  webui:
+  ollama:
+
+networks:
+  default:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
