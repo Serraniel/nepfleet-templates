@@ -6,6 +6,7 @@ services:
       - data:/app/data
     networks: [ingress, default]
     labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3001}}"
       homepage.group: System
