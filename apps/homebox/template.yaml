@@ -9,7 +9,7 @@ metadata:
   homepage: https://homebox.software
   source: https://github.com/sysadminsmedia/homebox
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: ghcr.io/sysadminsmedia/homebox
@@ -25,5 +25,8 @@ spec:
       title: Allow registration
       description: Needed to create the first account; turn off afterwards.
       default: "true"
+  generate:
+    # Required since Homebox 0.27; rotating it invalidates every API key.
+    - { name: API_KEY_PEPPER, kind: secret, length: 64, encoding: alnum }
   volumes:
     - { name: data, backup: true }
