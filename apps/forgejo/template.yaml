@@ -1,0 +1,39 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: forgejo
+  title: Forgejo + Actions runner
+  description: Self-hosted git forge with a registered Forgejo Actions runner. Jobs run in an isolated Docker-in-Docker daemon, never on the host's Docker.
+  tier: app
+  category: development
+  homepage: https://forgejo.org
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: codeberg.org/forgejo/forgejo
+      track: minor
+    - name: code.forgejo.org/forgejo/runner
+      track: minor
+    - name: docker
+      track: minor
+    - name: postgres
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: SSH_PORT
+      type: int
+      title: Host port for git over SSH
+      default: "2222"
+      required: true
+  generate:
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    - { name: RUNNER_SECRET, kind: secret, length: 40, encoding: hex }
+  volumes:
+    - { name: data, backup: true }
+    - { name: db, backup: true }
+    - { name: runner, backup: false }

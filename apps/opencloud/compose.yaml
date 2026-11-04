@@ -1,0 +1,34 @@
+services:
+  opencloud:
+    image: opencloudeu/opencloud:7.2.4
+    restart: unless-stopped
+    # init only writes a config on first start; later starts skip it.
+    entrypoint: ["/bin/sh", "-c", "opencloud init || true; exec opencloud server"]
+    environment:
+      OC_URL: https://${DOMAIN}
+      OC_INSECURE: "false"
+      PROXY_TLS: "false"            # Caddy terminates TLS
+      OC_LOG_LEVEL: warn
+      IDM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}   # initial admin password, first start only
+    volumes:
+      - config:/etc/opencloud
+      - data:/var/lib/opencloud
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9200}}"
+      kuma.opencloud.http.name: OpenCloud
+      kuma.opencloud.http.url: https://${DOMAIN}
+      homepage.group: Files
+      homepage.name: OpenCloud
+      homepage.icon: opencloud.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  config:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

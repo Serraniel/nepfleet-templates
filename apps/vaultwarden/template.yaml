@@ -1,0 +1,31 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: vaultwarden
+  title: Vaultwarden
+  description: Bitwarden-compatible password manager.
+  tier: app
+  category: security
+  homepage: https://github.com/dani-garcia/vaultwarden
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: vaultwarden/server
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: SIGNUPS_ALLOWED
+      type: bool
+      title: Allow sign-ups
+      default: "false"
+    - name: ADMIN_TOKEN
+      type: secret
+      title: Admin token (Argon2 PHC string)
+      description: Leave empty to disable /admin. Generate with `docker run --rm -it vaultwarden/server /vaultwarden hash`.
+  volumes:
+    - { name: data, backup: true, shared: true }

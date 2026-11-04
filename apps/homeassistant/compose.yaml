@@ -1,0 +1,19 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.10
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./config:/config
+      - /run/dbus:/run/dbus:ro   # Bluetooth
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: host.docker.internal:8123
+      kuma.homeassistant.http.name: Home Assistant
+      kuma.homeassistant.http.url: https://${DOMAIN}
+      homepage.group: Home
+      homepage.name: Home Assistant
+      homepage.icon: home-assistant.svg
+      homepage.href: https://${DOMAIN}

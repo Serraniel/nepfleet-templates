@@ -1,0 +1,31 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: registry
+  title: Container registry
+  description: Private OCI registry (CNCF Distribution) with htpasswd authentication.
+  tier: app
+  category: development
+  homepage: https://distribution.github.io/distribution/
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: registry
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: HTPASSWD
+      type: secret
+      title: htpasswd line(s)
+      description: bcrypt only, e.g. the output of `htpasswd -nB alice`.
+      pattern: '^[^:\s]+:\$2[aby]\$'
+      required: true
+  generate:
+    - { name: HTTP_SECRET, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: data, backup: true, shared: true }

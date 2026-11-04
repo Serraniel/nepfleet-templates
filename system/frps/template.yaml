@@ -1,0 +1,34 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: frps
+  title: frp server (public side)
+  description: Receives tunnels from frpc at home and publishes them through Caddy. Bind it to the WireGuard address, so the control port is never on the internet.
+  tier: system
+  category: networking
+  homepage: https://github.com/fatedier/frp
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: fatedier/frps
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, logs: true }
+  inputs:
+    - name: BIND_ADDR
+      type: string
+      title: Address for the frp control port
+      description: This host's WireGuard IP (recommended) or 0.0.0.0.
+      required: true
+    - name: EXPOSED_HOSTS
+      type: string
+      title: Public host names served through tunnels
+      description: Comma separated, e.g. "jellyfin.example.org, photos.example.org"
+      required: true
+  generate:
+    - name: FRP_TOKEN
+      kind: secret
+      length: 48
+      encoding: alnum
+  files:
+    - { src: files/frps.toml, dest: frps.toml }

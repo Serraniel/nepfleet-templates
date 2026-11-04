@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: jellyfin
+  title: Jellyfin
+  description: Media server. Mount your media read-only. Add /dev/dri in compose.yaml for hardware transcoding.
+  tier: app
+  category: media
+  homepage: https://jellyfin.org
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: jellyfin/jellyfin
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: MEDIA_PATH
+      type: path
+      title: Host folder with your media
+      required: true
+  volumes:
+    - { name: config, backup: true }
+    - { name: cache, backup: false }

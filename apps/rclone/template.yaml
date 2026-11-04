@@ -1,0 +1,34 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: rclone
+  title: rclone
+  description: Remote-control daemon with the web GUI for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes live in rclone.conf, which is stored encrypted in the fleet repository.
+  tier: app
+  category: storage
+  homepage: https://rclone.org
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: rclone/rclone
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain for the web GUI
+      required: true
+    - name: RC_USER
+      type: string
+      title: Web GUI user
+      default: admin
+      required: true
+    - name: DATA_PATH
+      type: path
+      title: Host folder rclone may read and write
+      required: true
+  generate:
+    - { name: RC_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: config, backup: true }

@@ -1,0 +1,15 @@
+services:
+  watchtower:
+    image: nickfedor/watchtower:1
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_MONITOR_ONLY: ${WATCHTOWER_MODE}
+      WATCHTOWER_LABEL_ENABLE: "true"   # only containers labelled com.centurylinklabs.watchtower.enable=true
+      WATCHTOWER_SCHEDULE: ${SCHEDULE}
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_NOTIFICATION_URL: ${NOTIFICATION_URL}
+      TZ: ${TZ}
+    # Full socket: updating means recreating containers. Monitor-only does not
+    # need write access, but Watchtower cannot be restricted further.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

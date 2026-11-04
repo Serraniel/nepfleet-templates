@@ -1,0 +1,57 @@
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.4
+    restart: unless-stopped
+    environment:
+      PAPERLESS_URL: https://${DOMAIN}
+      PAPERLESS_SECRET_KEY: ${SECRET_KEY}
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBPASS: ${DB_PASSWORD}
+      PAPERLESS_OCR_LANGUAGE: ${OCR_LANGUAGE}
+      PAPERLESS_TIME_ZONE: ${TZ}
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - ${CONSUME_PATH}:/usr/src/paperless/consume
+    networks: [ingress, default]
+    depends_on:
+      db: { condition: service_healthy }
+      broker: { condition: service_started }
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8000}}"
+      kuma.paperless.http.name: Paperless
+      kuma.paperless.http.url: https://${DOMAIN}
+      homepage.group: Documents
+      homepage.name: Paperless
+      homepage.icon: paperless-ngx.svg
+      homepage.href: https://${DOMAIN}
+
+  broker:
+    image: valkey/valkey:9.2-alpine
+    restart: unless-stopped
+
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "paperless"]
+      interval: 10s
+
+volumes:
+  data:
+  media:
+  db:
+
+networks:
+  default:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

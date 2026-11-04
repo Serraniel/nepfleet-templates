@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: homepage
+  title: Homepage
+  description: A dashboard for your services. Entries come from homepage.* labels.
+  tier: system
+  category: dashboard
+  homepage: https://gethomepage.dev
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/gethomepage/homepage
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  files:
+    - { src: files/docker.yaml, dest: config/docker.yaml }
+  volumes:
+    - name: config
+      backup: true

@@ -1,0 +1,23 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: binfmt
+  title: Foreign-architecture emulation
+  description: Registers QEMU user-mode emulators, so images built for another CPU (e.g. amd64 on an arm64 host) can run, slower. The NepFleet agent re-runs it after each boot (registrations do not survive a reboot). Privileged.
+  tier: system
+  category: host
+  homepage: https://github.com/tonistiigi/binfmt
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: tonistiigi/binfmt
+      track: minor
+  supports: { swarm: false, arm64: true }
+  inputs:
+    - name: ARCHES
+      type: string
+      title: Architectures to emulate
+      default: amd64,arm64
+      pattern: "^[a-z0-9,]+$"
+      required: true

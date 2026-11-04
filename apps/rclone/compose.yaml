@@ -1,0 +1,32 @@
+services:
+  rclone:
+    image: rclone/rclone:1.75
+    restart: unless-stopped
+    command:
+      - rcd
+      - --rc-web-gui
+      - --rc-web-gui-no-open-browser
+      - --rc-addr=:5572
+      - --rc-user=${RC_USER}
+      - --rc-pass=${RC_PASSWORD}
+    volumes:
+      - config:/config/rclone
+      - ${DATA_PATH}:/data
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 5572}}"
+      kuma.rclone.http.name: rclone
+      kuma.rclone.http.url: https://${DOMAIN}
+      homepage.group: Storage
+      homepage.name: rclone
+      homepage.icon: rclone.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  config:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

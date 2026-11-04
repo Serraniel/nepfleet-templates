@@ -1,0 +1,24 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: sendan
+  title: Sendan
+  description: Self-hosted, end-to-end encrypted file sharing.
+  tier: app
+  category: files
+  homepage: https://github.com/Serraniel/sendan
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/serraniel/sendan
+      track: patch   # pre-1.0: a minor may break
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      description: Used in every share link. Must be the public address.
+      required: true
+  volumes:
+    - { name: data, backup: true }

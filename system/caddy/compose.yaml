@@ -1,0 +1,51 @@
+services:
+  caddy:
+    image: ghcr.io/serraniel/nepfleet-caddy:2.11
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:2375
+      CADDY_INGRESS_NETWORKS: ${NEPFLEET_INGRESS_NETWORK}
+      CADDY_DOCKER_CADDYFILE_PATH: /etc/caddy/Caddyfile
+      ACME_EMAIL: ${ACME_EMAIL}
+      CADDY_DNS_PROVIDER: ${CADDY_DNS_PROVIDER}
+      DNS_API_TOKEN: ${DNS_API_TOKEN}
+    extra_hosts:
+      # lets stacks on host networking (e.g. Home Assistant) be proxied
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./dns:/etc/caddy/dns:ro
+      - data:/data
+    networks: [ingress, socket]
+    depends_on: [socket-proxy]
+
+  # Read-only Docker API: caddy-docker-proxy only lists containers, services and networks.
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/run]
+    environment:
+      CONTAINERS: 1
+      SERVICES: 1
+      NETWORKS: 1
+      TASKS: 1
+      EVENTS: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [socket]
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
+  socket:
+    internal: true

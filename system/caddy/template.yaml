@@ -1,0 +1,44 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: caddy
+  title: Caddy ingress
+  description: Reverse proxy with automatic TLS. Routes are read from caddy.* labels, and DNS-01 gives trusted certificates on home networks too.
+  tier: system
+  category: networking
+  homepage: https://github.com/lucaslorentz/caddy-docker-proxy
+  source: https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/serraniel/nepfleet-caddy
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { swarm: true, arm64: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: ACME_EMAIL
+      type: email
+      title: E-mail for Let's Encrypt
+      required: true
+    - name: CADDY_DNS_PROVIDER
+      type: enum
+      title: DNS provider for DNS-01
+      description: Needed for trusted certificates on names that are not reachable from the internet (home network) and for wildcards.
+      options: [none, cloudflare, hetzner, desec]
+      default: none
+    - name: DNS_API_TOKEN
+      type: secret
+      title: DNS provider API token
+      description: Leave empty when the provider is none.
+  volumes:
+    - name: data
+      backup: true
+      shared: true
+  files:
+    - { src: files/Caddyfile, dest: Caddyfile }
+    - { src: files/dns/none.caddy, dest: dns/none.caddy }
+    - { src: files/dns/cloudflare.caddy, dest: dns/cloudflare.caddy }
+    - { src: files/dns/hetzner.caddy, dest: dns/hetzner.caddy }
+    - { src: files/dns/desec.caddy, dest: dns/desec.caddy }

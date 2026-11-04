@@ -1,0 +1,42 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: frpc
+  title: frp client (home side)
+  description: Publishes a local service through an frps on a public host. Add more [[proxies]] to frpc.toml in the fleet repository.
+  tier: system
+  category: networking
+  homepage: https://github.com/fatedier/frp
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: fatedier/frpc
+      track: minor
+  supports: { arm64: true, logs: true }
+  inputs:
+    - name: SERVER_ADDR
+      type: string
+      title: frps address
+      description: The public host's WireGuard IP.
+      required: true
+    - name: FRP_TOKEN
+      type: secret
+      title: frps token
+      description: The FRP_TOKEN generated for the frps stack.
+      required: true
+    - name: PUBLIC_HOST
+      type: hostname
+      title: Public host name
+      required: true
+    - name: LOCAL_HOST
+      type: string
+      title: Local service host
+      description: Container name on the ingress network (e.g. jellyfin) or an IP.
+      required: true
+    - name: LOCAL_PORT
+      type: int
+      title: Local service port
+      required: true
+  files:
+    - { src: files/frpc.toml, dest: frpc.toml }

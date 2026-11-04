@@ -1,0 +1,26 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: homeassistant
+  title: Home Assistant
+  description: Home automation. Runs on host networking for device discovery (mDNS, SSDP), and Caddy reaches it through host.docker.internal. Not for swarm.
+  tier: app
+  category: home
+  homepage: https://www.home-assistant.io
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    # year.month versioning: every month counts as a "minor"
+    - name: ghcr.io/home-assistant/home-assistant
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  files:
+    - { src: files/http.yaml, dest: config/http.yaml }
+  volumes:
+    - { name: config, backup: true }

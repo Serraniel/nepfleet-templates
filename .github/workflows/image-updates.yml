@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Weekly: opens one issue per image that has a release beyond its template's
+# `track` (usually a new major), so a maintainer can adapt the template and
+# write a migration if needed. Never edits templates itself.
+name: Image updates
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 -I scripts/images.py check > report.json
+      - name: Open issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh label create image-update --color 1D76DB --description "New upstream release beyond a template's track" 2>/dev/null || true
+          jq -c '.[] | select(.beyondTrack == true)' report.json | while read -r e; do
+            tpl=$(jq -r .template <<<"$e"); ref=$(jq -r .ref <<<"$e"); latest=$(jq -r .latest <<<"$e"); track=$(jq -r .track <<<"$e")
+            title="${tpl}: ${ref%%:*} ${latest} available"
+            if gh issue list --state all --label image-update --search "in:title \"$title\"" --json title -q '.[].title' | grep -qxF "$title"; then
+              echo "exists: $title"; continue
+            fi
+            gh issue create --label image-update --title "$title" --body "$(printf '%s\n' \
+              "\`$tpl\` pins \`$ref\` (track: \`$track\`). Upstream published \`$latest\`, which NepFleet will not apply on its own." \
+              "" \
+              "- [ ] Read the upstream release notes for breaking changes" \
+              "- [ ] Update \`images[].ref\` and the compose file" \
+              "- [ ] Bump \`spec.version\` (major if users must act)" \
+              "- [ ] Add a \`migrations\` entry if data or config must change")"
+          done
+          # Unreachable or missing tags are worth an issue too.
+          jq -r '.[] | select(.error) | "- `\(.template)` `\(.ref)`: \(.error)"' report.json > errors.md
+          if [ -s errors.md ]; then
+            title="Image check errors"
+            if ! gh issue list --state open --label image-update --search "in:title \"$title\"" --json title -q '.[].title' | grep -qxF "$title"; then
+              gh issue create --label image-update --title "$title" --body-file errors.md
+            fi
+          fi

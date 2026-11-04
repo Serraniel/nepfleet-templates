@@ -1,0 +1,26 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: opencloud
+  title: OpenCloud
+  description: File sync and share (stable channel).
+  tier: app
+  category: files
+  homepage: https://opencloud.eu
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: opencloudeu/opencloud
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  generate:
+    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: config, backup: true }
+    - { name: data, backup: true }

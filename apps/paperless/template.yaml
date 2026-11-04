@@ -1,0 +1,42 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: paperless
+  title: Paperless-ngx
+  description: Document management with OCR.
+  tier: app
+  category: documents
+  homepage: https://docs.paperless-ngx.com
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/paperless-ngx/paperless-ngx
+      track: minor
+    - name: postgres
+      track: minor
+    - name: valkey/valkey
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: OCR_LANGUAGE
+      type: string
+      title: OCR languages (tesseract codes, "+" separated)
+      default: deu+eng
+      required: true
+    - name: CONSUME_PATH
+      type: path
+      title: Host folder watched for new documents
+      default: ./consume
+      required: true
+  generate:
+    - { name: SECRET_KEY, kind: secret, length: 64, encoding: alnum }
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: data, backup: true }
+    - { name: media, backup: true }
+    - { name: db, backup: true }

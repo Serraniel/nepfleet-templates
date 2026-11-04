@@ -1,0 +1,17 @@
+services:
+  neptide:
+    image: ghcr.io/serraniel/neptide:0.1.0
+    restart: unless-stopped
+    read_only: true
+    user: "65532:${DOCKER_GID}"
+    environment:
+      NEPTIDE_MONITOR_ONLY: ${MONITOR_ONLY}
+      NEPTIDE_NOTIFY: ${NOTIFY}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      neptide.self: "true"
+    deploy:
+      # On swarm: one instance on a manager updates the services.
+      placement:
+        constraints: [node.role == manager]

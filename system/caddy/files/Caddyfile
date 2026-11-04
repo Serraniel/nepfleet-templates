@@ -1,0 +1,5 @@
+# Global options. Sites come from caddy.* labels on other stacks.
+{
+	email {$ACME_EMAIL}
+	import /etc/caddy/dns/{$CADDY_DNS_PROVIDER}.caddy
+}

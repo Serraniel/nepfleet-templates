@@ -1,0 +1,42 @@
+services:
+  dozzle:
+    image: amir20/dozzle:v11
+    restart: unless-stopped
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:2375
+      DOZZLE_AUTH_PROVIDER: simple
+      DOZZLE_NO_ANALYTICS: "true"
+    volumes:
+      - ./data:/data
+    networks: [ingress, socket]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.dozzle.http.name: Dozzle
+      kuma.dozzle.http.url: https://${DOMAIN}/healthcheck
+      homepage.group: System
+      homepage.name: Logs
+      homepage.icon: dozzle.svg
+      homepage.href: https://${DOMAIN}
+
+  # Read-only API: logs and inspect only. Dozzle's start/stop actions stay off.
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/run]
+    environment:
+      CONTAINERS: 1
+      INFO: 1
+      EVENTS: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [socket]
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
+  socket:
+    internal: true

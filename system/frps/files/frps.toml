@@ -1,0 +1,6 @@
+bindPort = 7000
+vhostHTTPPort = 8080          # Caddy terminates TLS and forwards here by Host header
+
+auth.method = "token"
+auth.token = "{{ .Envs.FRP_TOKEN }}"
+transport.tls.force = true     # refuse unencrypted clients

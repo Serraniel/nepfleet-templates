@@ -1,0 +1,30 @@
+services:
+  kutt:
+    image: kutt/kutt:v3.2.6
+    restart: unless-stopped
+    environment:
+      DEFAULT_DOMAIN: ${DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+      DB_FILENAME: /var/lib/kutt/data.sqlite
+      DISALLOW_REGISTRATION: ${DISALLOW_REGISTRATION}
+      TRUST_PROXY: "true"
+    volumes:
+      - data:/var/lib/kutt
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.kutt.http.name: Kutt
+      kuma.kutt.http.url: https://${DOMAIN}
+      homepage.group: Web
+      homepage.name: Kutt
+      homepage.icon: kutt.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

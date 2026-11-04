@@ -1,0 +1,26 @@
+services:
+  owncast:
+    image: owncast/owncast:0.3.0
+    restart: unless-stopped
+    ports:
+      - "${RTMP_PORT}:1935"
+    volumes:
+      - data:/app/data
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.owncast.http.name: Owncast
+      kuma.owncast.http.url: https://${DOMAIN}/api/status
+      homepage.group: Media
+      homepage.name: Owncast
+      homepage.icon: owncast.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

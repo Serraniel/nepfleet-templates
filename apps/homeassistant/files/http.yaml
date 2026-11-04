@@ -1,0 +1,6 @@
+# Include from configuration.yaml with:  http: !include http.yaml
+# Trusts the Docker bridge, where Caddy's requests come from.
+use_x_forwarded_for: true
+trusted_proxies:
+  - 172.16.0.0/12
+  - 127.0.0.1

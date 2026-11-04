@@ -1,0 +1,29 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: kutt
+  title: Kutt
+  description: URL shortener (SQLite).
+  tier: app
+  category: web
+  homepage: https://github.com/thedevs-network/kutt
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: kutt/kutt
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: DISALLOW_REGISTRATION
+      type: bool
+      title: Disable public registration
+      default: "true"
+  generate:
+    - { name: JWT_SECRET, kind: secret, length: 48, encoding: base64url }
+  volumes:
+    - { name: data, backup: true }

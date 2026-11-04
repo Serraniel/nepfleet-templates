@@ -1,0 +1,34 @@
+# Commit types are set by .github/workflows/dependabot.yml.
+# Template image tags: Dependabot bumps within each template's `track`;
+# releases beyond it are handled by the image-updates workflow as issues.
+# Keep the ignore list in sync with `track: patch` entries.
+version: 2
+updates:
+  - package-ecosystem: docker-compose
+    directories: ["/system/*", "/apps/*"]
+    schedule: { interval: daily }
+    commit-message: { prefix: deps }
+    groups:
+      templates: { patterns: ["*"], update-types: [patch] }
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "ghcr.io/serraniel/sendan"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "ghcr.io/serraniel/sweetfolio"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "ghcr.io/serraniel/neptide"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "owncast/owncast"
+        update-types: ["version-update:semver-minor"]
+  # Base images of images/*, pinned by digest: a rebuilt base means a rebuilt image.
+  - package-ecosystem: docker
+    directories: ["/images/*"]
+    schedule: { interval: daily }
+    commit-message: { prefix: deps }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    commit-message: { prefix: ci }
+    groups:
+      actions: { patterns: ["*"] }

@@ -1,0 +1,7 @@
+services:
+  binfmt:
+    image: tonistiigi/binfmt:qemu-v10.2.3
+    command: ["--install", "${ARCHES}"]
+    privileged: true   # writes to /proc/sys/fs/binfmt_misc
+    restart: "no"
+    network_mode: none

@@ -1,0 +1,32 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: watchtower
+  title: Watchtower (maintained fork)
+  description: Image update notifications for containers NepFleet does not manage. Monitor-only by default, because in-place updates bypass the fleet repository and cannot be rolled back.
+  tier: system
+  category: updates
+  homepage: https://github.com/nicholas-fedor/watchtower
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: nickfedor/watchtower
+      track: minor
+  supports: { arm64: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: WATCHTOWER_MODE
+      type: enum
+      title: Mode
+      options: ["true", "false"]
+      default: "true"
+      description: '"true" = monitor only (notify). "false" = update labelled containers in place.'
+    - name: NOTIFICATION_URL
+      type: secret
+      title: Notification URL
+      description: A shoutrrr URL, e.g. ntfy://ntfy.sh/my-topic
+    - name: SCHEDULE
+      type: string
+      title: Schedule (6-field cron)
+      default: "0 0 4 * * *"
+      required: true

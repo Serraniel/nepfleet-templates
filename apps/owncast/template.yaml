@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: owncast
+  title: Owncast
+  description: Live streaming and chat. RTMP ingest is published directly on the host.
+  tier: app
+  category: media
+  homepage: https://owncast.online
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: owncast/owncast
+      track: patch
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: RTMP_PORT
+      type: int
+      title: Host port for RTMP ingest
+      default: "1935"
+      required: true
+  volumes:
+    - { name: data, backup: true }

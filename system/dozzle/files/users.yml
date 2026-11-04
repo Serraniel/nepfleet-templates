@@ -1,0 +1,3 @@
+# Dozzle users. Generate an entry with:
+#   docker run --rm amir20/dozzle:v11 generate admin --password '<password>'
+users: {}

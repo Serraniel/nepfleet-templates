@@ -1,0 +1,32 @@
+services:
+  registry:
+    image: registry:3.1
+    restart: unless-stopped
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: ${DOMAIN}
+      REGISTRY_AUTH_HTPASSWD_PATH: /run/htpasswd
+      REGISTRY_HTTP_SECRET: ${HTTP_SECRET}
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      HTPASSWD: ${HTPASSWD}
+    # The htpasswd file is written from the encrypted value at start, never to disk on the host.
+    entrypoint: ["/bin/sh", "-c", "printf '%s\\n' \"$$HTPASSWD\" > /run/htpasswd && exec registry serve /etc/distribution/config.yml"]
+    tmpfs: [/run]
+    volumes:
+      - data:/var/lib/registry
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 5000}}"
+      caddy.request_body.max_size: 0   # no upload limit for image layers
+      kuma.registry.http.name: Registry
+      kuma.registry.http.url: https://${DOMAIN}/v2/
+      kuma.registry.http.accepted_statuscodes: '["401"]'
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

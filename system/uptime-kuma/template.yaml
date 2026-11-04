@@ -1,0 +1,38 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: uptime-kuma
+  title: Uptime Kuma + AutoKuma
+  description: Uptime monitoring and status pages. AutoKuma creates monitors from kuma.* labels. Install it once for the whole fleet, or once per stack for a stack-local status page.
+  tier: system
+  category: monitoring
+  homepage: https://github.com/louislam/uptime-kuma
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: louislam/uptime-kuma
+      track: minor
+    - name: ghcr.io/bigboot/autokuma
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, statusPage: true, dashboard: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: KUMA_USERNAME
+      type: string
+      title: Admin user
+      description: Create this user in Uptime Kuma's first-run screen. AutoKuma logs in with it.
+      default: admin
+      required: true
+    - name: KUMA_PASSWORD
+      type: secret
+      title: Admin password
+      required: true
+  volumes:
+    - name: data
+      backup: true

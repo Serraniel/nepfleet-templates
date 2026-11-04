@@ -1,0 +1,30 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: neptide
+  title: neptide image updates
+  description: Health-gated image updates with automatic rollback, for containers and swarm services labelled neptide.enable=true.
+  tier: system
+  category: updates
+  homepage: https://github.com/Serraniel/neptide
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/serraniel/neptide
+      track: patch   # pre-1.0
+  supports: { swarm: true, arm64: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: DOCKER_GID
+      type: int
+      title: Group id of the docker group on the host
+      description: "getent group docker | cut -d: -f3"
+      required: true
+    - name: MONITOR_ONLY
+      type: bool
+      title: Only notify, never update
+      default: "false"
+    - name: NOTIFY
+      type: secret
+      title: Notification URLs
+      description: Comma separated shoutrrr URLs, e.g. discord://token@webhookid

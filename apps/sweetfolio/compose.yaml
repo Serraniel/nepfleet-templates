@@ -1,0 +1,23 @@
+services:
+  sweetfolio:
+    image: ghcr.io/serraniel/sweetfolio:0.5.4
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.sweetfolio.http.name: Sweetfolio
+      kuma.sweetfolio.http.url: https://${DOMAIN}
+      homepage.group: Finance
+      homepage.name: Sweetfolio
+      homepage.href: https://${DOMAIN}
+    deploy:
+      replicas: 2
+      update_config: { parallelism: 1, order: start-first, failure_action: rollback }
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

@@ -1,0 +1,26 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: dozzle
+  title: Dozzle
+  description: Live container logs in the browser. Deploy on swarm for a fleet-wide view.
+  tier: system
+  category: monitoring
+  homepage: https://dozzle.dev
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: amir20/dozzle
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, autoUpdate: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  files:
+    - { src: files/users.yml, dest: data/users.yml }
+  generate: []

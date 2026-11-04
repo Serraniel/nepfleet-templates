@@ -1,0 +1,108 @@
+x-forgejo-env: &forgejo-env
+  USER_UID: "1000"
+  USER_GID: "1000"
+  FORGEJO__database__DB_TYPE: postgres
+  FORGEJO__database__HOST: db:5432
+  FORGEJO__database__NAME: forgejo
+  FORGEJO__database__USER: forgejo
+  FORGEJO__database__PASSWD: ${DB_PASSWORD}
+  FORGEJO__server__DOMAIN: ${DOMAIN}
+  FORGEJO__server__ROOT_URL: https://${DOMAIN}/
+  FORGEJO__server__SSH_DOMAIN: ${DOMAIN}
+  FORGEJO__server__SSH_PORT: ${SSH_PORT}
+  FORGEJO__security__INSTALL_LOCK: "true"
+  FORGEJO__service__DISABLE_REGISTRATION: "true"
+  FORGEJO__actions__ENABLED: "true"
+
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:17
+    restart: unless-stopped
+    environment: *forgejo-env
+    ports:
+      - "${SSH_PORT}:22"
+    volumes:
+      - data:/data
+    networks: [ingress, default]
+    depends_on:
+      db: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/healthz"]
+      interval: 30s
+      start_period: 60s
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.forgejo.http.name: Forgejo
+      kuma.forgejo.http.url: https://${DOMAIN}/api/healthz
+      homepage.group: Development
+      homepage.name: Forgejo
+      homepage.icon: forgejo.svg
+      homepage.href: https://${DOMAIN}
+
+  # Registers the runner's shared secret with Forgejo. Idempotent; exits.
+  register-runner:
+    image: codeberg.org/forgejo/forgejo:17
+    restart: "no"
+    user: "1000:1000"
+    entrypoint: ["forgejo", "forgejo-cli", "actions", "register",
+                 "--name", "default", "--secret", "${RUNNER_SECRET}",
+                 "--labels", "docker:docker://node:22-bookworm"]
+    environment: *forgejo-env
+    volumes:
+      - data:/data
+    depends_on:
+      forgejo: { condition: service_healthy }
+
+  runner:
+    image: code.forgejo.org/forgejo/runner:13
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      DOCKER_HOST: tcp://dind:2375
+      RUNNER_SECRET: ${RUNNER_SECRET}
+    command: >-
+      sh -c 'test -f .runner || forgejo-runner create-runner-file --instance http://forgejo:3000
+      --name default --secret "$$RUNNER_SECRET"; exec forgejo-runner daemon'
+    working_dir: /data
+    volumes:
+      - runner:/data
+    networks: [default, ci]
+    depends_on:
+      register-runner: { condition: service_completed_successfully }
+      dind: { condition: service_started }
+
+  # Isolated daemon for CI jobs. Privileged, but holds nothing but job containers.
+  dind:
+    image: docker:29-dind
+    restart: unless-stopped
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    command: ["dockerd", "--host=tcp://0.0.0.0:2375"]
+    networks: [ci]
+
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: forgejo
+      POSTGRES_USER: forgejo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "forgejo"]
+      interval: 10s
+
+volumes:
+  data:
+  db:
+  runner:
+
+networks:
+  default:
+  ci: # not internal: jobs pull images and dependencies
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

@@ -1,0 +1,29 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.11.11
+    restart: unless-stopped
+    environment:
+      JELLYFIN_PublishedServerUrl: https://${DOMAIN}
+    volumes:
+      - config:/config
+      - cache:/cache
+      - ${MEDIA_PATH}:/media:ro
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8096}}"
+      kuma.jellyfin.http.name: Jellyfin
+      kuma.jellyfin.http.url: https://${DOMAIN}/health
+      homepage.group: Media
+      homepage.name: Jellyfin
+      homepage.icon: jellyfin.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  config:
+  cache:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

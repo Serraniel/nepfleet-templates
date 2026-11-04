@@ -1,0 +1,31 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.37.5
+    restart: unless-stopped
+    environment:
+      DOMAIN: https://${DOMAIN}
+      SIGNUPS_ALLOWED: ${SIGNUPS_ALLOWED}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+    volumes:
+      - data:/data
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      kuma.vaultwarden.http.name: Vaultwarden
+      kuma.vaultwarden.http.url: https://${DOMAIN}/alive
+      homepage.group: Security
+      homepage.name: Vaultwarden
+      homepage.icon: vaultwarden.svg
+      homepage.href: https://${DOMAIN}
+    deploy:
+      replicas: 1   # SQLite: never more than one
+      update_config: { order: stop-first }
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

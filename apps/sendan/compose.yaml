@@ -1,0 +1,27 @@
+services:
+  sendan:
+    image: ghcr.io/serraniel/sendan:0.3.4
+    restart: unless-stopped
+    read_only: true
+    environment:
+      SENDAN_BASE_URL: https://${DOMAIN}
+      SENDAN_TRUSTED_PROXIES: "1"   # exactly one proxy (Caddy) in front
+    volumes:
+      - data:/var/lib/sendan
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.sendan.http.name: Sendan
+      kuma.sendan.http.url: https://${DOMAIN}
+      homepage.group: Files
+      homepage.name: Sendan
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

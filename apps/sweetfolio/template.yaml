@@ -1,0 +1,21 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: sweetfolio
+  title: Sweetfolio
+  description: Portfolio planning and evaluation. Static app; data stays in the browser.
+  tier: app
+  category: finance
+  homepage: https://github.com/Serraniel/Sweetfolio
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/serraniel/sweetfolio
+      track: patch   # pre-1.0: a minor may break
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true

@@ -1,0 +1,12 @@
+serverAddr = "{{ .Envs.SERVER_ADDR }}"
+serverPort = 7000
+auth.method = "token"
+auth.token = "{{ .Envs.FRP_TOKEN }}"
+transport.tls.enable = true
+
+[[proxies]]
+name = "main"
+type = "http"
+localIP = "{{ .Envs.LOCAL_HOST }}"
+localPort = {{ .Envs.LOCAL_PORT }}
+customDomains = ["{{ .Envs.PUBLIC_HOST }}"]

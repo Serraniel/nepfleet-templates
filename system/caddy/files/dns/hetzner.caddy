@@ -1,0 +1,1 @@
+acme_dns hetzner {env.DNS_API_TOKEN}
