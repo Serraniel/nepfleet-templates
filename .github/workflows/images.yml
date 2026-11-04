@@ -56,6 +56,7 @@ jobs:
             org.opencontainers.image.title=NepFleet Caddy
             org.opencontainers.image.description=Caddy with docker-proxy and DNS-01 providers
             org.opencontainers.image.licenses=AGPL-3.0-or-later
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
           provenance: mode=max
           sbom: true
@@ -73,3 +74,16 @@ jobs:
         run: |
           cosign sign --yes "${IMAGE}@${DIGEST}"
           cosign attest --yes --type cyclonedx --predicate image.cdx.json "${IMAGE}@${DIGEST}"
+      # GHCR creates new packages as private. Templates pull anonymously, so
+      # fail here rather than on every user's host.
+      - name: Image can be pulled anonymously
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          repo="${IMAGE#ghcr.io/}"
+          # A private package refuses even the anonymous token.
+          token=$(curl -sS "https://ghcr.io/token?scope=repository:${repo}:pull" | jq -r '.token // empty')
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer ${token}" \
+            -H 'Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json' \
+            "https://ghcr.io/v2/${repo}/manifests/${DIGEST}")
+          [ "$code" = 200 ] || { echo "::error::${IMAGE} is not public (HTTP ${code}). See README: Images."; exit 1; }
