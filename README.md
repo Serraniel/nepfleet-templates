@@ -10,39 +10,45 @@ The official catalogue of [NepFleet](https://github.com/Serraniel/nepfleet) temp
 
 ## Catalogue
 
-Legend: 🌐 ingress (Caddy) · 📈 monitors (AutoKuma) · 🏠 dashboard (Homepage) · 🐝 swarm-ready · 💾 backup
+<!-- catalogue:start -->
 
-| Template | Tier | Integrations |
-|---|---|---|
-| [caddy](system/caddy) | system | 🐝 💾 · public ACME + DNS-01 for home networks |
-| [dozzle](system/dozzle) | system | 🌐 📈 🏠 🐝 |
-| [uptime-kuma](system/uptime-kuma) | system | 🌐 🏠 🐝 💾 · fleet-wide or per-stack status page |
-| [homepage](system/homepage) | system | 🌐 📈 🐝 💾 |
-| [neptide](system/neptide) | system | 🐝 · default updater: health-gated, with rollback |
-| [watchtower](system/watchtower) | system | alternative, notify-only by default (fork `nickfedor/watchtower`) |
-| [volume-backup](system/volume-backup) | system | default: scheduled, age-encrypted volume backups, local + SSH/SFTP |
-| [backrest](system/backrest) | system | 🌐 📈 🏠 💾 · restic: deduplicated offsite backups with a web UI |
-| [binfmt](system/binfmt) | system | run foreign-architecture images |
-| [frps](system/frps) | system | 🌐 · public side of tunnels to home services |
-| [frpc](system/frpc) | system | home side of tunnels |
-| [forgejo](apps/forgejo) | app | 🌐 📈 🏠 💾 · with an Actions runner in DinD |
-| [homeassistant](apps/homeassistant) | app | 🌐 📈 🏠 💾 |
-| [homebox](apps/homebox) | app | 🌐 📈 🏠 🐝 💾 |
-| [immich](apps/immich) | app | 🌐 📈 🏠 💾 · Power Tools as optional profile |
-| [jellyfin](apps/jellyfin) | app | 🌐 📈 🏠 💾 |
-| [kutt](apps/kutt) | app | 🌐 📈 🏠 💾 |
-| [metube](apps/metube) | app | 🌐 📈 🏠 · yt-dlp web UI |
-| [navidrome](apps/navidrome) | app | 🌐 📈 🏠 💾 |
-| [open-webui](apps/open-webui) | app | 🌐 📈 🏠 💾 · Ollama and LiteLLM as optional profiles |
-| [opencloud](apps/opencloud) | app | 🌐 📈 🏠 💾 |
-| [owncast](apps/owncast) | app | 🌐 📈 🏠 💾 |
-| [paperless](apps/paperless) | app | 🌐 📈 🏠 💾 |
-| [rclone](apps/rclone) | app | 🌐 📈 🏠 |
-| [registry](apps/registry) | app | 🌐 📈 🐝 💾 |
-| [sendan](apps/sendan) | app | 🌐 📈 🏠 💾 |
-| [sweetfolio](apps/sweetfolio) | app | 🌐 📈 🏠 🐝 |
-| [tdarr](apps/tdarr) | app | 🌐 📈 🏠 💾 · server + internal node |
-| [vaultwarden](apps/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 |
+Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 🐝 swarm · 💾 backup · 🔑 sso · 🦾 arm64
+
+| Template | Project | Tier | Integrations |
+|---|---|---|---|
+| [backrest](system/backrest) | [Backrest (restic)](https://github.com/garethgeorge/backrest) | system | 🌐 📈 🏠 💾 🦾 |
+| [binfmt](system/binfmt) | [Foreign-architecture emulation](https://github.com/tonistiigi/binfmt) | system | 🦾 |
+| [caddy](system/caddy) | [Caddy ingress](https://github.com/lucaslorentz/caddy-docker-proxy) | system | 🐝 💾 🦾 |
+| [dozzle](system/dozzle) | [Dozzle](https://dozzle.dev) · [source](https://github.com/amir20/dozzle) | system | 🌐 📈 🏠 🐝 🦾 |
+| [frpc](system/frpc) | [frp client (home side)](https://github.com/fatedier/frp) | system | 🦾 |
+| [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
+| [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |
+| [neptide](system/neptide) | [neptide image updates](https://github.com/Serraniel/neptide) | system | 🐝 🦾 |
+| [uptime-kuma](system/uptime-kuma) | [Uptime Kuma + AutoKuma](https://github.com/louislam/uptime-kuma) | system | 🌐 📊 🏠 🐝 💾 🦾 |
+| [volume-backup](system/volume-backup) | [Volume backups (docker-volume-backup)](https://offen.github.io/docker-volume-backup/) · [source](https://github.com/offen/docker-volume-backup) | system | 🦾 |
+| [watchtower](system/watchtower) | [Watchtower (maintained fork)](https://github.com/nicholas-fedor/watchtower) | system | 🦾 |
+| [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
+| [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
+| [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 💾 🦾 |
+| [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
+| [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 💾 🦾 |
+| [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🦾 |
+| [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |
+| [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 💾 |
+| [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 💾 🦾 |
+| [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 💾 🦾 |
+| [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 💾 🦾 |
+| [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
+| [registry](apps/registry) | [Container registry](https://distribution.github.io/distribution/) · [source](https://github.com/distribution/distribution) | app | 🌐 📈 🐝 💾 🦾 |
+| [sendan](apps/sendan) | [Sendan](https://github.com/Serraniel/sendan) | app | 🌐 📈 🏠 💾 🦾 |
+| [sweetfolio](apps/sweetfolio) | [Sweetfolio](https://github.com/Serraniel/Sweetfolio) | app | 🌐 📈 🏠 🐝 🦾 |
+| [tdarr](apps/tdarr) | [Tdarr](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🌐 📈 🏠 💾 🦾 |
+| [vaultwarden](apps/vaultwarden) | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+
+<!-- catalogue:end -->
+
+The table is generated from the templates (`scripts/catalogue.py`); CI keeps it current.
 
 ## Automation
 

@@ -7,6 +7,7 @@ metadata:
   tier: app
   category: development
   homepage: https://forgejo.org
+  source: https://codeberg.org/forgejo/forgejo
 spec:
   version: 0.1.0
   compose: compose.yaml

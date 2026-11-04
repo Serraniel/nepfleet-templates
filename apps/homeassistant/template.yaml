@@ -7,6 +7,7 @@ metadata:
   tier: app
   category: home
   homepage: https://www.home-assistant.io
+  source: https://github.com/home-assistant/core
 spec:
   version: 0.1.0
   compose: compose.yaml
