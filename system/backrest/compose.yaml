@@ -1,6 +1,7 @@
 services:
   backrest:
     image: garethgeorge/backrest:v1.14.1
+    hostname: backrest   # restic snapshots are tagged with it; keep it stable
     restart: unless-stopped
     environment:
       BACKREST_DATA: /data

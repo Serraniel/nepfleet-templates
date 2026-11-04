@@ -10,6 +10,10 @@ services:
       inContainer: "true"
       ffmpegVersion: "7"
       nodeName: ${NEPFLEET_STACK}-internal
+      # Authentication stays on (the server port is published). The seeded
+      # key also creates the "admin" user with this key as its password.
+      seededApiKey: tapi_${API_KEY}
+      apiKey: tapi_${API_KEY}
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}

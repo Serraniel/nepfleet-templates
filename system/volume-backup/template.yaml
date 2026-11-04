@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: volume-backup
   title: Volume backups (docker-volume-backup)
-  description: Scheduled, age-encrypted backups of all Docker volumes on this host, to a local folder and optionally over SSH/SFTP (e.g. a Storage Box). Containers labelled docker-volume-backup.stop-during-backup=true are stopped during the backup for consistency.
+  description: Scheduled, age-encrypted backups of the Docker volumes on this host, to a local folder and optionally over SSH/SFTP (e.g. a Storage Box). Containers labelled docker-volume-backup.stop-during-backup=true are stopped during the backup for consistency. Host folders (media, photos) are not included; back them up with backrest.
   tier: system
   category: backup
   homepage: https://offen.github.io/docker-volume-backup/
@@ -52,9 +52,18 @@ spec:
       type: string
       title: Remote folder
       default: ./backups
+    - name: SSH_HOST_PUBLIC_KEY
+      type: string
+      title: SSH host public key
+      description: Required with SSH. One line from `ssh-keyscan -t ed25519 -p <port> <host>`, without the host name, e.g. "ssh-ed25519 AAAA…".
     - name: SSH_PASSWORD
       type: secret
       title: SSH password
+    - name: EXCLUDE_REGEXP
+      type: string
+      title: Paths to skip (regular expression)
+      description: Volumes that hold only caches or downloadable data, matched against /backup/volumes/<name>/...
+      default: "/backup/volumes/[^/]*(model-cache|ollama|cache)/"
     - name: NOTIFICATION_URLS
       type: secret
       title: Notification URLs (shoutrrr, comma separated)

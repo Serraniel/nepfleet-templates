@@ -6,7 +6,6 @@ services:
       ND_BASEURL: https://${DOMAIN}
       ND_SCANSCHEDULE: ${SCAN_SCHEDULE}
       ND_LOGLEVEL: info
-      ND_REVERSEPROXYWHITELIST: 172.16.0.0/12   # Caddy on the Docker network
     volumes:
       - data:/data
       - ${MUSIC_PATH}:/music:ro

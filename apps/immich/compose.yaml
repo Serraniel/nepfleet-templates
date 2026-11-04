@@ -64,18 +64,21 @@ services:
       docker-volume-backup.stop-during-backup: "true"
 
   power-tools:
-    image: ghcr.io/varun-raj/immich-power-tools:0.19.1
+    image: ghcr.io/immich-power-tools/immich-power-tools:0.25.0
     profiles: [power-tools]
     restart: unless-stopped
     environment:
       IMMICH_URL: http://immich-server:2283
       EXTERNAL_IMMICH_URL: https://${DOMAIN}
-      IMMICH_API_KEY: ${IMMICH_API_KEY}
       DB_HOST: database
       DB_PORT: "5432"
       DB_USERNAME: immich
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE_NAME: immich
+    # No IMMICH_API_KEY on purpose: with one, every visitor acts as the key's
+    # owner without logging in. Users log in with their Immich account.
+    volumes:
+      - power-tools:/app/data
     networks: [ingress, default]
     depends_on: [immich-server]
     labels:
@@ -88,6 +91,7 @@ services:
 volumes:
   db:
   model-cache:
+  power-tools:
 
 networks:
   default:

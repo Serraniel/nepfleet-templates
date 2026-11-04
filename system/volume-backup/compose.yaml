@@ -15,6 +15,8 @@ services:
       SSH_USER: ${SSH_USER}
       SSH_PASSWORD: ${SSH_PASSWORD}
       SSH_REMOTE_PATH: ${SSH_REMOTE_PATH}
+      SSH_HOST_PUBLIC_KEY: ${SSH_HOST_PUBLIC_KEY}   # without it, the SSH copy refuses to connect
+      BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}
       NOTIFICATION_URLS: ${NOTIFICATION_URLS}
       NOTIFICATION_LEVEL: error
       DOCKER_HOST: tcp://socket-proxy:2375
@@ -25,7 +27,9 @@ services:
     networks: [socket, default]
     depends_on: [socket-proxy]
 
-  # Only what stop-during-backup and exec hooks need.
+  # Exactly what stop-during-backup needs: list containers, read /info
+  # (swarm detection), start and stop. No POST: it would allow creating
+  # (privileged) containers, which is root on the host.
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.4.7
     restart: unless-stopped
@@ -33,10 +37,9 @@ services:
     tmpfs: [/run]
     environment:
       CONTAINERS: 1
+      INFO: 1
       ALLOW_START: 1
       ALLOW_STOP: 1
-      EXEC: 1
-      POST: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [socket]

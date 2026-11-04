@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: immich
   title: Immich (+ Power Tools)
-  description: Photo and video backup with machine learning. Enable Immich Power Tools (bulk management) with the power-tools profile after creating an API key in Immich.
+  description: Photo and video backup with machine learning. Immich Power Tools (bulk management, login with your Immich account) is an optional profile. Photos live in UPLOAD_PATH on the host; back that folder up with backrest (volume-backup covers the database).
   tier: app
   category: media
   homepage: https://immich.app
@@ -20,7 +20,7 @@ spec:
       track: patch   # extension versions move with Immich; follow the official compose file
     - name: valkey/valkey
       track: minor
-    - name: ghcr.io/varun-raj/immich-power-tools
+    - name: ghcr.io/immich-power-tools/immich-power-tools
       track: patch   # pre-1.0
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
@@ -41,12 +41,9 @@ spec:
       type: hostname
       title: Domain for Power Tools
       default: tools.localhost
-    - name: IMMICH_API_KEY
-      type: secret
-      title: Immich API key for Power Tools
-      description: Create it in Immich (Account settings → API keys), then enable the power-tools profile.
   generate:
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
   volumes:
     - { name: db, backup: true }
     - { name: model-cache, backup: false }
+    - { name: power-tools, backup: true }

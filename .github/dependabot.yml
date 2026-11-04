@@ -25,7 +25,7 @@ updates:
         update-types: ["version-update:semver-minor"]
       - dependency-name: "ghcr.io/sysadminsmedia/homebox"
         update-types: ["version-update:semver-minor"]
-      - dependency-name: "ghcr.io/varun-raj/immich-power-tools"
+      - dependency-name: "ghcr.io/immich-power-tools/immich-power-tools"
         update-types: ["version-update:semver-minor"]
       - dependency-name: "owncast/owncast"
         update-types: ["version-update:semver-minor"]
