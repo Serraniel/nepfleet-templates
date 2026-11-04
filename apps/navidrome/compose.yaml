@@ -11,6 +11,7 @@ services:
       - ${MUSIC_PATH}:/music:ro
     networks: [ingress]
     labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 4533}}"
       kuma.navidrome.http.name: Navidrome

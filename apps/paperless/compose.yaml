@@ -44,6 +44,8 @@ services:
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "paperless"]
       interval: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
 
 volumes:
   data:

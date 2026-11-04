@@ -31,6 +31,7 @@ services:
       interval: 30s
       start_period: 60s
     labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
       kuma.forgejo.http.name: Forgejo
@@ -94,6 +95,8 @@ services:
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "forgejo"]
       interval: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
 
 volumes:
   data:
