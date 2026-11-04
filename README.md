@@ -6,7 +6,7 @@ The official catalogue of [NepFleet](https://github.com/Serraniel/nepfleet) temp
 - `apps/`: services you run.
 - `images/`: images this repository builds, published as `ghcr.io/serraniel/nepfleet-<name>`.
 
-> Templates are validated and every image tag is checked in CI, but they are **not yet integration-tested** ([#integration tests](https://github.com/Serraniel/nepfleet-templates/milestones)). Review them before production use.
+> In CI every template is validated, every image tag is checked, swarm templates pass `docker stack config`, and every template is installed with test values through `nepfleet apply` and must become healthy (except `binfmt` and `frpc`, see `scripts/test-values.json`). Integrations such as TLS and SSO are not exercised end to end yet. Review templates before production use.
 
 ## Catalogue
 
@@ -53,6 +53,8 @@ The table is generated from the templates (`scripts/catalogue.py`); CI keeps it 
 ## Automation
 
 - **Validate** runs on every PR. It runs NepFleet's own validator and `docker compose config`, and checks that every pinned tag exists.
+- **Validate** also installs every template the way a user does (`scripts/test-templates.py`): `nepfleet new` with test values from each input's type or `scripts/test-values.json`, then a health-gated `nepfleet apply`, then teardown.
+- **`index.json`** is the catalogue frontends read (`nepfleet template index .`); CI fails when it is stale.
 - **Image updates** runs weekly. It opens an issue when an image publishes a release beyond its template's `track`, usually a new major version.
 - **Images** builds `images/*` on change and weekly to pick up base-image fixes, then checks that the image can be pulled without logging in.
 

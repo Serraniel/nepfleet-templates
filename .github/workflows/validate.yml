@@ -26,6 +26,57 @@ jobs:
         run: python3 -I scripts/catalogue.py --check
       - name: Every pinned image tag exists
         run: python3 -I scripts/images.py check --strict > /dev/null
+      - name: index.json matches the templates
+        run: |
+          go run github.com/Serraniel/nepfleet/cmd/nepfleet@main template index . > /tmp/index.json
+          diff -u index.json /tmp/index.json || { echo "::error::index.json is stale: run nepfleet template index . > index.json"; exit 1; }
+
+  # Installs need what users have: the nepfleet CLI, sops and age.
+  swarm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27.3"
+      - name: Install nepfleet, sops and age
+        run: |
+          go install github.com/Serraniel/nepfleet/cmd/nepfleet@main github.com/getsops/sops/v3/cmd/sops@latest filippo.io/age/cmd/...@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Swarm templates pass docker stack config
+        run: python3 -I scripts/test-templates.py swarm "$(go env GOPATH)/bin/nepfleet"
+
+  deploy-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.list.outputs.templates }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: list
+        run: echo "templates=$(python3 -I scripts/test-templates.py list --deploy)" >> "$GITHUB_OUTPUT"
+
+  # Every template is installed with test values through nepfleet apply,
+  # which waits for each service's health check, then torn down.
+  deploy:
+    needs: deploy-matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        template: ${{ fromJSON(needs.deploy-matrix.outputs.templates) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27.3"
+      - name: Install nepfleet, sops and age
+        run: |
+          go install github.com/Serraniel/nepfleet/cmd/nepfleet@main github.com/getsops/sops/v3/cmd/sops@latest filippo.io/age/cmd/...@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Deploy ${{ matrix.template }} and wait for healthy
+        run: python3 -I scripts/test-templates.py deploy "$(go env GOPATH)/bin/nepfleet" "${{ matrix.template }}"
 
   conventional-title:
     if: github.event_name == 'pull_request'

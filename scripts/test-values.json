@@ -1,0 +1,7 @@
+{
+  "_skip_deploy": {
+    "binfmt": "one-shot: registers emulators and exits, so there is no running service to wait for",
+    "frpc": "needs a reachable frps server"
+  },
+  "registry": {"HTPASSWD": "ci:$2y$05$KN2DUjsfLLdbhBeVyLtJ0.K/AXTkmGSLPYPV0zCoZFyEtYM6z7RJe"}
+}

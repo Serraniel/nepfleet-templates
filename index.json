@@ -1,0 +1,1832 @@
+{
+  "apiVersion": "nepfleet/v1alpha1",
+  "kind": "Catalogue",
+  "templates": [
+    {
+      "name": "backrest",
+      "title": "Backrest (restic)",
+      "description": "Deduplicated, encrypted restic backups with a web UI and schedules, e.g. offsite to a Storage Box over SFTP or any rclone remote. Docker volumes are mounted read-only under /userdata/volumes. Create the admin account on first start.",
+      "tier": "system",
+      "category": "backup",
+      "homepage": "https://github.com/garethgeorge/backrest",
+      "path": "system/backrest",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "garethgeorge/backrest",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "EXTRA_PATH",
+          "type": "path",
+          "title": "Additional host folder to back up (read-only)",
+          "required": true,
+          "default": "/srv"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "config",
+          "backup": true
+        },
+        {
+          "name": "cache"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "binfmt",
+      "title": "Foreign-architecture emulation",
+      "description": "Registers QEMU user-mode emulators, so images built for another CPU (e.g. amd64 on an arm64 host) can run, slower. The NepFleet agent re-runs it after each boot (registrations do not survive a reboot). Privileged.",
+      "tier": "system",
+      "category": "host",
+      "homepage": "https://github.com/tonistiigi/binfmt",
+      "path": "system/binfmt",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "tonistiigi/binfmt",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": false,
+        "autoUpdate": false,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "ARCHES",
+          "type": "string",
+          "title": "Architectures to emulate",
+          "required": true,
+          "default": "amd64,arm64",
+          "pattern": "^[a-z0-9,]+$"
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "caddy",
+      "title": "Caddy ingress",
+      "description": "Reverse proxy with automatic TLS. Routes are read from caddy.* labels, and DNS-01 gives trusted certificates on home networks too.",
+      "tier": "system",
+      "category": "networking",
+      "homepage": "https://github.com/lucaslorentz/caddy-docker-proxy",
+      "source": "https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy",
+      "path": "system/caddy",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/serraniel/nepfleet-caddy",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "ACME_EMAIL",
+          "type": "email",
+          "title": "E-mail for Let's Encrypt",
+          "required": true
+        },
+        {
+          "name": "CADDY_DNS_PROVIDER",
+          "type": "enum",
+          "title": "DNS provider for DNS-01",
+          "description": "Needed for trusted certificates on names that are not reachable from the internet (home network) and for wildcards.",
+          "default": "none",
+          "options": [
+            "none",
+            "cloudflare",
+            "hetzner",
+            "desec"
+          ]
+        },
+        {
+          "name": "DNS_API_TOKEN",
+          "type": "secret",
+          "title": "DNS provider API token",
+          "description": "Leave empty when the provider is none."
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true,
+          "shared": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "dozzle",
+      "title": "Dozzle",
+      "description": "Live container logs in the browser. Deploy on swarm for a fleet-wide view.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://dozzle.dev",
+      "source": "https://github.com/amir20/dozzle",
+      "path": "system/dozzle",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "amir20/dozzle",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": false,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "frpc",
+      "title": "frp client (home side)",
+      "description": "Publishes a local service through an frps on a public host. Add more [[proxies]] to frpc.toml in the fleet repository.",
+      "tier": "system",
+      "category": "networking",
+      "homepage": "https://github.com/fatedier/frp",
+      "path": "system/frpc",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "fatedier/frpc",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "SERVER_ADDR",
+          "type": "string",
+          "title": "frps address",
+          "description": "The public host's WireGuard IP.",
+          "required": true
+        },
+        {
+          "name": "FRP_TOKEN",
+          "type": "secret",
+          "title": "frps token",
+          "description": "The FRP_TOKEN generated for the frps stack.",
+          "required": true
+        },
+        {
+          "name": "PUBLIC_HOST",
+          "type": "hostname",
+          "title": "Public host name",
+          "required": true
+        },
+        {
+          "name": "LOCAL_HOST",
+          "type": "string",
+          "title": "Local service host",
+          "description": "Container name on the ingress network (e.g. jellyfin) or an IP.",
+          "required": true
+        },
+        {
+          "name": "LOCAL_PORT",
+          "type": "int",
+          "title": "Local service port",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "frps",
+      "title": "frp server (public side)",
+      "description": "Receives tunnels from frpc at home and publishes them through Caddy. Bind it to the WireGuard address, so the control port is never on the internet.",
+      "tier": "system",
+      "category": "networking",
+      "homepage": "https://github.com/fatedier/frp",
+      "path": "system/frps",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "fatedier/frps",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "BIND_ADDR",
+          "type": "string",
+          "title": "Address for the frp control port",
+          "description": "This host's WireGuard IP (recommended) or 0.0.0.0.",
+          "required": true
+        },
+        {
+          "name": "EXPOSED_HOSTS",
+          "type": "string",
+          "title": "Public host names served through tunnels",
+          "description": "Comma separated, e.g. \"jellyfin.example.org, photos.example.org\"",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "FRP_TOKEN",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "homepage",
+      "title": "Homepage",
+      "description": "A dashboard for your services. Entries come from homepage.* labels.",
+      "tier": "system",
+      "category": "dashboard",
+      "homepage": "https://gethomepage.dev",
+      "source": "https://github.com/gethomepage/homepage",
+      "path": "system/homepage",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/gethomepage/homepage",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": false,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "neptide",
+      "title": "neptide image updates",
+      "description": "Health-gated image updates with automatic rollback, for containers and swarm services labelled neptide.enable=true.",
+      "tier": "system",
+      "category": "updates",
+      "homepage": "https://github.com/Serraniel/neptide",
+      "path": "system/neptide",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/serraniel/neptide",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOCKER_GID",
+          "type": "int",
+          "title": "Group id of the docker group on the host",
+          "description": "getent group docker | cut -d: -f3",
+          "required": true
+        },
+        {
+          "name": "MONITOR_ONLY",
+          "type": "bool",
+          "title": "Only notify, never update",
+          "default": "false"
+        },
+        {
+          "name": "NOTIFY",
+          "type": "secret",
+          "title": "Notification URLs",
+          "description": "Comma separated shoutrrr URLs, e.g. discord://token@webhookid"
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "uptime-kuma",
+      "title": "Uptime Kuma + AutoKuma",
+      "description": "Uptime monitoring and status pages. AutoKuma creates monitors from kuma.* labels. Install it once for the whole fleet, or once per stack for a stack-local status page.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://github.com/louislam/uptime-kuma",
+      "path": "system/uptime-kuma",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "louislam/uptime-kuma",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/bigboot/autokuma",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": false,
+        "statusPage": true,
+        "dashboard": true,
+        "logs": false,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "KUMA_USERNAME",
+          "type": "string",
+          "title": "Admin user",
+          "description": "Create this user in Uptime Kuma's first-run screen. AutoKuma logs in with it.",
+          "required": true,
+          "default": "admin"
+        },
+        {
+          "name": "KUMA_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "volume-backup",
+      "title": "Volume backups (docker-volume-backup)",
+      "description": "Scheduled, age-encrypted backups of the Docker volumes on this host, to a local folder and optionally over SSH/SFTP (e.g. a Storage Box). Containers labelled docker-volume-backup.stop-during-backup=true are stopped during the backup for consistency. Host folders (media, photos) are not included; back them up with backrest.",
+      "tier": "system",
+      "category": "backup",
+      "homepage": "https://offen.github.io/docker-volume-backup/",
+      "source": "https://github.com/offen/docker-volume-backup",
+      "path": "system/volume-backup",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "offen/docker-volume-backup",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "SCHEDULE",
+          "type": "string",
+          "title": "Cron schedule",
+          "required": true,
+          "default": "0 3 * * *"
+        },
+        {
+          "name": "RETENTION_DAYS",
+          "type": "int",
+          "title": "Keep backups for (days)",
+          "required": true,
+          "default": "14"
+        },
+        {
+          "name": "AGE_RECIPIENTS",
+          "type": "string",
+          "title": "age public keys (comma separated)",
+          "description": "Use the recipients from fleet.yaml spec.secrets.age, so the fleet's key can decrypt every backup.",
+          "required": true,
+          "pattern": "^age1[0-9a-z]+(,age1[0-9a-z]+)*$"
+        },
+        {
+          "name": "ARCHIVE_PATH",
+          "type": "path",
+          "title": "Local folder for backup archives",
+          "required": true,
+          "default": "/srv/backups"
+        },
+        {
+          "name": "SSH_HOST_NAME",
+          "type": "string",
+          "title": "SSH/SFTP host for off-host copies (empty = local only)"
+        },
+        {
+          "name": "SSH_PORT",
+          "type": "int",
+          "title": "SSH port",
+          "default": "22"
+        },
+        {
+          "name": "SSH_USER",
+          "type": "string",
+          "title": "SSH user"
+        },
+        {
+          "name": "SSH_REMOTE_PATH",
+          "type": "string",
+          "title": "Remote folder",
+          "default": "./backups"
+        },
+        {
+          "name": "SSH_HOST_PUBLIC_KEY",
+          "type": "string",
+          "title": "SSH host public key",
+          "description": "Required with SSH. One line from `ssh-keyscan -t ed25519 -p <port> <host>`, without the host name, e.g. \"ssh-ed25519 AAAA…\"."
+        },
+        {
+          "name": "SSH_PASSWORD",
+          "type": "secret",
+          "title": "SSH password"
+        },
+        {
+          "name": "EXCLUDE_REGEXP",
+          "type": "string",
+          "title": "Paths to skip (regular expression)",
+          "description": "Volumes that hold only caches or downloadable data, matched against /backup/volumes/<name>/...",
+          "default": "/backup/volumes/[^/]*(model-cache|ollama|cache)/"
+        },
+        {
+          "name": "NOTIFICATION_URLS",
+          "type": "secret",
+          "title": "Notification URLs (shoutrrr, comma separated)",
+          "description": "Failed backups are always reported here, e.g. discord://token@webhookid"
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "watchtower",
+      "title": "Watchtower (maintained fork)",
+      "description": "Image update notifications for containers NepFleet does not manage. Monitor-only by default, because in-place updates bypass the fleet repository and cannot be rolled back.",
+      "tier": "system",
+      "category": "updates",
+      "homepage": "https://github.com/nicholas-fedor/watchtower",
+      "path": "system/watchtower",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "nickfedor/watchtower",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "WATCHTOWER_MODE",
+          "type": "enum",
+          "title": "Mode",
+          "description": "\"true\" = monitor only (notify). \"false\" = update labelled containers in place.",
+          "default": "true",
+          "options": [
+            "true",
+            "false"
+          ]
+        },
+        {
+          "name": "NOTIFICATION_URL",
+          "type": "secret",
+          "title": "Notification URL",
+          "description": "A shoutrrr URL, e.g. ntfy://ntfy.sh/my-topic"
+        },
+        {
+          "name": "SCHEDULE",
+          "type": "string",
+          "title": "Schedule (6-field cron)",
+          "required": true,
+          "default": "0 0 4 * * *"
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "forgejo",
+      "title": "Forgejo + Actions runner",
+      "description": "Self-hosted git forge with a registered Forgejo Actions runner. Jobs run in an isolated Docker-in-Docker daemon, never on the host's Docker.",
+      "tier": "app",
+      "category": "development",
+      "homepage": "https://forgejo.org",
+      "source": "https://codeberg.org/forgejo/forgejo",
+      "path": "apps/forgejo",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "codeberg.org/forgejo/forgejo",
+          "track": "minor"
+        },
+        {
+          "name": "code.forgejo.org/forgejo/runner",
+          "track": "minor"
+        },
+        {
+          "name": "docker",
+          "track": "minor"
+        },
+        {
+          "name": "postgres",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "SSH_PORT",
+          "type": "int",
+          "title": "Host port for git over SSH",
+          "required": true,
+          "default": "2222"
+        }
+      ],
+      "generate": [
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        },
+        {
+          "name": "RUNNER_SECRET",
+          "kind": "secret",
+          "length": 40,
+          "encoding": "hex"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "db",
+          "backup": true
+        },
+        {
+          "name": "runner"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "homeassistant",
+      "title": "Home Assistant",
+      "description": "Home automation. Runs on host networking for device discovery (mDNS, SSDP), and Caddy reaches it through host.docker.internal. Not for swarm.",
+      "tier": "app",
+      "category": "home",
+      "homepage": "https://www.home-assistant.io",
+      "source": "https://github.com/home-assistant/core",
+      "path": "apps/homeassistant",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/home-assistant/home-assistant",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "homebox",
+      "title": "Homebox",
+      "description": "Home inventory and organisation.",
+      "tier": "app",
+      "category": "home",
+      "homepage": "https://homebox.software",
+      "source": "https://github.com/sysadminsmedia/homebox",
+      "path": "apps/homebox",
+      "version": "0.1.1",
+      "images": [
+        {
+          "name": "ghcr.io/sysadminsmedia/homebox",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ALLOW_REGISTRATION",
+          "type": "bool",
+          "title": "Allow registration",
+          "description": "Needed to create the first account; turn off afterwards.",
+          "default": "true"
+        }
+      ],
+      "generate": [
+        {
+          "name": "API_KEY_PEPPER",
+          "kind": "secret",
+          "length": 64,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "immich",
+      "title": "Immich (+ Power Tools)",
+      "description": "Photo and video backup with machine learning. Immich Power Tools (bulk management, login with your Immich account) is an optional profile. Photos live in UPLOAD_PATH on the host; back that folder up with backrest (volume-backup covers the database).",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://immich.app",
+      "source": "https://github.com/immich-app/immich",
+      "path": "apps/immich",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/immich-app/immich-server",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/immich-app/immich-machine-learning",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/immich-app/postgres",
+          "track": "patch"
+        },
+        {
+          "name": "valkey/valkey",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/immich-power-tools/immich-power-tools",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain for Immich",
+          "required": true
+        },
+        {
+          "name": "UPLOAD_PATH",
+          "type": "path",
+          "title": "Host folder for photos and videos",
+          "required": true
+        },
+        {
+          "name": "COMPOSE_PROFILES",
+          "type": "enum",
+          "title": "Optional parts",
+          "default": "none",
+          "options": [
+            "none",
+            "power-tools"
+          ]
+        },
+        {
+          "name": "POWER_TOOLS_DOMAIN",
+          "type": "hostname",
+          "title": "Domain for Power Tools",
+          "default": "tools.localhost"
+        }
+      ],
+      "generate": [
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "db",
+          "backup": true
+        },
+        {
+          "name": "model-cache"
+        },
+        {
+          "name": "power-tools",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "jellyfin",
+      "title": "Jellyfin",
+      "description": "Media server. Mount your media read-only. Add /dev/dri in compose.yaml for hardware transcoding.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://jellyfin.org",
+      "source": "https://github.com/jellyfin/jellyfin",
+      "path": "apps/jellyfin",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "jellyfin/jellyfin",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "MEDIA_PATH",
+          "type": "path",
+          "title": "Host folder with your media",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        },
+        {
+          "name": "cache"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "kutt",
+      "title": "Kutt",
+      "description": "URL shortener (SQLite).",
+      "tier": "app",
+      "category": "web",
+      "homepage": "https://github.com/thedevs-network/kutt",
+      "path": "apps/kutt",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "kutt/kutt",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "DISALLOW_REGISTRATION",
+          "type": "bool",
+          "title": "Disable public registration",
+          "default": "true"
+        }
+      ],
+      "generate": [
+        {
+          "name": "JWT_SECRET",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "base64url"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "metube",
+      "title": "MeTube (yt-dlp web UI)",
+      "description": "Download videos and audio with yt-dlp from the browser. No built-in login, so keep it on the home network or behind forward auth.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://github.com/alexta69/metube",
+      "path": "apps/metube",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/alexta69/metube",
+          "track": "major"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "DOWNLOAD_PATH",
+          "type": "path",
+          "title": "Host folder for downloads",
+          "required": true
+        },
+        {
+          "name": "PUID",
+          "type": "int",
+          "title": "User id owning the downloads",
+          "required": true,
+          "default": "1000"
+        },
+        {
+          "name": "PGID",
+          "type": "int",
+          "title": "Group id owning the downloads",
+          "required": true,
+          "default": "1000"
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "navidrome",
+      "title": "Navidrome",
+      "description": "Music streaming server with a Subsonic-compatible API. Music is mounted read-only.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://www.navidrome.org",
+      "source": "https://github.com/navidrome/navidrome",
+      "path": "apps/navidrome",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "deluan/navidrome",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "MUSIC_PATH",
+          "type": "path",
+          "title": "Host folder with your music",
+          "required": true
+        },
+        {
+          "name": "SCAN_SCHEDULE",
+          "type": "string",
+          "title": "Library scan interval",
+          "required": true,
+          "default": "1h"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "open-webui",
+      "title": "Open WebUI (+ Ollama, LiteLLM)",
+      "description": "Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. The first account becomes admin.",
+      "tier": "app",
+      "category": "ai",
+      "homepage": "https://openwebui.com",
+      "source": "https://github.com/open-webui/open-webui",
+      "path": "apps/open-webui",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/open-webui/open-webui",
+          "track": "minor"
+        },
+        {
+          "name": "ollama/ollama",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/berriai/litellm",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": false,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "COMPOSE_PROFILES",
+          "type": "enum",
+          "title": "Model backends",
+          "default": "ollama",
+          "options": [
+            "ollama",
+            "litellm",
+            "ollama,litellm",
+            "none"
+          ]
+        },
+        {
+          "name": "ENABLE_SIGNUP",
+          "type": "bool",
+          "title": "Allow sign-ups",
+          "description": "Applies on first start only; Open WebUI stores it, so later changes go through its Admin settings.",
+          "default": "true"
+        }
+      ],
+      "generate": [
+        {
+          "name": "WEBUI_SECRET_KEY",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        },
+        {
+          "name": "LITELLM_KEY",
+          "kind": "secret",
+          "length": 40,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "webui",
+          "backup": true
+        },
+        {
+          "name": "ollama"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "opencloud",
+      "title": "OpenCloud",
+      "description": "File sync and share (stable channel).",
+      "tier": "app",
+      "category": "files",
+      "homepage": "https://opencloud.eu",
+      "source": "https://github.com/opencloud-eu/opencloud",
+      "path": "apps/opencloud",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "opencloudeu/opencloud",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD",
+          "kind": "secret",
+          "length": 24,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        },
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "owncast",
+      "title": "Owncast",
+      "description": "Live streaming and chat. RTMP ingest is published directly on the host.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://owncast.online",
+      "source": "https://github.com/owncast/owncast",
+      "path": "apps/owncast",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "owncast/owncast",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "RTMP_PORT",
+          "type": "int",
+          "title": "Host port for RTMP ingest",
+          "required": true,
+          "default": "1935"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "paperless",
+      "title": "Paperless-ngx",
+      "description": "Document management with OCR.",
+      "tier": "app",
+      "category": "documents",
+      "homepage": "https://docs.paperless-ngx.com",
+      "source": "https://github.com/paperless-ngx/paperless-ngx",
+      "path": "apps/paperless",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/paperless-ngx/paperless-ngx",
+          "track": "minor"
+        },
+        {
+          "name": "postgres",
+          "track": "minor"
+        },
+        {
+          "name": "valkey/valkey",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "OCR_LANGUAGE",
+          "type": "string",
+          "title": "OCR languages (tesseract codes, \"+\" separated)",
+          "required": true,
+          "default": "deu+eng"
+        },
+        {
+          "name": "CONSUME_PATH",
+          "type": "path",
+          "title": "Host folder watched for new documents",
+          "required": true,
+          "default": "./consume"
+        }
+      ],
+      "generate": [
+        {
+          "name": "SECRET_KEY",
+          "kind": "secret",
+          "length": 64,
+          "encoding": "alnum"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "media",
+          "backup": true
+        },
+        {
+          "name": "db",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "rclone",
+      "title": "rclone",
+      "description": "Remote-control daemon with the web GUI for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes live in rclone.conf, which is stored encrypted in the fleet repository.",
+      "tier": "app",
+      "category": "storage",
+      "homepage": "https://rclone.org",
+      "source": "https://github.com/rclone/rclone",
+      "path": "apps/rclone",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "rclone/rclone",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain for the web GUI",
+          "required": true
+        },
+        {
+          "name": "RC_USER",
+          "type": "string",
+          "title": "Web GUI user",
+          "required": true,
+          "default": "admin"
+        },
+        {
+          "name": "DATA_PATH",
+          "type": "path",
+          "title": "Host folder rclone may read and write",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "RC_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "registry",
+      "title": "Container registry",
+      "description": "Private OCI registry (CNCF Distribution) with htpasswd authentication.",
+      "tier": "app",
+      "category": "development",
+      "homepage": "https://distribution.github.io/distribution/",
+      "source": "https://github.com/distribution/distribution",
+      "path": "apps/registry",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "registry",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "HTPASSWD",
+          "type": "secret",
+          "title": "htpasswd line(s)",
+          "description": "bcrypt only, e.g. the output of `htpasswd -nB alice`.",
+          "required": true,
+          "pattern": "^[^:\\s]+:\\$2[aby]\\$"
+        }
+      ],
+      "generate": [
+        {
+          "name": "HTTP_SECRET",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true,
+          "shared": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "sendan",
+      "title": "Sendan",
+      "description": "Self-hosted, end-to-end encrypted file sharing.",
+      "tier": "app",
+      "category": "files",
+      "homepage": "https://github.com/Serraniel/sendan",
+      "path": "apps/sendan",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/serraniel/sendan",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "description": "Used in every share link. Must be the public address.",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "sweetfolio",
+      "title": "Sweetfolio",
+      "description": "Portfolio planning and evaluation. Static app; data stays in the browser.",
+      "tier": "app",
+      "category": "finance",
+      "homepage": "https://github.com/Serraniel/Sweetfolio",
+      "path": "apps/sweetfolio",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/serraniel/sweetfolio",
+          "track": "patch"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [],
+      "migrations": []
+    },
+    {
+      "name": "tdarr",
+      "title": "Tdarr",
+      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Add GPU devices in compose.yaml for hardware transcoding.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://home.tdarr.io",
+      "source": "https://github.com/HaveAGitGat/Tdarr",
+      "path": "apps/tdarr",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/haveagitgat/tdarr",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain for the web UI",
+          "required": true
+        },
+        {
+          "name": "MEDIA_PATH",
+          "type": "path",
+          "title": "Host folder with media to transcode",
+          "required": true
+        },
+        {
+          "name": "CACHE_PATH",
+          "type": "path",
+          "title": "Host folder for transcode cache (fast disk)",
+          "required": true,
+          "default": "/srv/tdarr-cache"
+        },
+        {
+          "name": "SERVER_PORT",
+          "type": "int",
+          "title": "Host port for remote Tdarr nodes",
+          "required": true,
+          "default": "8266"
+        },
+        {
+          "name": "PUID",
+          "type": "int",
+          "title": "User id owning the media",
+          "required": true,
+          "default": "1000"
+        },
+        {
+          "name": "PGID",
+          "type": "int",
+          "title": "Group id owning the media",
+          "required": true,
+          "default": "1000"
+        }
+      ],
+      "generate": [
+        {
+          "name": "API_KEY",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "server",
+          "backup": true
+        },
+        {
+          "name": "configs",
+          "backup": true
+        },
+        {
+          "name": "logs"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "vaultwarden",
+      "title": "Vaultwarden",
+      "description": "Bitwarden-compatible password manager.",
+      "tier": "app",
+      "category": "security",
+      "homepage": "https://github.com/dani-garcia/vaultwarden",
+      "path": "apps/vaultwarden",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "vaultwarden/server",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "SIGNUPS_ALLOWED",
+          "type": "bool",
+          "title": "Allow sign-ups",
+          "default": "false"
+        },
+        {
+          "name": "ADMIN_TOKEN",
+          "type": "secret",
+          "title": "Admin token (Argon2 PHC string)",
+          "description": "Leave empty to disable /admin. Generate with `docker run --rm -it vaultwarden/server /vaultwarden hash`."
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true,
+          "shared": true
+        }
+      ],
+      "migrations": []
+    }
+  ]
+}
