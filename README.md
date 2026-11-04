@@ -21,7 +21,7 @@ Legend: 🌐 ingress (Caddy) · 📈 monitors (AutoKuma) · 🏠 dashboard (Home
 | [neptide](system/neptide) | system | 🐝 · default updater: health-gated, with rollback |
 | [watchtower](system/watchtower) | system | alternative, notify-only by default (fork `nickfedor/watchtower`) |
 | [binfmt](system/binfmt) | system | run foreign-architecture images |
-| [frps](system/frps) / [frpc](system/frpc) | system | 🌐 📈 · expose home services through a public host |
+| [frps](system/frps) / [frpc](system/frpc) | system | 🌐 · expose home services through a public host |
 | [forgejo](apps/forgejo) | app | 🌐 📈 🏠 💾 · with an Actions runner in DinD |
 | [homeassistant](apps/homeassistant) | app | 🌐 📈 🏠 💾 |
 | [jellyfin](apps/jellyfin) | app | 🌐 📈 🏠 💾 |

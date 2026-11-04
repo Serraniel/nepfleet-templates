@@ -13,7 +13,7 @@ spec:
   images:
     - name: fatedier/frps
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, logs: true }
+  supports: { arm64: true, ingress: true, logs: true }
   inputs:
     - name: BIND_ADDR
       type: string
