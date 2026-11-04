@@ -7,6 +7,7 @@ services:
       HBOX_LOG_LEVEL: info
       HBOX_WEB_MAX_UPLOAD_SIZE: "50"
       HBOX_OPTIONS_TRUST_PROXY: "true"   # behind Caddy
+      HBOX_AUTH_API_KEY_PEPPER: ${API_KEY_PEPPER}
       TZ: ${TZ}
     volumes:
       - data:/data
