@@ -54,7 +54,19 @@ The table is generated from the templates (`scripts/catalogue.py`); CI keeps it 
 
 - **Validate** runs on every PR. It runs NepFleet's own validator and `docker compose config`, and checks that every pinned tag exists.
 - **Image updates** runs weekly. It opens an issue when an image publishes a release beyond its template's `track`, usually a new major version.
-- **Images** builds `images/*` on change and weekly to pick up base-image fixes.
+- **Images** builds `images/*` on change and weekly to pick up base-image fixes, then checks that the image can be pulled without logging in.
+
+## Images
+
+Images built here are published as `ghcr.io/serraniel/nepfleet-<name>`. They are public, so hosts pull them without credentials, and they come with SBOMs and cosign signatures like every NepFleet image. `nepfleet-caddy` is Caddy with caddy-docker-proxy and the DNS-01 providers the `caddy` template offers.
+
+GHCR creates a new package as **private** on its first push, and there is no API to change that. When you add an image under `images/`:
+
+1. Let the **Images** workflow push it once. Its last step fails while the package is private.
+2. On GitHub, open the package (profile → Packages → `nepfleet-<name>`) → **Package settings** → **Change visibility** → **Public**.
+3. Re-run the workflow. The anonymous-pull check then passes, and so does the tag check in **Validate**.
+
+The `org.opencontainers.image.source` label links the package to this repository, so it shows up under the repository's packages.
 
 ## Using other catalogues
 
