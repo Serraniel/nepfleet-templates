@@ -44,8 +44,8 @@ jobs:
         run: |
           # One go install per module: it refuses packages from several.
           go install github.com/Serraniel/nepfleet/cmd/nepfleet@main
-          go install github.com/getsops/sops/v3/cmd/sops@latest
-          go install filippo.io/age/cmd/...@latest
+          go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
+          go install filippo.io/age/cmd/...@v1.3.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Swarm templates pass docker stack config
         run: python3 -I scripts/test-templates.py swarm "$(go env GOPATH)/bin/nepfleet"
@@ -78,8 +78,8 @@ jobs:
         run: |
           # One go install per module: it refuses packages from several.
           go install github.com/Serraniel/nepfleet/cmd/nepfleet@main
-          go install github.com/getsops/sops/v3/cmd/sops@latest
-          go install filippo.io/age/cmd/...@latest
+          go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
+          go install filippo.io/age/cmd/...@v1.3.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Deploy ${{ matrix.template }} and wait for healthy
         run: python3 -I scripts/test-templates.py deploy "$(go env GOPATH)/bin/nepfleet" "${{ matrix.template }}"

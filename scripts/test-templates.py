@@ -12,7 +12,6 @@ them per template where a type alone is not enough.
 """
 import json
 import os
-import re
 import secrets
 import shutil
 import subprocess
@@ -21,6 +20,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+NETWORK = "nepfleet_templates_it"  # never a real install's ingress network
 OVERRIDES = json.loads((ROOT / "scripts" / "test-values.json").read_text())
 
 
@@ -35,13 +35,23 @@ def catalogue(nf):
     return json.loads(run(nf, "template", "index", ROOT).stdout)["templates"]
 
 
-def value(tpl, inp, workdir):
+def value(tpl, inp, fleet):
+    """A test value for inp, or None to leave an optional input empty."""
     name, typ = inp["name"], inp.get("type", "string")
     over = OVERRIDES.get(tpl["name"], {})
     if name in over:
-        return over[name].replace("{workdir}", str(workdir))
+        return over[name].format(**fleet.facts)
+    if name in ("PUID", "PGID"):  # the runner's user owns the test's directories
+        return str(fleet.facts["uid" if name == "PUID" else "gid"])
+    if typ == "path":
+        # Never a real host directory, even when the template defaults to one.
+        v = fleet.dir / "paths" / tpl["name"] / name.lower()
+        v.mkdir(parents=True, exist_ok=True)
+        return str(v)
     if inp.get("default") and typ != "secret":
         return inp["default"]
+    if not inp.get("required"):
+        return None
     v = {
         "hostname": f"{tpl['name']}.example.test",
         "url": f"https://{tpl['name']}.example.test",
@@ -49,17 +59,18 @@ def value(tpl, inp, workdir):
         "int": "1",
         "bool": "false",
         "secret": "ci-" + secrets.token_hex(16),
-        "path": str(workdir / "paths" / tpl["name"] / name.lower()),
     }.get(typ)
     if typ == "enum":
         v = inp["options"][0]
-    if v is None:
-        v = "ci"
-    if typ == "path":
-        Path(v).mkdir(parents=True, exist_ok=True)
-    if inp.get("pattern") and not re.fullmatch(inp["pattern"], v):
-        raise SystemExit(f"{tpl['name']}: no test value for {name} matches {inp['pattern']}; add one to scripts/test-values.json")
-    return v
+    return v if v is not None else "ci"
+
+
+def replace(text, old, new):
+    """str.replace that fails when nothing matched, so a changed skeleton
+    cannot silently test the wrong thing."""
+    if old not in text:
+        raise SystemExit(f"test-templates.py: expected {old!r} in a generated file; nepfleet changed, update the script")
+    return text.replace(old, new, 1)
 
 
 class Fleet:
@@ -75,10 +86,13 @@ class Fleet:
         run(nf, "init", self.dir / "fleet")
         self.fleet = self.dir / "fleet"
         y = (self.fleet / "fleet.yaml").read_text()
-        y = y.replace("      url: https://github.com/Serraniel/nepfleet-templates\n", f"      path: {ROOT}\n")
-        y = y.replace("      ref: main\n", "").replace("    age: []", f'    age: ["{pub}"]')
-        y = y.replace("spec:\n", "spec:\n  ingressNetwork: nepfleet_templates_it\n", 1)
+        y = replace(y, "      url: https://github.com/Serraniel/nepfleet-templates\n", f"      path: {ROOT}\n")
+        y = replace(y, "      ref: main\n", "")
+        y = replace(y, "    age: []", f'    age: ["{pub}"]')
+        y = replace(y, "spec:\n", f"spec:\n  ingressNetwork: {NETWORK}\n")
         (self.fleet / "fleet.yaml").write_text(y)
+        self.facts = {"workdir": self.dir, "age_public_key": pub, "uid": os.getuid(), "gid": os.getgid(),
+                      "docker_gid": os.stat("/var/run/docker.sock").st_gid}
 
     def nepfleet(self, cmd, *args, check=True):
         return run(self.nf, cmd, "--fleet", self.fleet, "--state", self.dir / "state", "--host", "it", *args,
@@ -88,13 +102,16 @@ class Fleet:
         """Creates stack it-<template>: never a name a real project may have."""
         sets = []
         for inp in tpl["inputs"]:
-            sets += ["--set", f"{inp['name']}={value(tpl, inp, self.dir)}"]
-        run(self.nf, "new", tpl["name"], stack_name(tpl["name"]), *sets, cwd=self.fleet, env=self.env)
-        stack = self.fleet / ("system" if tpl["tier"] == "system" else "stacks") / stack_name(tpl["name"]) / "stack.yaml"
-        s = stack.read_text().replace("target: local", "target: it")
+            v = value(tpl, inp, self)
+            if v is not None:
+                sets += ["--set", f"{inp['name']}={v}"]
+        p = run(self.nf, "new", tpl["name"], stack_name(tpl["name"]), "--target", "it", *sets,
+                cwd=self.fleet, env=self.env, check=False)
+        if p.returncode != 0:
+            raise SystemExit(f"{tpl['name']}: nepfleet new refused the test values (add one to scripts/test-values.json):\n{p.stdout}{p.stderr}")
         if mode == "swarm":
-            s = s.replace("spec:\n", "spec:\n    mode: swarm\n", 1)  # yaml.v3 indents by 4
-        stack.write_text(s)
+            stack = self.fleet / ("system" if tpl["tier"] == "system" else "stacks") / stack_name(tpl["name"]) / "stack.yaml"
+            stack.write_text(replace(stack.read_text(), "\nspec:\n", "\nspec:\n    mode: swarm\n"))  # yaml.v3 indents by 4
 
     def cleanup(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -136,10 +153,13 @@ def swarm(nf):
             for line in files.get(".env", "").splitlines():
                 if "=" in line and not line.startswith("#"):
                     k, v = line.split("=", 1)
-                    env[k] = v.strip("'\"")
+                    if len(v) >= 2 and v[0] == v[-1] == "'":  # nepfleet writes KEY='value'
+                        v = v[1:-1]
+                    env[k] = v
             p = run("docker", "stack", "config", "--compose-file", work / "compose.yaml", cwd=work, env=env, check=False)
-            print(("ok   " if p.returncode == 0 else "FAIL ") + tpl["path"])
-            if p.returncode != 0:
+            ok = p.returncode == 0 and "is not set" not in p.stderr  # a missing variable only warns
+            print(("ok   " if ok else "FAIL ") + tpl["path"])
+            if not ok:
                 print(p.stderr.strip())
                 failed.append(tpl["name"])
         finally:
@@ -149,6 +169,9 @@ def swarm(nf):
 
 
 def deploy(nf, names):
+    if not os.environ.get("CI") and "--local" not in sys.argv:
+        raise SystemExit("deploy starts real containers (some watch or update the host's other containers); run it in CI, or pass --local")
+    names = [n for n in names if n != "--local"]
     tpls = {t["name"]: t for t in catalogue(nf)}
     failed = []
     for name in names:
@@ -161,9 +184,16 @@ def deploy(nf, names):
             if p.returncode != 0:
                 failed.append(name)
         finally:
-            # Only this test's own project: it-<template>, created above.
-            run("docker", "compose", "--project-name", stack_name(name), "down", "--volumes", "--remove-orphans", check=False)
-            run("docker", "network", "rm", "nepfleet_templates_it", check=False)
+            # Only this test's own project, by its rendered files: without
+            # --file, compose would pick up a compose.yaml from the cwd.
+            d = fleet.dir / "state" / "stacks" / stack_name(name)
+            if (d / "compose.yaml").exists():
+                run("docker", "compose", "--project-name", stack_name(name), "--project-directory", d,
+                    "--file", d / "compose.yaml", "--env-file", d / ".env",
+                    "down", "--volumes", "--remove-orphans", cwd=d, check=False)
+            run("docker", "network", "rm", NETWORK, check=False)
+            # Bind mounts may hold files containers wrote as root.
+            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", "alpine:3.24", "rm", "-rf", "/w/paths", "/w/state", check=False)
             fleet.cleanup()
     if failed:
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
