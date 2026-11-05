@@ -1,6 +1,6 @@
 services:
   sweetfolio:
-    image: ghcr.io/serraniel/sweetfolio:0.5.4
+    image: ghcr.io/serraniel/sweetfolio:0.6.0
     restart: unless-stopped
     read_only: true
     tmpfs: [/tmp]
