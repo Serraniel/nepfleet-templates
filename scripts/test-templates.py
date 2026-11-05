@@ -92,7 +92,7 @@ class Fleet:
         y = replace(y, "spec:\n", f"spec:\n  ingressNetwork: {NETWORK}\n")
         (self.fleet / "fleet.yaml").write_text(y)
         self.facts = {"workdir": self.dir, "age_public_key": pub, "uid": os.getuid(), "gid": os.getgid(),
-                      "docker_gid": os.stat("/var/run/docker.sock").st_gid}
+                      "docker_gid": docker_gid()}
 
     def nepfleet(self, cmd, *args, check=True):
         return run(self.nf, cmd, "--fleet", self.fleet, "--state", self.dir / "state", "--host", "it", *args,
@@ -115,6 +115,14 @@ class Fleet:
 
     def cleanup(self):
         shutil.rmtree(self.dir, ignore_errors=True)
+
+
+def docker_gid():
+    """The group of the Docker socket (rootless Docker or DOCKER_HOST: ours)."""
+    try:
+        return os.stat("/var/run/docker.sock").st_gid
+    except OSError:
+        return os.getgid()
 
 
 def stack_name(template):
@@ -193,7 +201,7 @@ def deploy(nf, names):
                     "down", "--volumes", "--remove-orphans", cwd=d, check=False)
             run("docker", "network", "rm", NETWORK, check=False)
             # Bind mounts may hold files containers wrote as root.
-            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", "alpine:3.24", "rm", "-rf", "/w/paths", "/w/state", check=False)
+            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a", "rm", "-rf", "/w/paths", "/w/state", check=False)
             fleet.cleanup()
     if failed:
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
