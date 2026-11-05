@@ -1,0 +1,20 @@
+{
+  "_skip_deploy": {
+    "binfmt": "one-shot: registers emulators and exits, so there is no running service to wait for",
+    "frpc": "needs a reachable frps server",
+    "neptide": "pins neptide 0.1.0, which is published when neptide's release-please PR is merged; remove this line then"
+  },
+  "frps": {
+    "BIND_ADDR": "127.0.0.1"
+  },
+  "neptide": {
+    "DOCKER_GID": "{docker_gid}",
+    "MONITOR_ONLY": "true"
+  },
+  "registry": {
+    "HTPASSWD": "ci:$2y$05$KN2DUjsfLLdbhBeVyLtJ0.K/AXTkmGSLPYPV0zCoZFyEtYM6z7RJe"
+  },
+  "volume-backup": {
+    "AGE_RECIPIENTS": "{age_public_key}"
+  }
+}
