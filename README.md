@@ -6,7 +6,7 @@ The official catalogue of [NepFleet](https://github.com/Serraniel/nepfleet) temp
 - `apps/`: services you run.
 - `images/`: images this repository builds, published as `ghcr.io/serraniel/nepfleet-<name>`.
 
-> In CI every template is validated, every image tag is checked, swarm templates pass `docker stack config`, and every template is installed with test values through `nepfleet apply` and must become healthy (except `binfmt` and `frpc`, see `scripts/test-values.json`). Integrations such as TLS and SSO are not exercised end to end yet. Review templates before production use.
+> In CI every template is validated, every image tag is checked, swarm templates pass `docker stack config`, and every template is installed with test values through `nepfleet apply` and must become healthy (except the few `_skip_deploy` lists in `scripts/test-values.json`, each with its reason). Integrations such as TLS and SSO are not exercised end to end yet. Review templates before production use.
 
 ## Catalogue
 
