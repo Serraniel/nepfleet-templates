@@ -27,7 +27,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -85,7 +86,8 @@
         "logs": false,
         "autoUpdate": false,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -131,7 +133,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -200,7 +203,8 @@
         "logs": false,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -239,7 +243,8 @@
         "logs": true,
         "autoUpdate": false,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -305,7 +310,8 @@
         "logs": true,
         "autoUpdate": false,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -364,7 +370,8 @@
         "logs": false,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -520,7 +527,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -580,7 +588,8 @@
         "logs": false,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -643,7 +652,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -751,7 +761,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -809,7 +820,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -854,7 +866,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -921,7 +934,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1001,7 +1015,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1073,7 +1088,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1129,7 +1145,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1204,7 +1221,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1285,7 +1303,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1344,7 +1363,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1402,7 +1422,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1452,7 +1473,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1516,7 +1538,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1578,7 +1601,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1644,7 +1668,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1724,7 +1749,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1780,7 +1806,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1840,7 +1867,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1920,7 +1948,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -1985,7 +2014,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2045,7 +2075,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2091,7 +2122,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2152,7 +2184,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": false,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2169,13 +2202,13 @@
     {
       "name": "syncthing",
       "title": "Syncthing",
-      "description": "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder.",
+      "description": "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT.",
       "tier": "app",
       "category": "files",
       "homepage": "https://syncthing.net",
       "source": "https://github.com/syncthing/syncthing",
       "path": "apps/syncthing",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "syncthing/syncthing",
@@ -2192,7 +2225,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2205,6 +2239,7 @@
           "name": "DATA_PATH",
           "type": "path",
           "title": "Host folder that synced folders live in (/data in Syncthing)",
+          "description": "Create it first and give it to PUID:PGID; a folder Docker creates belongs to root, and Syncthing cannot write there.",
           "required": true
         },
         {
@@ -2271,7 +2306,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
@@ -2369,7 +2405,8 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false
+        "sso": false,
+        "metrics": false
       },
       "inputs": [
         {
