@@ -28,6 +28,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [volume-backup](system/volume-backup) | [Volume backups (docker-volume-backup)](https://offen.github.io/docker-volume-backup/) · [source](https://github.com/offen/docker-volume-backup) | system | 🦾 |
 | [watchtower](system/watchtower) | [Watchtower (maintained fork)](https://github.com/nicholas-fedor/watchtower) | system | 🦾 |
 | [actual](apps/actual) | [Actual Budget](https://actualbudget.org) · [source](https://github.com/actualbudget/actual) | app | 🌐 📈 🏠 💾 🦾 |
+| [audiobookshelf](apps/audiobookshelf) | [Audiobookshelf](https://www.audiobookshelf.org) · [source](https://github.com/advplyr/audiobookshelf) | app | 🌐 📈 🏠 💾 🦾 |
 | [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 💾 🦾 |
 | [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
