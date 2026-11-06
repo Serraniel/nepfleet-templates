@@ -2,7 +2,8 @@
   "_skip_deploy": {
     "binfmt": "one-shot: registers emulators and exits, so there is no running service to wait for",
     "frpc": "needs a reachable frps server",
-    "neptide": "pins neptide 0.1.0, which is published when neptide's release-please PR is merged; remove this line then"
+    "neptide": "pins neptide 0.1.0, which is published when neptide's release-please PR is merged; remove this line then",
+    "vpn-egress": "needs credentials of a VPN provider to bring the tunnel up"
   },
   "frps": {
     "BIND_ADDR": "127.0.0.1"
