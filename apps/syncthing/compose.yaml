@@ -1,0 +1,53 @@
+services:
+  # Sets the web UI login (user admin) in the config before Syncthing starts,
+  # on every start: changing GUI_PASSWORD changes the login. The password
+  # goes in on stdin, never on a command line.
+  # Runs as root (a new volume belongs to root) and hands the files to PUID.
+  set-login:
+    image: syncthing/syncthing:2.1.7
+    user: "0:0"
+    environment:
+      GUI_PASSWORD: ${GUI_PASSWORD}
+      PUID: ${PUID}
+      PGID: ${PGID}
+    entrypoint: ["/bin/sh", "-c"]
+    command: ['printf %s "$$GUI_PASSWORD" | syncthing generate --home /var/syncthing/config --gui-user admin --gui-password - && chown -R "$$PUID:$$PGID" /var/syncthing/config']
+    volumes:
+      - config:/var/syncthing/config
+    network_mode: none
+
+  syncthing:
+    image: syncthing/syncthing:2.1.7
+    restart: unless-stopped
+    # The image's own health check (/rest/noauth/health) is used.
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${SYNC_PORT}:22000/tcp"   # device connections
+      - "${SYNC_PORT}:22000/udp"   # QUIC
+    volumes:
+      - config:/var/syncthing/config
+      - ${DATA_PATH}:/data
+    networks: [ingress]
+    depends_on:
+      set-login: { condition: service_completed_successfully }
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent index database
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8384}}"
+      kuma.syncthing.http.name: Syncthing
+      kuma.syncthing.http.url: https://${DOMAIN}/rest/noauth/health
+      homepage.group: Files
+      homepage.name: Syncthing
+      homepage.icon: syncthing.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  config:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
