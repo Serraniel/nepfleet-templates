@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: syncthing
   title: Syncthing
-  description: "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT."
+  description: "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT."
   tier: app
   category: files
   homepage: https://syncthing.net
