@@ -1,0 +1,35 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:2.37.2
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - config:/config
+      - metadata:/metadata
+      - ${AUDIOBOOKS_PATH}:/audiobooks
+      - ${PODCASTS_PATH}:/podcasts
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost/healthcheck').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 30s
+      start_period: 30s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # SQLite database: consistent copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      kuma.audiobookshelf.http.name: Audiobookshelf
+      kuma.audiobookshelf.http.url: https://${DOMAIN}/healthcheck
+      homepage.group: Media
+      homepage.name: Audiobookshelf
+      homepage.icon: audiobookshelf.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  config:
+  metadata:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

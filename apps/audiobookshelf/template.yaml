@@ -1,0 +1,37 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: audiobookshelf
+  title: Audiobookshelf
+  description: Audiobook and podcast server with apps for phones, progress sync and podcast downloads. Create the root user on the first visit.
+  tier: app
+  category: media
+  homepage: https://www.audiobookshelf.org
+  source: https://github.com/advplyr/audiobookshelf
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/advplyr/audiobookshelf
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: AUDIOBOOKS_PATH
+      type: path
+      title: Host folder with your audiobooks
+      description: Mounted writable, so uploads, metadata embedding and deleting files from the app work.
+      required: true
+    - name: PODCASTS_PATH
+      type: path
+      title: Host folder for podcasts (downloads go here)
+      default: ./podcasts
+      required: true
+  volumes:
+    - { name: config, backup: true }
+    # Covers (uploaded or matched online), author images, the app's own
+    # backups and logs: a library scan does not bring these back.
+    - { name: metadata, backup: true }

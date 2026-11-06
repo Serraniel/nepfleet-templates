@@ -717,6 +717,69 @@
       "migrations": []
     },
     {
+      "name": "audiobookshelf",
+      "title": "Audiobookshelf",
+      "description": "Audiobook and podcast server with apps for phones, progress sync and podcast downloads. Create the root user on the first visit.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://www.audiobookshelf.org",
+      "source": "https://github.com/advplyr/audiobookshelf",
+      "path": "apps/audiobookshelf",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/advplyr/audiobookshelf",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "AUDIOBOOKS_PATH",
+          "type": "path",
+          "title": "Host folder with your audiobooks",
+          "description": "Mounted writable, so uploads, metadata embedding and deleting files from the app work.",
+          "required": true
+        },
+        {
+          "name": "PODCASTS_PATH",
+          "type": "path",
+          "title": "Host folder for podcasts (downloads go here)",
+          "required": true,
+          "default": "./podcasts"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        },
+        {
+          "name": "metadata",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "bookstack",
       "title": "BookStack",
       "description": "Wiki and documentation, organised in shelves, books and pages.",
