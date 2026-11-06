@@ -672,6 +672,78 @@
       "migrations": []
     },
     {
+      "name": "bookstack",
+      "title": "BookStack",
+      "description": "Wiki and documentation, organised in shelves, books and pages.",
+      "tier": "app",
+      "category": "documents",
+      "homepage": "https://www.bookstackapp.com",
+      "source": "https://github.com/BookStackApp/BookStack",
+      "path": "apps/bookstack",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "lscr.io/linuxserver/bookstack",
+          "track": "minor"
+        },
+        {
+          "name": "mariadb",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "APP_KEY",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        },
+        {
+          "name": "DB_ROOT_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        },
+        {
+          "name": "db",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "forgejo",
       "title": "Forgejo + Actions runner",
       "description": "Self-hosted git forge with a registered Forgejo Actions runner. Jobs run in an isolated Docker-in-Docker daemon, never on the host's Docker.",

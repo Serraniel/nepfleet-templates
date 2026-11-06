@@ -1,0 +1,32 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: bookstack
+  title: BookStack
+  description: Wiki and documentation, organised in shelves, books and pages.
+  tier: app
+  category: documents
+  homepage: https://www.bookstackapp.com
+  source: https://github.com/BookStackApp/BookStack
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: lscr.io/linuxserver/bookstack
+      track: minor
+    - name: mariadb
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  generate:
+    # BookStack (Laravel) accepts a 32-character key; it encrypts stored secrets.
+    - { name: APP_KEY, kind: secret, length: 32, encoding: alnum }
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    - { name: DB_ROOT_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: config, backup: true }
+    - { name: db, backup: true }
