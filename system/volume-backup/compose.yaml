@@ -18,7 +18,9 @@ services:
       SSH_HOST_PUBLIC_KEY: ${SSH_HOST_PUBLIC_KEY}   # without it, the SSH copy refuses to connect
       # Your exclude, plus every volume a template on this host marks
       # backup: false (caches, models); NepFleet lists those by name.
-      BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}|/backup/volumes/(${NEPFLEET_NO_BACKUP_VOLUMES})/
+      # Safety copies left by nepfleet restore (<volume>-before-restore-<time>)
+      # are not backed up either.
+      BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}|/backup/volumes/(${NEPFLEET_NO_BACKUP_VOLUMES})/|/backup/volumes/[^/]+-before-restore-[0-9-]+/
       NOTIFICATION_URLS: ${NOTIFICATION_URLS}
       NOTIFICATION_LEVEL: error
       DOCKER_HOST: tcp://socket-proxy:2375
