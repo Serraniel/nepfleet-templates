@@ -42,6 +42,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🦾 |
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |
+| [ntfy](apps/ntfy) | [ntfy](https://ntfy.sh) · [source](https://github.com/binwiederhier/ntfy) | app | 🌐 📈 🏠 💾 🦾 |
 | [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 💾 🦾 |
 | [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 💾 🦾 |
