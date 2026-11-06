@@ -7,16 +7,18 @@ services:
       BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: ${RETENTION_DAYS}
-      # Encrypted to the fleet's age recipients: without the fleet key, a
-      # stolen archive is useless.
-      AGE_PUBLIC_KEYS: ${AGE_RECIPIENTS}
+      # Encrypted to the fleet's age recipients (fleet.yaml): without the
+      # fleet key, a stolen archive is useless.
+      AGE_PUBLIC_KEYS: ${NEPFLEET_AGE_RECIPIENTS}
       SSH_HOST_NAME: ${SSH_HOST_NAME}
       SSH_PORT: ${SSH_PORT}
       SSH_USER: ${SSH_USER}
       SSH_PASSWORD: ${SSH_PASSWORD}
       SSH_REMOTE_PATH: ${SSH_REMOTE_PATH}
       SSH_HOST_PUBLIC_KEY: ${SSH_HOST_PUBLIC_KEY}   # without it, the SSH copy refuses to connect
-      BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}
+      # Your exclude, plus every volume a template on this host marks
+      # backup: false (caches, models); NepFleet lists those by name.
+      BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}|/backup/volumes/(${NEPFLEET_NO_BACKUP_VOLUMES})/
       NOTIFICATION_URLS: ${NOTIFICATION_URLS}
       NOTIFICATION_LEVEL: error
       DOCKER_HOST: tcp://socket-proxy:2375
