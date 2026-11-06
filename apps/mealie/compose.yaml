@@ -9,8 +9,6 @@ services:
       TZ: ${TZ}
       PUID: "1000"
       PGID: "1000"
-      MAX_WORKERS: "1"
-      WEB_CONCURRENCY: "1"
     volumes:
       - data:/app/data
     networks: [ingress]

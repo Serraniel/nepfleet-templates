@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: mealie
   title: Mealie
-  description: Recipe manager and meal planner that imports recipes from any URL. Create the first account on the first visit; sign-up is off afterwards unless enabled.
+  description: "Recipe manager and meal planner that imports recipes from any URL. Sign in with changeme@example.com / MyPassword on the first visit and change the email and password right away: until then anyone can log in as admin."
   tier: app
   category: home
   homepage: https://mealie.io
