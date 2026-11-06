@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.home-assistant.io
   source: https://github.com/home-assistant/core
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     # year.month versioning: every month counts as a "minor"
@@ -21,6 +21,16 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: ZIGBEE_DEVICE
+      type: device
+      title: Zigbee USB stick for ZHA (e.g. SkyConnect, Sonoff)
+      description: Pick its /dev/serial/by-id path; Home Assistant sees the same path, so ZHA keeps working across reboots. After replugging the stick, restart the stack.
+    - name: ZWAVE_DEVICE
+      type: device
+      title: Z-Wave USB stick
+  hardware:
+    - { input: ZIGBEE_DEVICE, services: [homeassistant] }
+    - { input: ZWAVE_DEVICE, services: [homeassistant] }
   files:
     - { src: files/http.yaml, dest: config/http.yaml }
   volumes:
