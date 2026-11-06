@@ -1,6 +1,8 @@
 x-forgejo-env: &forgejo-env
   USER_UID: "1000"
   USER_GID: "1000"
+  # No weekly update check (DNS lookup at release.forgejo.org); updates come through NepFleet.
+  FORGEJO__cron_0x2E_update_checker__ENABLED: "false"
   FORGEJO__database__DB_TYPE: postgres
   FORGEJO__database__HOST: db:5432
   FORGEJO__database__NAME: forgejo

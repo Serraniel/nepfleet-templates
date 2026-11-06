@@ -6,6 +6,7 @@ services:
       N8N_HOST: ${DOMAIN}
       N8N_PROTOCOL: https
       N8N_PROXY_HOPS: "1"          # behind Caddy: trust one X-Forwarded-For hop
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"   # no version check against api.n8n.io; updates come through NepFleet
       WEBHOOK_URL: https://${DOMAIN}/
       N8N_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       GENERIC_TIMEZONE: ${TZ}

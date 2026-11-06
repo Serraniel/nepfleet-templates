@@ -38,7 +38,7 @@ services:
       MACHINE_LEARNING_MODEL_REVISION: v2
       # No telemetry: onnxruntime sends usage data to Microsoft by default
       # (v3.3.6 turns it off too; stated here so it stays off), and the
-      # Hugging Face hub reports model downloads.
+      # Hugging Face hub gets fewer library details with model downloads.
       ORT_DISABLE_TELEMETRY: "1"
       HF_HUB_DISABLE_TELEMETRY: "1"
     volumes:

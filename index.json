@@ -986,7 +986,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1128,7 +1128,7 @@
       "homepage": "https://homebox.software",
       "source": "https://github.com/sysadminsmedia/homebox",
       "path": "apps/homebox",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "ghcr.io/sysadminsmedia/homebox",
@@ -1188,7 +1188,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1517,7 +1517,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -1643,7 +1643,7 @@
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -1732,7 +1732,7 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "opencloudeu/opencloud",
@@ -2105,7 +2105,7 @@
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",
@@ -2208,7 +2208,7 @@
       "homepage": "https://syncthing.net",
       "source": "https://github.com/syncthing/syncthing",
       "path": "apps/syncthing",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "syncthing/syncthing",

@@ -9,7 +9,7 @@ metadata:
   homepage: https://syncthing.net
   source: https://github.com/syncthing/syncthing
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: syncthing/syncthing

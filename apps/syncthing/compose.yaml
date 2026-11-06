@@ -1,5 +1,6 @@
 services:
-  # Sets the web UI login (user admin) in the config before Syncthing starts,
+  # Sets the web UI login (user admin) and turns off crash reports to
+  # crash.syncthing.net in the config before Syncthing starts,
   # on every start: changing GUI_PASSWORD changes the login. The password
   # goes in on stdin, never on a command line.
   # Runs as root (a new volume belongs to root) and hands the files to PUID.
@@ -11,7 +12,7 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
     entrypoint: ["/bin/sh", "-c"]
-    command: ['printf %s "$$GUI_PASSWORD" | syncthing generate --home /var/syncthing/config --gui-user admin --gui-password - && chown -R "$$PUID:$$PGID" /var/syncthing/config']
+    command: ['printf %s "$$GUI_PASSWORD" | syncthing generate --home /var/syncthing/config --gui-user admin --gui-password - && sed -i "s#<crashReportingEnabled>true</crashReportingEnabled>#<crashReportingEnabled>false</crashReportingEnabled>#" /var/syncthing/config/config.xml && chown -R "$$PUID:$$PGID" /var/syncthing/config']
     volumes:
       - config:/var/syncthing/config
     network_mode: none
