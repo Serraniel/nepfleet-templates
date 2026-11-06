@@ -1,0 +1,25 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: actual
+  title: Actual Budget
+  description: Local-first personal finance and envelope budgeting. Set the server password on the first visit.
+  tier: app
+  category: finance
+  homepage: https://actualbudget.org
+  source: https://github.com/actualbudget/actual
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    # Versions are YY.MM.patch: "minor" takes the monthly releases of a year.
+    - name: actualbudget/actual-server
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  volumes:
+    - { name: data, backup: true }
