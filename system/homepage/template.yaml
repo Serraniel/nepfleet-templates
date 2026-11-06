@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: homepage
   title: Homepage
-  description: A dashboard for your services. Entries come from homepage.* labels.
+  description: A dashboard for your services. Entries come from homepage.* labels; title, theme, language, search and the resource widgets are set as values (NepFleet owns settings.yaml and widgets.yaml; bookmarks.yaml and the rest stay yours).
   tier: system
   category: dashboard
   homepage: https://gethomepage.dev
   source: https://github.com/gethomepage/homepage
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: ghcr.io/gethomepage/homepage
@@ -22,8 +22,36 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: TITLE
+      type: string
+      title: Page title
+      default: Home
+      pattern: '^[^"\\\x27\x00-\x1f]{1,60}$'
+    - name: THEME
+      type: enum
+      title: Theme
+      options: [dark, light]
+      default: dark
+    - name: COLOR
+      type: enum
+      title: Color palette
+      options: [slate, gray, zinc, neutral, stone, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose, red, white]
+      default: slate
+    - name: LANGUAGE
+      type: enum
+      title: Language
+      options: [af, ar, bg, ca, cs, da, de, el, en, eo, es, eu, fi, fr, he, hi, hr, hu, id, it, ja, ko, lv, ms, nb-NO, nl, no, pl, pt, pt-BR, ro, ru, sk, sl, sr, sv, te, th, tr, uk, vi, yue, zh-Hans, zh-Hant]
+      default: en
+    - name: SEARCH
+      type: enum
+      title: Search box provider
+      options: [duckduckgo, google, bing, baidu, brave]
+      default: duckduckgo
   files:
     - { src: files/docker.yaml, dest: config/docker.yaml }
+    # Rendered from the values above: edit those, not the files.
+    - { src: files/settings.yaml, dest: config/settings.yaml }
+    - { src: files/widgets.yaml, dest: config/widgets.yaml }
   volumes:
     - name: config
       backup: true

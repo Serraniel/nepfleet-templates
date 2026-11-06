@@ -1,0 +1,7 @@
+# Rendered by NepFleet from the homepage stack's values; changes here are overwritten.
+title: "${TITLE}"
+theme: ${THEME}
+color: ${COLOR}
+language: ${LANGUAGE}
+headerStyle: boxed
+statusStyle: dot
