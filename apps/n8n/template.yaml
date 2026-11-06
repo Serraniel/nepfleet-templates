@@ -1,0 +1,31 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: n8n
+  title: n8n
+  description: Workflow automation with a visual editor, webhooks and hundreds of integrations.
+  tier: app
+  category: automation
+  homepage: https://n8n.io
+  source: https://github.com/n8n-io/n8n
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: n8nio/n8n
+      track: minor
+    - name: postgres
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain (also the base URL of webhooks)
+      required: true
+  generate:
+    # Encrypts the credentials n8n stores; losing it makes them unreadable.
+    - { name: ENCRYPTION_KEY, kind: secret, length: 48, encoding: alnum }
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: data, backup: true }
+    - { name: db, backup: true }

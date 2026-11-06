@@ -1199,6 +1199,72 @@
       "migrations": []
     },
     {
+      "name": "n8n",
+      "title": "n8n",
+      "description": "Workflow automation with a visual editor, webhooks and hundreds of integrations.",
+      "tier": "app",
+      "category": "automation",
+      "homepage": "https://n8n.io",
+      "source": "https://github.com/n8n-io/n8n",
+      "path": "apps/n8n",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "n8nio/n8n",
+          "track": "minor"
+        },
+        {
+          "name": "postgres",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain (also the base URL of webhooks)",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "ENCRYPTION_KEY",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "db",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "navidrome",
       "title": "Navidrome",
       "description": "Music streaming server with a Subsonic-compatible API. Music is mounted read-only.",
