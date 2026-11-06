@@ -1,0 +1,42 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: vpn-egress
+  title: VPN egress (gluetun)
+  description: "Sends traffic out through a commercial VPN (Mullvad, Proton, IVPN, …) with a kill switch: without the tunnel, nothing leaves. Other stacks route through it with network_mode: container:<stack>-gluetun-1; devices on the LAN can use its HTTP proxy (port PROXY_PORT, user proxy, password PROXY_PASSWORD from the stack's secrets). The opposite of a home VPN: this hides home, it does not reach it."
+  tier: app
+  category: networking
+  homepage: https://github.com/qdm12/gluetun-wiki
+  source: https://github.com/qdm12/gluetun
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: qmcgaw/gluetun
+      track: minor
+  supports: { arm64: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: VPN_SERVICE_PROVIDER
+      type: enum
+      title: VPN provider
+      options: [mullvad, protonvpn, ivpn, airvpn, nordvpn, surfshark, windscribe]
+      default: mullvad
+    - name: WIREGUARD_PRIVATE_KEY
+      type: secret
+      title: WireGuard private key from your provider's WireGuard configuration
+      required: true
+    - name: WIREGUARD_ADDRESSES
+      type: string
+      title: WireGuard address(es) from the same configuration (e.g. 10.64.222.21/32; not needed for Proton)
+    - name: SERVER_COUNTRIES
+      type: string
+      title: Server countries, comma separated (empty = any)
+    - name: PROXY_PORT
+      type: int
+      title: Host port of the HTTP proxy for LAN devices
+      default: "8888"
+      required: true
+  generate:
+    - { name: PROXY_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: data, backup: false }   # server lists; downloaded again

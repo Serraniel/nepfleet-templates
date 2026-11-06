@@ -1,0 +1,28 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3.41.3
+    restart: unless-stopped
+    # The image's own health check reports the tunnel.
+    cap_add: [NET_ADMIN]
+    devices: ["/dev/net/tun:/dev/net/tun"]
+    environment:
+      VPN_SERVICE_PROVIDER: ${VPN_SERVICE_PROVIDER}
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      WIREGUARD_ADDRESSES: ${WIREGUARD_ADDRESSES}
+      SERVER_COUNTRIES: ${SERVER_COUNTRIES}
+      # DNS over TLS inside the tunnel, so lookups do not leak to the ISP.
+      DOT: "on"
+      # HTTP proxy for LAN devices, with a login: the port is on the LAN.
+      HTTPPROXY: "on"
+      HTTPPROXY_USER: proxy
+      HTTPPROXY_PASSWORD: ${PROXY_PASSWORD}
+      HTTPPROXY_STEALTH: "on"
+      TZ: ${TZ}
+    ports:
+      - "${PROXY_PORT}:8888/tcp"
+    volumes:
+      - data:/gluetun
+
+volumes:
+  data:
