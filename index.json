@@ -755,6 +755,7 @@
           "name": "AUDIOBOOKS_PATH",
           "type": "path",
           "title": "Host folder with your audiobooks",
+          "description": "Mounted writable, so uploads, metadata embedding and deleting files from the app work.",
           "required": true
         },
         {
@@ -772,7 +773,8 @@
           "backup": true
         },
         {
-          "name": "metadata"
+          "name": "metadata",
+          "backup": true
         }
       ],
       "migrations": []
