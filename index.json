@@ -764,7 +764,7 @@
       "homepage": "https://www.home-assistant.io",
       "source": "https://github.com/home-assistant/core",
       "path": "apps/homeassistant",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/home-assistant/home-assistant",
@@ -789,6 +789,17 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "ZIGBEE_DEVICE",
+          "type": "device",
+          "title": "Zigbee/Thread USB stick (e.g. SkyConnect, Sonoff)",
+          "description": "Pick its /dev/serial/by-id path; Home Assistant sees the same path, so its ZHA or Thread setup survives replugging."
+        },
+        {
+          "name": "ZWAVE_DEVICE",
+          "type": "device",
+          "title": "Z-Wave USB stick"
         }
       ],
       "generate": [],
@@ -965,7 +976,7 @@
       "homepage": "https://jellyfin.org",
       "source": "https://github.com/jellyfin/jellyfin",
       "path": "apps/jellyfin",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "jellyfin/jellyfin",
@@ -996,6 +1007,12 @@
           "type": "path",
           "title": "Host folder with your media",
           "required": true
+        },
+        {
+          "name": "GPU",
+          "type": "gpu",
+          "title": "Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)",
+          "default": "none"
         }
       ],
       "generate": [],
@@ -1687,7 +1704,7 @@
       "homepage": "https://home.tdarr.io",
       "source": "https://github.com/HaveAGitGat/Tdarr",
       "path": "apps/tdarr",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/haveagitgat/tdarr",
@@ -1746,6 +1763,12 @@
           "title": "Group id owning the media",
           "required": true,
           "default": "1000"
+        },
+        {
+          "name": "GPU",
+          "type": "gpu",
+          "title": "Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)",
+          "default": "none"
         }
       ],
       "generate": [

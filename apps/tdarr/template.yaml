@@ -9,7 +9,7 @@ metadata:
   homepage: https://home.tdarr.io
   source: https://github.com/HaveAGitGat/Tdarr
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: ghcr.io/haveagitgat/tdarr
@@ -44,6 +44,12 @@ spec:
       title: Group id owning the media
       default: "1000"
       required: true
+    - name: GPU
+      type: gpu
+      title: Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)
+      default: none
+  hardware:
+    - { input: GPU, services: [tdarr] }
   generate:
     - { name: API_KEY, kind: secret, length: 32, encoding: alnum }
   volumes:
