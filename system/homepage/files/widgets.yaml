@@ -1,0 +1,8 @@
+# Rendered by NepFleet from the homepage stack's values; changes here are overwritten.
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+- search:
+    provider: ${SEARCH}
+    target: _blank

@@ -337,13 +337,13 @@
     {
       "name": "homepage",
       "title": "Homepage",
-      "description": "A dashboard for your services. Entries come from homepage.* labels.",
+      "description": "A dashboard for your services. Entries come from homepage.* labels; title, theme, language, search and the resource widgets are set as values.",
       "tier": "system",
       "category": "dashboard",
       "homepage": "https://gethomepage.dev",
       "source": "https://github.com/gethomepage/homepage",
       "path": "system/homepage",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/gethomepage/homepage",
@@ -372,6 +372,73 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "TITLE",
+          "type": "string",
+          "title": "Page title",
+          "default": "Home",
+          "pattern": "^[^\"\\\\]{1,60}$"
+        },
+        {
+          "name": "THEME",
+          "type": "enum",
+          "title": "Theme",
+          "default": "dark",
+          "options": [
+            "dark",
+            "light"
+          ]
+        },
+        {
+          "name": "COLOR",
+          "type": "enum",
+          "title": "Color palette",
+          "default": "slate",
+          "options": [
+            "slate",
+            "gray",
+            "zinc",
+            "neutral",
+            "stone",
+            "amber",
+            "yellow",
+            "lime",
+            "green",
+            "emerald",
+            "teal",
+            "cyan",
+            "sky",
+            "blue",
+            "indigo",
+            "violet",
+            "purple",
+            "fuchsia",
+            "pink",
+            "rose",
+            "red",
+            "white"
+          ]
+        },
+        {
+          "name": "LANGUAGE",
+          "type": "string",
+          "title": "Language (e.g. en, de)",
+          "default": "en",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+        },
+        {
+          "name": "SEARCH",
+          "type": "enum",
+          "title": "Search box provider",
+          "default": "duckduckgo",
+          "options": [
+            "duckduckgo",
+            "google",
+            "bing",
+            "baidu",
+            "brave"
+          ]
         }
       ],
       "generate": [],
