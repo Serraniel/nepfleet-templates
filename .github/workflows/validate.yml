@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+env:
+  # nepfleet@main straight from git: the module proxy caches @main for hours,
+  # so templates were checked by an older nepfleet than main. Only this
+  # module skips the proxy and the checksum database; it is our own code.
+  GOPRIVATE: github.com/Serraniel/nepfleet
+
 jobs:
   templates:
     runs-on: ubuntu-latest
