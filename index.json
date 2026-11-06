@@ -1905,7 +1905,7 @@
     {
       "name": "stirling-pdf",
       "title": "Stirling-PDF",
-      "description": "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin / stirling and set a new password right away.",
+      "description": "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/stirling-pdf/values.secret.yaml); you are asked to change it. Plan about 4 GB of memory.",
       "tier": "app",
       "category": "documents",
       "homepage": "https://www.stirlingpdf.com",
@@ -1944,10 +1944,21 @@
           "default": "true"
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD",
+          "kind": "secret",
+          "length": 24,
+          "encoding": "alnum"
+        }
+      ],
       "volumes": [
         {
           "name": "configs",
+          "backup": true
+        },
+        {
+          "name": "storage",
           "backup": true
         }
       ],
