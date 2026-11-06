@@ -1,5 +1,7 @@
 # NepFleet templates
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Serraniel/nepfleet-templates/badge)](https://scorecard.dev/viewer/?uri=github.com/Serraniel/nepfleet-templates)
+
 The official catalogue of [NepFleet](https://github.com/Serraniel/nepfleet) templates. The format is described in the [template spec](https://github.com/Serraniel/nepfleet/blob/main/docs/spec/template.md).
 
 - `system/`: services NepFleet itself builds on, such as ingress, logs, uptime and tunnels. All of them are opt-in.
