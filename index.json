@@ -782,13 +782,13 @@
     {
       "name": "bookstack",
       "title": "BookStack",
-      "description": "Wiki and documentation, organised in shelves, books and pages.",
+      "description": "Wiki and documentation, organised in shelves, books and pages. Sign in with admin@admin.com / password on the first visit and change both right away.",
       "tier": "app",
       "category": "documents",
       "homepage": "https://www.bookstackapp.com",
       "source": "https://github.com/BookStackApp/BookStack",
       "path": "apps/bookstack",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "lscr.io/linuxserver/bookstack",
@@ -1256,6 +1256,57 @@
           "encoding": "base64url"
         }
       ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "mealie",
+      "title": "Mealie",
+      "description": "Recipe manager and meal planner that imports recipes from any URL. Sign in with changeme@example.com / MyPassword on the first visit and change the email and password right away: until then anyone can log in as admin.",
+      "tier": "app",
+      "category": "home",
+      "homepage": "https://mealie.io",
+      "source": "https://github.com/mealie-recipes/mealie",
+      "path": "apps/mealie",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/mealie-recipes/mealie",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ALLOW_SIGNUP",
+          "type": "bool",
+          "title": "Let visitors create accounts",
+          "default": "false"
+        }
+      ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",

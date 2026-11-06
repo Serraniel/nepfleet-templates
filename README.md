@@ -36,6 +36,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 💾 🦾 |
 | [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
 | [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 💾 🦾 |
+| [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 💾 🦾 |
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🦾 |
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |

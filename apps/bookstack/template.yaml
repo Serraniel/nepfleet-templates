@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: bookstack
   title: BookStack
-  description: Wiki and documentation, organised in shelves, books and pages.
+  description: Wiki and documentation, organised in shelves, books and pages. Sign in with admin@admin.com / password on the first visit and change both right away.
   tier: app
   category: documents
   homepage: https://www.bookstackapp.com
   source: https://github.com/BookStackApp/BookStack
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: lscr.io/linuxserver/bookstack
