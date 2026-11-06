@@ -1903,6 +1903,57 @@
       "migrations": []
     },
     {
+      "name": "stirling-pdf",
+      "title": "Stirling-PDF",
+      "description": "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin / stirling and set a new password right away.",
+      "tier": "app",
+      "category": "documents",
+      "homepage": "https://www.stirlingpdf.com",
+      "source": "https://github.com/Stirling-Tools/Stirling-PDF",
+      "path": "apps/stirling-pdf",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "stirlingtools/stirling-pdf",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ENABLE_LOGIN",
+          "type": "bool",
+          "title": "Require a login (recommended when the domain is public)",
+          "default": "true"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "configs",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "sweetfolio",
       "title": "Sweetfolio",
       "description": "Portfolio planning and evaluation. Static app; data stays in the browser.",

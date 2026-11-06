@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: stirling-pdf
+  title: Stirling-PDF
+  description: PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin / stirling and set a new password right away.
+  tier: app
+  category: documents
+  homepage: https://www.stirlingpdf.com
+  source: https://github.com/Stirling-Tools/Stirling-PDF
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: stirlingtools/stirling-pdf
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: ENABLE_LOGIN
+      type: bool
+      title: Require a login (recommended when the domain is public)
+      default: "true"
+  volumes:
+    - { name: configs, backup: true }
