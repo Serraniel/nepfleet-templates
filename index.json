@@ -1635,6 +1635,68 @@
       "migrations": []
     },
     {
+      "name": "ntfy",
+      "title": "ntfy",
+      "description": "Push notifications to phones and desktops over HTTP, for NepFleet and anything else (ntfy://<domain>/<topic> in shoutrrr). Access is closed by default: sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/ntfy/values.secret.yaml) and create users or tokens for publishers.",
+      "tier": "app",
+      "category": "notifications",
+      "homepage": "https://ntfy.sh",
+      "source": "https://github.com/binwiederhier/ntfy",
+      "path": "apps/ntfy",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "binwiederhier/ntfy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "UPSTREAM_BASE_URL",
+          "type": "url",
+          "title": "Upstream for iOS push (e.g. https://ntfy.sh; empty = none, iPhones then poll)",
+          "description": "With an upstream, ntfy.sh learns message IDs (not contents) to wake iPhones."
+        }
+      ],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD",
+          "kind": "secret",
+          "length": 24,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "cache"
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "open-webui",
       "title": "Open WebUI (+ Ollama, LiteLLM)",
       "description": "Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. The first account becomes admin.",

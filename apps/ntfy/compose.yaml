@@ -1,0 +1,45 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:v2.37.2
+    restart: unless-stopped
+    # The admin user is provisioned on every start from ADMIN_PASSWORD (as a
+    # bcrypt hash, computed here), so it exists before anyone can reach ntfy.
+    entrypoint: ["/bin/sh", "-c"]
+    command: ['NTFY_AUTH_USERS="admin:$$(printf "%s\n%s\n" "$$ADMIN_PASSWORD" "$$ADMIN_PASSWORD" | ntfy user hash 2>/dev/null):admin" exec ntfy serve']
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      NTFY_BASE_URL: https://${DOMAIN}
+      NTFY_BEHIND_PROXY: "true"
+      NTFY_AUTH_FILE: /var/lib/ntfy/user.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all   # nothing without a login or token
+      NTFY_ENABLE_LOGIN: "true"
+      NTFY_CACHE_FILE: /var/cache/ntfy/cache.db
+      NTFY_UPSTREAM_BASE_URL: ${UPSTREAM_BASE_URL}
+      TZ: ${TZ}
+    volumes:
+      - data:/var/lib/ntfy
+      - cache:/var/cache/ntfy
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost/v1/health"]
+      interval: 30s
+      start_period: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # SQLite user database
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      kuma.ntfy.http.name: ntfy
+      kuma.ntfy.http.url: https://${DOMAIN}/v1/health
+      homepage.group: Infrastructure
+      homepage.name: ntfy
+      homepage.icon: ntfy.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+  cache:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

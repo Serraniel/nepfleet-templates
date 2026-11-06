@@ -1,0 +1,31 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: ntfy
+  title: ntfy
+  description: "Push notifications to phones and desktops over HTTP, for NepFleet and anything else (ntfy://<domain>/<topic> in shoutrrr). Access is closed by default: sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/ntfy/values.secret.yaml) and create users or tokens for publishers."
+  tier: app
+  category: notifications
+  homepage: https://ntfy.sh
+  source: https://github.com/binwiederhier/ntfy
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: binwiederhier/ntfy
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: UPSTREAM_BASE_URL
+      type: url
+      title: Upstream for iOS push (e.g. https://ntfy.sh; empty = none, iPhones then poll)
+      description: With an upstream, ntfy.sh learns message IDs (not contents) to wake iPhones.
+  generate:
+    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: data, backup: true }    # users, tokens, access rules
+    - { name: cache, backup: false }  # recent messages for clients that were offline
