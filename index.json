@@ -672,6 +672,51 @@
       "migrations": []
     },
     {
+      "name": "actual",
+      "title": "Actual Budget",
+      "description": "Local-first personal finance and envelope budgeting. Set the server password on the first visit.",
+      "tier": "app",
+      "category": "finance",
+      "homepage": "https://actualbudget.org",
+      "source": "https://github.com/actualbudget/actual",
+      "path": "apps/actual",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "actualbudget/actual-server",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "bookstack",
       "title": "BookStack",
       "description": "Wiki and documentation, organised in shelves, books and pages.",

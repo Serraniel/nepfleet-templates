@@ -1,0 +1,31 @@
+services:
+  actual:
+    image: actualbudget/actual-server:26.11.0
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - data:/data
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD-SHELL", "node src/scripts/health-check.js"]
+      interval: 30s
+      start_period: 20s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # SQLite files: consistent copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 5006}}"
+      kuma.actual.http.name: Actual Budget
+      kuma.actual.http.url: https://${DOMAIN}
+      homepage.group: Finance
+      homepage.name: Actual Budget
+      homepage.icon: actual-budget.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
