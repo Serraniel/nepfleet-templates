@@ -1265,6 +1265,57 @@
       "migrations": []
     },
     {
+      "name": "mealie",
+      "title": "Mealie",
+      "description": "Recipe manager and meal planner that imports recipes from any URL. Create the first account on the first visit; sign-up is off afterwards unless enabled.",
+      "tier": "app",
+      "category": "home",
+      "homepage": "https://mealie.io",
+      "source": "https://github.com/mealie-recipes/mealie",
+      "path": "apps/mealie",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/mealie-recipes/mealie",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ALLOW_SIGNUP",
+          "type": "bool",
+          "title": "Let visitors create accounts",
+          "default": "false"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "metube",
       "title": "MeTube (yt-dlp web UI)",
       "description": "Download videos and audio with yt-dlp from the browser. No built-in login, so keep it on the home network or behind forward auth.",
