@@ -9,7 +9,7 @@ metadata:
   homepage: https://homebox.software
   source: https://github.com/sysadminsmedia/homebox
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: ghcr.io/sysadminsmedia/homebox

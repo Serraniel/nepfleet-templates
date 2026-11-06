@@ -14,6 +14,7 @@ services:
       SCARF_NO_ANALYTICS: "true"
       DO_NOT_TRACK: "true"
       ANONYMIZED_TELEMETRY: "false"
+      ENABLE_VERSION_UPDATE_CHECK: "false"   # no release check against GitHub
     volumes:
       - webui:/app/backend/data
     networks: [ingress, default]

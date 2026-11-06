@@ -7,6 +7,7 @@ services:
     environment:
       OC_URL: https://${DOMAIN}
       OC_INSECURE: "false"
+      FRONTEND_CHECK_FOR_UPDATES: "false"   # no update check from the web UI
       PROXY_TLS: "false"            # Caddy terminates TLS
       OC_LOG_LEVEL: warn
       IDM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}   # initial admin password, first start only

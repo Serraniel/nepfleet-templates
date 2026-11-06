@@ -5,6 +5,7 @@ services:
     environment:
       HBOX_OPTIONS_ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
       HBOX_LOG_LEVEL: info
+      HBOX_OPTIONS_GITHUB_RELEASE_CHECK: "false"   # no release check against GitHub
       HBOX_WEB_MAX_UPLOAD_SIZE: "50"
       HBOX_OPTIONS_TRUST_PROXY: "true"   # behind Caddy
       HBOX_AUTH_API_KEY_PEPPER: ${API_KEY_PEPPER}
