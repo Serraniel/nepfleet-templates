@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.navidrome.org
   source: https://github.com/navidrome/navidrome
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: deluan/navidrome

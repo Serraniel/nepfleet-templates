@@ -1188,7 +1188,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1584,7 +1584,7 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "deluan/navidrome",
@@ -1643,7 +1643,7 @@
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -2105,7 +2105,7 @@
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",

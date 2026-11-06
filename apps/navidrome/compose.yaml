@@ -6,6 +6,7 @@ services:
       ND_BASEURL: https://${DOMAIN}
       ND_SCANSCHEDULE: ${SCAN_SCHEDULE}
       ND_LOGLEVEL: info
+      ND_ENABLEINSIGHTSCOLLECTOR: "false"   # no anonymous usage reports
     volumes:
       - data:/data
       - ${MUSIC_PATH}:/music:ro

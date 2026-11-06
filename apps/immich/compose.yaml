@@ -32,10 +32,15 @@ services:
       docker-volume-backup.stop-during-backup: "true"
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v3.3.5
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.6
     restart: unless-stopped
     environment:
       MACHINE_LEARNING_MODEL_REVISION: v2
+      # No telemetry: onnxruntime sends usage data to Microsoft by default
+      # (v3.3.6 turns it off too; stated here so it stays off), and the
+      # Hugging Face hub reports model downloads.
+      ORT_DISABLE_TELEMETRY: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
     volumes:
       - model-cache:/cache
 

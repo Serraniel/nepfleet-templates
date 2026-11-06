@@ -8,6 +8,7 @@ services:
       SECURITY_INITIALLOGIN_USERNAME: admin
       SECURITY_INITIALLOGIN_PASSWORD: ${ADMIN_PASSWORD}
       SYSTEM_DEFAULTLOCALE: en-GB
+      SYSTEM_ENABLEANALYTICS: "false"   # no usage analytics
       TZ: ${TZ}
     volumes:
       - configs:/configs   # settings and, with login, the user database (H2)

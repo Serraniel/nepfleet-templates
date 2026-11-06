@@ -10,6 +10,10 @@ services:
       OLLAMA_BASE_URL: http://ollama:11434
       OPENAI_API_BASE_URL: http://litellm:4000/v1
       OPENAI_API_KEY: sk-${LITELLM_KEY}
+      # No telemetry (Scarf download analytics, ChromaDB usage data).
+      SCARF_NO_ANALYTICS: "true"
+      DO_NOT_TRACK: "true"
+      ANONYMIZED_TELEMETRY: "false"
     volumes:
       - webui:/app/backend/data
     networks: [ingress, default]
