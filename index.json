@@ -2167,6 +2167,85 @@
       "migrations": []
     },
     {
+      "name": "syncthing",
+      "title": "Syncthing",
+      "description": "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder.",
+      "tier": "app",
+      "category": "files",
+      "homepage": "https://syncthing.net",
+      "source": "https://github.com/syncthing/syncthing",
+      "path": "apps/syncthing",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "syncthing/syncthing",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain of the web UI",
+          "required": true
+        },
+        {
+          "name": "DATA_PATH",
+          "type": "path",
+          "title": "Host folder that synced folders live in (/data in Syncthing)",
+          "required": true
+        },
+        {
+          "name": "SYNC_PORT",
+          "type": "int",
+          "title": "Host port for device connections (TCP and UDP)",
+          "required": true,
+          "default": "22000"
+        },
+        {
+          "name": "PUID",
+          "type": "int",
+          "title": "User id owning the synced files",
+          "required": true,
+          "default": "1000"
+        },
+        {
+          "name": "PGID",
+          "type": "int",
+          "title": "Group id owning the synced files",
+          "required": true,
+          "default": "1000"
+        }
+      ],
+      "generate": [
+        {
+          "name": "GUI_PASSWORD",
+          "kind": "secret",
+          "length": 24,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "config",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "tdarr",
       "title": "Tdarr",
       "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding.",

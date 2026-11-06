@@ -1,0 +1,46 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: syncthing
+  title: Syncthing
+  description: "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder."
+  tier: app
+  category: files
+  homepage: https://syncthing.net
+  source: https://github.com/syncthing/syncthing
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: syncthing/syncthing
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain of the web UI
+      required: true
+    - name: DATA_PATH
+      type: path
+      title: Host folder that synced folders live in (/data in Syncthing)
+      required: true
+    - name: SYNC_PORT
+      type: int
+      title: Host port for device connections (TCP and UDP)
+      default: "22000"
+      required: true
+    - name: PUID
+      type: int
+      title: User id owning the synced files
+      default: "1000"
+      required: true
+    - name: PGID
+      type: int
+      title: Group id owning the synced files
+      default: "1000"
+      required: true
+  generate:
+    # The web UI login; set before Syncthing starts, so the UI is never open.
+    - { name: GUI_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: config, backup: true }
