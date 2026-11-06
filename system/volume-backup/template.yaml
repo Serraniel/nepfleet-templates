@@ -9,7 +9,7 @@ metadata:
   homepage: https://offen.github.io/docker-volume-backup/
   source: https://github.com/offen/docker-volume-backup
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: offen/docker-volume-backup
@@ -27,12 +27,6 @@ spec:
       type: int
       title: Keep backups for (days)
       default: "14"
-      required: true
-    - name: AGE_RECIPIENTS
-      type: string
-      title: age public keys (comma separated)
-      description: Use the recipients from fleet.yaml spec.secrets.age, so the fleet's key can decrypt every backup.
-      pattern: "^age1[0-9a-z]+(,age1[0-9a-z]+)*$"
       required: true
     - name: ARCHIVE_PATH
       type: path
@@ -63,8 +57,10 @@ spec:
     - name: EXCLUDE_REGEXP
       type: string
       title: Paths to skip (regular expression)
-      description: Volumes that hold only caches or downloadable data, matched against /backup/volumes/<name>/...
+      description: In addition to the volumes templates mark backup false, which NepFleet leaves out by itself. Matched against /backup/volumes/<name>/...
       default: "/backup/volumes/[^/]*(model-cache|ollama|cache)/"
+      required: true
+      pattern: ".+"
     - name: NOTIFICATION_URLS
       type: secret
       title: Notification URLs (shoutrrr, comma separated)

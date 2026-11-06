@@ -631,7 +631,7 @@
       "homepage": "https://offen.github.io/docker-volume-backup/",
       "source": "https://github.com/offen/docker-volume-backup",
       "path": "system/volume-backup",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "offen/docker-volume-backup",
@@ -669,14 +669,6 @@
           "title": "Keep backups for (days)",
           "required": true,
           "default": "14"
-        },
-        {
-          "name": "AGE_RECIPIENTS",
-          "type": "string",
-          "title": "age public keys (comma separated)",
-          "description": "Use the recipients from fleet.yaml spec.secrets.age, so the fleet's key can decrypt every backup.",
-          "required": true,
-          "pattern": "^age1[0-9a-z]+(,age1[0-9a-z]+)*$"
         },
         {
           "name": "ARCHIVE_PATH",
@@ -722,8 +714,10 @@
           "name": "EXCLUDE_REGEXP",
           "type": "string",
           "title": "Paths to skip (regular expression)",
-          "description": "Volumes that hold only caches or downloadable data, matched against /backup/volumes/<name>/...",
-          "default": "/backup/volumes/[^/]*(model-cache|ollama|cache)/"
+          "description": "In addition to the volumes templates mark backup false, which NepFleet leaves out by itself. Matched against /backup/volumes/<name>/...",
+          "required": true,
+          "default": "/backup/volumes/[^/]*(model-cache|ollama|cache)/",
+          "pattern": ".+"
         },
         {
           "name": "NOTIFICATION_URLS",
