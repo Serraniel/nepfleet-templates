@@ -1,0 +1,33 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: stirling-pdf
+  title: Stirling-PDF
+  description: "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/stirling-pdf/values.secret.yaml); you are asked to change it. Plan about 4 GB of memory."
+  tier: app
+  category: documents
+  homepage: https://www.stirlingpdf.com
+  source: https://github.com/Stirling-Tools/Stirling-PDF
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: stirlingtools/stirling-pdf
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: ENABLE_LOGIN
+      type: bool
+      title: Require a login (recommended when the domain is public)
+      default: "true"
+  generate:
+    # The first admin; without it, the documented admin / stirling would be
+    # the first login on a public domain. Used on the first start only.
+    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: configs, backup: true }
+    - { name: storage, backup: true }

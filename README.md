@@ -47,6 +47,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
 | [registry](apps/registry) | [Container registry](https://distribution.github.io/distribution/) · [source](https://github.com/distribution/distribution) | app | 🌐 📈 🐝 💾 🦾 |
 | [sendan](apps/sendan) | [Sendan](https://github.com/Serraniel/sendan) | app | 🌐 📈 🏠 💾 🦾 |
+| [stirling-pdf](apps/stirling-pdf) | [Stirling-PDF](https://www.stirlingpdf.com) · [source](https://github.com/Stirling-Tools/Stirling-PDF) | app | 🌐 📈 🏠 💾 🦾 |
 | [sweetfolio](apps/sweetfolio) | [Sweetfolio](https://github.com/Serraniel/Sweetfolio) | app | 🌐 📈 🏠 🐝 🦾 |
 | [tdarr](apps/tdarr) | [Tdarr](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🌐 📈 🏠 💾 🦾 |
 | [vaultwarden](apps/vaultwarden) | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 🦾 |

@@ -1,0 +1,35 @@
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:3.3.0
+    restart: unless-stopped
+    # The image's own health check (/api/v1/info/status) is used.
+    environment:
+      SECURITY_ENABLELOGIN: ${ENABLE_LOGIN}
+      SECURITY_INITIALLOGIN_USERNAME: admin
+      SECURITY_INITIALLOGIN_PASSWORD: ${ADMIN_PASSWORD}
+      SYSTEM_DEFAULTLOCALE: en-GB
+      TZ: ${TZ}
+    volumes:
+      - configs:/configs   # settings and, with login, the user database (H2)
+      - storage:/storage   # files users save on the server
+    networks: [ingress]
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      caddy.request_body.max_size: 2GB   # large PDFs
+      kuma.stirling-pdf.http.name: Stirling-PDF
+      kuma.stirling-pdf.http.url: https://${DOMAIN}/api/v1/info/status
+      homepage.group: Documents
+      homepage.name: Stirling-PDF
+      homepage.icon: stirling-pdf.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  configs:
+  storage:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
