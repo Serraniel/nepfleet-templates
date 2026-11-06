@@ -23,8 +23,8 @@ spec:
       required: true
     - name: ZIGBEE_DEVICE
       type: device
-      title: Zigbee/Thread USB stick (e.g. SkyConnect, Sonoff)
-      description: Pick its /dev/serial/by-id path; Home Assistant sees the same path, so its ZHA or Thread setup survives replugging.
+      title: Zigbee USB stick for ZHA (e.g. SkyConnect, Sonoff)
+      description: Pick its /dev/serial/by-id path; Home Assistant sees the same path, so ZHA keeps working across reboots. After replugging the stick, restart the stack.
     - name: ZWAVE_DEVICE
       type: device
       title: Z-Wave USB stick

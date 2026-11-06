@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: jellyfin
   title: Jellyfin
-  description: Media server. Mount your media read-only. Add /dev/dri in compose.yaml for hardware transcoding.
+  description: Media server. Mount your media read-only. Pick a GPU for hardware transcoding.
   tier: app
   category: media
   homepage: https://jellyfin.org

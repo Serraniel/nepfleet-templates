@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: tdarr
   title: Tdarr
-  description: "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Add GPU devices in compose.yaml for hardware transcoding."
+  description: "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding."
   tier: app
   category: media
   homepage: https://home.tdarr.io

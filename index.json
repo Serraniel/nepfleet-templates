@@ -793,8 +793,8 @@
         {
           "name": "ZIGBEE_DEVICE",
           "type": "device",
-          "title": "Zigbee/Thread USB stick (e.g. SkyConnect, Sonoff)",
-          "description": "Pick its /dev/serial/by-id path; Home Assistant sees the same path, so its ZHA or Thread setup survives replugging."
+          "title": "Zigbee USB stick for ZHA (e.g. SkyConnect, Sonoff)",
+          "description": "Pick its /dev/serial/by-id path; Home Assistant sees the same path, so ZHA keeps working across reboots. After replugging the stick, restart the stack."
         },
         {
           "name": "ZWAVE_DEVICE",
@@ -970,7 +970,7 @@
     {
       "name": "jellyfin",
       "title": "Jellyfin",
-      "description": "Media server. Mount your media read-only. Add /dev/dri in compose.yaml for hardware transcoding.",
+      "description": "Media server. Mount your media read-only. Pick a GPU for hardware transcoding.",
       "tier": "app",
       "category": "media",
       "homepage": "https://jellyfin.org",
@@ -1698,7 +1698,7 @@
     {
       "name": "tdarr",
       "title": "Tdarr",
-      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Add GPU devices in compose.yaml for hardware transcoding.",
+      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding.",
       "tier": "app",
       "category": "media",
       "homepage": "https://home.tdarr.io",
