@@ -21,5 +21,9 @@
   "wireguard": {
     "VPN_HOST": "vpn.example.test",
     "VPN_PORT": "51999"
+  },
+  "pihole": {
+    "DNS_PORT": "15353",
+    "BIND_ADDR": "127.0.0.1"
   }
 }

@@ -1,0 +1,44 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: pihole
+  title: Pi-hole
+  description: "DNS ad and tracker blocking for the whole local network. Point your router's DNS (or each device's) at this host. If systemd-resolved already uses port 53, set BIND_ADDR to this host's LAN address. Sign in to the web UI with the generated WEB_PASSWORD (read it with: sops decrypt stacks/pihole/values.secret.yaml)."
+  tier: app
+  category: networking
+  homepage: https://pi-hole.net
+  source: https://github.com/pi-hole/docker-pi-hole
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: pihole, port: 80 }   # also reachable on a LAN port (access mode port)
+  images:
+    - name: pihole/pihole
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain of the web UI
+      required: true
+    - name: BIND_ADDR
+      type: string
+      title: Address DNS listens on (0.0.0.0 = all; this host's LAN IP if systemd-resolved holds port 53)
+      default: "0.0.0.0"
+      required: true
+      pattern: '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'
+    - name: DNS_PORT
+      type: int
+      title: DNS port (53 for devices to use it)
+      default: "53"
+      required: true
+    - name: UPSTREAM_DNS
+      type: string
+      title: Upstream DNS servers, separated by ; (default Quad9, filtering and no logging)
+      default: "9.9.9.9;149.112.112.112"
+      required: true
+      pattern: '^[0-9a-fA-F.:#]+(;[0-9a-fA-F.:#]+)*$'
+  generate:
+    - { name: WEB_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: data, backup: true }   # settings, block lists, custom DNS entries
