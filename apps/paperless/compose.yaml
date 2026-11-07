@@ -22,6 +22,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8000}}"
       kuma.paperless.http.name: Paperless
+      kuma.paperless.http.parent_name: paperless-stack
+      kuma.paperless-stack.group.name: Paperless
       kuma.paperless.http.url: https://${DOMAIN}
       homepage.group: Documents
       homepage.name: Paperless
@@ -31,6 +33,12 @@ services:
   broker:
     image: valkey/valkey:9.2-alpine
     restart: unless-stopped
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.paperless-broker.docker.name: Paperless Redis
+      kuma.paperless-broker.docker.docker_container: ${NEPFLEET_STACK}-broker-1
+      kuma.paperless-broker.docker.docker_host_name: nepfleet-docker
+      kuma.paperless-broker.docker.parent_name: paperless-stack
 
   db:
     image: postgres:18-alpine
@@ -46,6 +54,11 @@ services:
       interval: 10s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.paperless-db.docker.name: Paperless database
+      kuma.paperless-db.docker.docker_container: ${NEPFLEET_STACK}-db-1
+      kuma.paperless-db.docker.docker_host_name: nepfleet-docker
+      kuma.paperless-db.docker.parent_name: paperless-stack
 
 volumes:
   data:

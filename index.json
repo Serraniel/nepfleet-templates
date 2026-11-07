@@ -563,7 +563,7 @@
       "category": "monitoring",
       "homepage": "https://github.com/louislam/uptime-kuma",
       "path": "system/uptime-kuma",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "louislam/uptime-kuma",
@@ -582,7 +582,7 @@
         "swarm": true,
         "arm64": true,
         "ingress": true,
-        "monitoring": false,
+        "monitoring": true,
         "statusPage": true,
         "dashboard": true,
         "logs": false,
@@ -907,7 +907,7 @@
       "homepage": "https://www.bookstackapp.com",
       "source": "https://github.com/BookStackApp/BookStack",
       "path": "apps/bookstack",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "lscr.io/linuxserver/bookstack",
@@ -980,7 +980,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1182,7 +1182,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1511,7 +1511,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -1699,7 +1699,7 @@
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -1898,7 +1898,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",

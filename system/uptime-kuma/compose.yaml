@@ -4,7 +4,9 @@ services:
     restart: unless-stopped
     volumes:
       - data:/app/data
-    networks: [ingress, default]
+    # socket: Docker monitors (workers, databases) ask the read-only proxy
+    # whether a container runs and is healthy.
+    networks: [ingress, default, socket]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}
@@ -25,6 +27,12 @@ services:
       AUTOKUMA__DOCKER__LABEL_PREFIX: kuma
     networks: [default, socket]
     depends_on: [uptime-kuma, socket-proxy]
+    labels:
+      # The Docker host that templates' docker monitors name with
+      # docker_host_name: nepfleet-docker.
+      kuma.nepfleet-docker.docker_host.name: Docker (NepFleet)
+      kuma.nepfleet-docker.docker_host.connection_type: tcp
+      kuma.nepfleet-docker.docker_host.host: http://socket-proxy:2375
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.4.7

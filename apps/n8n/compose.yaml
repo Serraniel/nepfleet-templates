@@ -31,6 +31,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 5678}}"
       kuma.n8n.http.name: n8n
+      kuma.n8n.http.parent_name: n8n-stack
+      kuma.n8n-stack.group.name: n8n
       kuma.n8n.http.url: https://${DOMAIN}/healthz
       homepage.group: Automation
       homepage.name: n8n
@@ -51,6 +53,11 @@ services:
       interval: 10s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.n8n-db.docker.name: n8n database
+      kuma.n8n-db.docker.docker_container: ${NEPFLEET_STACK}-db-1
+      kuma.n8n-db.docker.docker_host_name: nepfleet-docker
+      kuma.n8n-db.docker.parent_name: n8n-stack
 
 volumes:
   data:

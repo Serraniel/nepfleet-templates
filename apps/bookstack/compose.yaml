@@ -26,6 +26,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 80}}"
       kuma.bookstack.http.name: BookStack
+      kuma.bookstack.http.parent_name: bookstack-stack
+      kuma.bookstack-stack.group.name: BookStack
       kuma.bookstack.http.url: https://${DOMAIN}/status
       homepage.group: Documents
       homepage.name: BookStack
@@ -49,6 +51,11 @@ services:
       start_period: 30s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.bookstack-db.docker.name: BookStack database
+      kuma.bookstack-db.docker.docker_container: ${NEPFLEET_STACK}-db-1
+      kuma.bookstack-db.docker.docker_host_name: nepfleet-docker
+      kuma.bookstack-db.docker.parent_name: bookstack-stack
 
 volumes:
   config:

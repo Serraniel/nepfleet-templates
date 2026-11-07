@@ -24,6 +24,8 @@ services:
       caddy.reverse_proxy: "{{upstreams 2283}}"
       caddy.request_body.max_size: 0   # large video uploads
       kuma.immich.http.name: Immich
+      kuma.immich.http.parent_name: immich-stack
+      kuma.immich-stack.group.name: Immich
       kuma.immich.http.url: https://${DOMAIN}/api/server/ping
       homepage.group: Media
       homepage.name: Immich
@@ -43,6 +45,12 @@ services:
       HF_HUB_DISABLE_TELEMETRY: "1"
     volumes:
       - model-cache:/cache
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.immich-ml.docker.name: Immich machine learning
+      kuma.immich-ml.docker.docker_container: ${NEPFLEET_STACK}-immich-machine-learning-1
+      kuma.immich-ml.docker.docker_host_name: nepfleet-docker
+      kuma.immich-ml.docker.parent_name: immich-stack
 
   redis:
     image: valkey/valkey:9.2-alpine
@@ -50,6 +58,12 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
       interval: 10s
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.immich-redis.docker.name: Immich Redis
+      kuma.immich-redis.docker.docker_container: ${NEPFLEET_STACK}-redis-1
+      kuma.immich-redis.docker.docker_host_name: nepfleet-docker
+      kuma.immich-redis.docker.parent_name: immich-stack
 
   database:
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
@@ -67,6 +81,11 @@ services:
       interval: 10s
     labels:
       docker-volume-backup.stop-during-backup: "true"
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.immich-database.docker.name: Immich database
+      kuma.immich-database.docker.docker_container: ${NEPFLEET_STACK}-database-1
+      kuma.immich-database.docker.docker_host_name: nepfleet-docker
+      kuma.immich-database.docker.parent_name: immich-stack
 
   power-tools:
     image: ghcr.io/immich-power-tools/immich-power-tools:0.25.0
