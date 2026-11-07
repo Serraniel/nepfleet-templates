@@ -1,0 +1,29 @@
+services:
+  adguard-home:
+    image: adguard/adguardhome:v0.107.80
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDR}:${DNS_PORT}:53/udp"
+      - "${BIND_ADDR}:${DNS_PORT}:53/tcp"
+    volumes:
+      - work:/opt/adguardhome/work
+      - conf:/opt/adguardhome/conf
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.adguard-home.http.name: AdGuard Home
+      kuma.adguard-home.http.url: ${NEPFLEET_URL}/
+      homepage.group: Infrastructure
+      homepage.name: AdGuard Home
+      homepage.icon: adguard-home.svg
+      homepage.href: ${NEPFLEET_URL}
+
+volumes:
+  work:
+  conf:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
