@@ -6,7 +6,9 @@ services:
     restart: unless-stopped
     init: true
     read_only: true
-    tmpfs: [/tmp]
+    tmpfs:
+      - /tmp
+      - /home/node/.cache:uid=1000,gid=1000,mode=0700   # it insists on a private one
     cap_drop: [ALL]
     security_opt:
       - no-new-privileges:true
