@@ -9,8 +9,9 @@ metadata:
   homepage: https://www.stirlingpdf.com
   source: https://github.com/Stirling-Tools/Stirling-PDF
 spec:
-  version: 0.1.2
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: stirling-pdf, port: 8080 }   # also reachable on a LAN port (access mode port)
   images:
     - name: stirlingtools/stirling-pdf
       track: minor

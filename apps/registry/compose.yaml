@@ -20,7 +20,7 @@ services:
       caddy.reverse_proxy: "{{upstreams 5000}}"
       caddy.request_body.max_size: 0   # no upload limit for image layers
       kuma.registry.http.name: Registry
-      kuma.registry.http.url: https://${DOMAIN}/v2/
+      kuma.registry.http.url: ${NEPFLEET_URL}/v2/
       kuma.registry.http.accepted_statuscodes: '["401"]'
 
 volumes:

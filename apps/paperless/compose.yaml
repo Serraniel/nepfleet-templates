@@ -3,7 +3,7 @@ services:
     image: ghcr.io/paperless-ngx/paperless-ngx:3.4
     restart: unless-stopped
     environment:
-      PAPERLESS_URL: https://${DOMAIN}
+      PAPERLESS_URL: ${NEPFLEET_URL}
       PAPERLESS_SECRET_KEY: ${SECRET_KEY}
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
@@ -24,11 +24,11 @@ services:
       kuma.paperless.http.name: Paperless
       kuma.paperless.http.parent_name: paperless-stack
       kuma.paperless-stack.group.name: Paperless
-      kuma.paperless.http.url: https://${DOMAIN}
+      kuma.paperless.http.url: ${NEPFLEET_URL}
       homepage.group: Documents
       homepage.name: Paperless
       homepage.icon: paperless-ngx.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   broker:
     image: valkey/valkey:9.2-alpine

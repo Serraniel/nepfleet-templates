@@ -18,11 +18,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 7745}}"
       kuma.homebox.http.name: Homebox
-      kuma.homebox.http.url: https://${DOMAIN}/api/v1/status
+      kuma.homebox.http.url: ${NEPFLEET_URL}/api/v1/status
       homepage.group: Home
       homepage.name: Homebox
       homepage.icon: homebox.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
     deploy:
       replicas: 1   # SQLite
 

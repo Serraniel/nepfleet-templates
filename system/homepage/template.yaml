@@ -9,7 +9,7 @@ metadata:
   homepage: https://gethomepage.dev
   source: https://github.com/gethomepage/homepage
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   images:
     - name: ghcr.io/gethomepage/homepage

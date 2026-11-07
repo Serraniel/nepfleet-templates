@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     read_only: true
     environment:
-      SENDAN_BASE_URL: https://${DOMAIN}
+      SENDAN_BASE_URL: ${NEPFLEET_URL}
       SENDAN_TRUSTED_PROXIES: "1"   # exactly one proxy (Caddy) in front
     volumes:
       - data:/var/lib/sendan
@@ -13,10 +13,10 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
       kuma.sendan.http.name: Sendan
-      kuma.sendan.http.url: https://${DOMAIN}
+      kuma.sendan.http.url: ${NEPFLEET_URL}
       homepage.group: Files
       homepage.name: Sendan
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

@@ -17,11 +17,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 5572}}"
       kuma.rclone.http.name: rclone
-      kuma.rclone.http.url: https://${DOMAIN}
+      kuma.rclone.http.url: ${NEPFLEET_URL}
       homepage.group: Storage
       homepage.name: rclone
       homepage.icon: rclone.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   config:

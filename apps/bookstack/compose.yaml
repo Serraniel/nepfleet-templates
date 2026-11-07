@@ -6,7 +6,7 @@ services:
       PUID: "1000"
       PGID: "1000"
       TZ: ${TZ}
-      APP_URL: https://${DOMAIN}
+      APP_URL: ${NEPFLEET_URL}
       APP_KEY: ${APP_KEY}
       DB_HOST: db
       DB_PORT: "3306"
@@ -28,11 +28,11 @@ services:
       kuma.bookstack.http.name: BookStack
       kuma.bookstack.http.parent_name: bookstack-stack
       kuma.bookstack-stack.group.name: BookStack
-      kuma.bookstack.http.url: https://${DOMAIN}/status
+      kuma.bookstack.http.url: ${NEPFLEET_URL}/status
       homepage.group: Documents
       homepage.name: BookStack
       homepage.icon: bookstack.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   db:
     image: mariadb:11.8

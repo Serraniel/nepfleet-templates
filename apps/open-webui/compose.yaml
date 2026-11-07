@@ -3,7 +3,7 @@ services:
     image: ghcr.io/open-webui/open-webui:v0.13.0
     restart: unless-stopped
     environment:
-      WEBUI_URL: https://${DOMAIN}
+      WEBUI_URL: ${NEPFLEET_URL}
       WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
       ENABLE_SIGNUP: ${ENABLE_SIGNUP}
       # Unused backends simply stay unreachable; Open WebUI shows them as offline.
@@ -24,11 +24,11 @@ services:
       kuma.open-webui.http.name: Open WebUI
       kuma.open-webui.http.parent_name: open-webui-stack
       kuma.open-webui-stack.group.name: Open WebUI
-      kuma.open-webui.http.url: https://${DOMAIN}/health
+      kuma.open-webui.http.url: ${NEPFLEET_URL}/health
       homepage.group: AI
       homepage.name: Open WebUI
       homepage.icon: open-webui.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   ollama:
     image: ollama/ollama:0.40.14

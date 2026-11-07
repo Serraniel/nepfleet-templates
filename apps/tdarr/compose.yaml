@@ -30,11 +30,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8265}}"
       kuma.tdarr.http.name: Tdarr
-      kuma.tdarr.http.url: https://${DOMAIN}
+      kuma.tdarr.http.url: ${NEPFLEET_URL}
       homepage.group: Media
       homepage.name: Tdarr
       homepage.icon: tdarr.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   server:

@@ -39,11 +39,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8384}}"
       kuma.syncthing.http.name: Syncthing
-      kuma.syncthing.http.url: https://${DOMAIN}/rest/noauth/health
+      kuma.syncthing.http.url: ${NEPFLEET_URL}/rest/noauth/health
       homepage.group: Files
       homepage.name: Syncthing
       homepage.icon: syncthing.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   config:

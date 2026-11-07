@@ -9,7 +9,7 @@ x-forgejo-env: &forgejo-env
   FORGEJO__database__USER: forgejo
   FORGEJO__database__PASSWD: ${DB_PASSWORD}
   FORGEJO__server__DOMAIN: ${DOMAIN}
-  FORGEJO__server__ROOT_URL: https://${DOMAIN}/
+  FORGEJO__server__ROOT_URL: ${NEPFLEET_URL}/
   FORGEJO__server__SSH_DOMAIN: ${DOMAIN}
   FORGEJO__server__SSH_PORT: ${SSH_PORT}
   FORGEJO__security__INSTALL_LOCK: "true"
@@ -39,11 +39,11 @@ services:
       kuma.forgejo.http.name: Forgejo
       kuma.forgejo.http.parent_name: forgejo-stack
       kuma.forgejo-stack.group.name: Forgejo
-      kuma.forgejo.http.url: https://${DOMAIN}/api/healthz
+      kuma.forgejo.http.url: ${NEPFLEET_URL}/api/healthz
       homepage.group: Development
       homepage.name: Forgejo
       homepage.icon: forgejo.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   # Registers the runner's shared secret with Forgejo. Idempotent; exits.
   register-runner:

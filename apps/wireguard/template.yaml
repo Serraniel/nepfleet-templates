@@ -9,7 +9,7 @@ metadata:
   homepage: https://wg-easy.github.io/wg-easy/
   source: https://github.com/wg-easy/wg-easy
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: ghcr.io/wg-easy/wg-easy

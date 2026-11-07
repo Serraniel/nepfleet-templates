@@ -9,8 +9,9 @@ metadata:
   homepage: https://mealie.io
   source: https://github.com/mealie-recipes/mealie
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: mealie, port: 9000 }   # also reachable on a LAN port (access mode port)
   images:
     - name: ghcr.io/mealie-recipes/mealie
       track: minor

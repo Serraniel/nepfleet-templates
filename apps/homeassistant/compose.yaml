@@ -12,8 +12,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: host.docker.internal:8123
       kuma.homeassistant.http.name: Home Assistant
-      kuma.homeassistant.http.url: https://${DOMAIN}
+      kuma.homeassistant.http.url: ${NEPFLEET_URL}
       homepage.group: Home
       homepage.name: Home Assistant
       homepage.icon: home-assistant.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}

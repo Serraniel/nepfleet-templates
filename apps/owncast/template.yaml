@@ -9,8 +9,9 @@ metadata:
   homepage: https://owncast.online
   source: https://github.com/owncast/owncast
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: owncast, port: 8080 }   # also reachable on a LAN port (access mode port)
   images:
     - name: owncast/owncast
       track: patch

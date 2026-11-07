@@ -8,8 +8,9 @@ metadata:
   category: finance
   homepage: https://github.com/Serraniel/Sweetfolio
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: sweetfolio, port: 8080 }   # also reachable on a LAN port (access mode port)
   images:
     - name: ghcr.io/serraniel/sweetfolio
       track: patch   # pre-1.0: a minor may break

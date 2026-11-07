@@ -9,7 +9,7 @@ metadata:
   homepage: https://actualbudget.org
   source: https://github.com/actualbudget/actual
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     # Versions are YY.MM.patch: "minor" takes the monthly releases of a year.

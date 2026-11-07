@@ -3,7 +3,7 @@ services:
     image: deluan/navidrome:0.64.2
     restart: unless-stopped
     environment:
-      ND_BASEURL: https://${DOMAIN}
+      ND_BASEURL: ${NEPFLEET_URL}
       ND_SCANSCHEDULE: ${SCAN_SCHEDULE}
       ND_LOGLEVEL: info
       ND_ENABLEINSIGHTSCOLLECTOR: "false"   # no anonymous usage reports
@@ -16,11 +16,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 4533}}"
       kuma.navidrome.http.name: Navidrome
-      kuma.navidrome.http.url: https://${DOMAIN}/ping
+      kuma.navidrome.http.url: ${NEPFLEET_URL}/ping
       homepage.group: Media
       homepage.name: Navidrome
       homepage.icon: navidrome.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

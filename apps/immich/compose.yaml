@@ -26,11 +26,11 @@ services:
       kuma.immich.http.name: Immich
       kuma.immich.http.parent_name: immich-stack
       kuma.immich-stack.group.name: Immich
-      kuma.immich.http.url: https://${DOMAIN}/api/server/ping
+      kuma.immich.http.url: ${NEPFLEET_URL}/api/server/ping
       homepage.group: Media
       homepage.name: Immich
       homepage.icon: immich.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
       docker-volume-backup.stop-during-backup: "true"
 
   immich-machine-learning:
@@ -93,7 +93,7 @@ services:
     restart: unless-stopped
     environment:
       IMMICH_URL: http://immich-server:2283
-      EXTERNAL_IMMICH_URL: https://${DOMAIN}
+      EXTERNAL_IMMICH_URL: ${NEPFLEET_URL}
       DB_HOST: database
       DB_PORT: "5432"
       DB_USERNAME: immich

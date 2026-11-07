@@ -20,11 +20,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 9898}}"
       kuma.backrest.http.name: Backrest
-      kuma.backrest.http.url: https://${DOMAIN}
+      kuma.backrest.http.url: ${NEPFLEET_URL}
       homepage.group: System
       homepage.name: Backups
       homepage.icon: backrest.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:
