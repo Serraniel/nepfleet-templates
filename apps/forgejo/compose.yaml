@@ -15,6 +15,14 @@ x-forgejo-env: &forgejo-env
   FORGEJO__security__INSTALL_LOCK: "true"
   FORGEJO__service__DISABLE_REGISTRATION: "true"
   FORGEJO__actions__ENABLED: "true"
+  # Mail, for notifications and password resets; off until a server is given.
+  FORGEJO__mailer__ENABLED: ${MAIL_ENABLED}
+  FORGEJO__mailer__PROTOCOL: smtp+starttls
+  FORGEJO__mailer__SMTP_ADDR: ${SMTP_SERVER}
+  FORGEJO__mailer__SMTP_PORT: ${SMTP_PORT}
+  FORGEJO__mailer__USER: ${SMTP_LOGIN}
+  FORGEJO__mailer__PASSWD: ${SMTP_PASSWORD}
+  FORGEJO__mailer__FROM: ${SMTP_FROM_ADDRESS}
 
 services:
   forgejo:
@@ -52,7 +60,7 @@ services:
     user: "1000:1000"
     entrypoint: ["forgejo", "forgejo-cli", "actions", "register",
                  "--name", "default", "--secret", "${RUNNER_SECRET}",
-                 "--labels", "docker:docker://node:22-bookworm"]
+                 "--labels", "${RUNNER_LABELS}"]
     environment: *forgejo-env
     volumes:
       - data:/data
