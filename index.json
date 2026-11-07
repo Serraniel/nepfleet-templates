@@ -464,6 +464,66 @@
       "migrations": []
     },
     {
+      "name": "grafana",
+      "title": "Grafana",
+      "description": "Metrics dashboards, reading the prometheus template's data. Sign in as admin, with the password in the stack's encrypted secrets (ADMIN_PASSWORD).",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://grafana.com/oss/grafana",
+      "source": "https://github.com/grafana/grafana",
+      "path": "system/grafana",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "grafana/grafana",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": true
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "PROMETHEUS_URL",
+          "type": "url",
+          "title": "Prometheus address",
+          "description": "The prometheus template's address on the ingress network.",
+          "default": "http://prometheus:9090"
+        }
+      ],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "homepage",
       "title": "Homepage",
       "description": "A dashboard for your services. Entries come from homepage.* labels; title, theme, language, search and the resource widgets are set as values (NepFleet owns settings.yaml and widgets.yaml; bookmarks.yaml and the rest stay yours).",
@@ -728,6 +788,59 @@
           "name": "data",
           "backup": true,
           "shared": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "prometheus",
+      "title": "Prometheus",
+      "description": "Collects metrics from this host and from every service with nepfleet.metrics labels. It has no login, so it isn't published: use the grafana template to look at it.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://prometheus.io",
+      "source": "https://github.com/prometheus/prometheus",
+      "path": "system/prometheus",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "prom/prometheus",
+          "track": "minor"
+        },
+        {
+          "name": "quay.io/prometheus/node-exporter",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": false,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "RETENTION_DAYS",
+          "type": "int",
+          "title": "Keep metrics for (days)",
+          "default": "30"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data"
         }
       ],
       "migrations": []

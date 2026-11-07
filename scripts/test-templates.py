@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -243,8 +244,22 @@ def check_dozzle():
         raise SystemExit("dozzle: its proxy let a container be stopped")
 
 
+def check_prometheus():
+    """Ready says little: it must really scrape this host, and find services by label."""
+    c = stack_name("prometheus") + "-prometheus-1"
+    for _ in range(30):
+        out = run("docker", "exec", c, "wget", "-qO-", "http://localhost:9090/api/v1/targets").stdout
+        targets = json.loads(out)["data"]["activeTargets"]
+        up = {t["labels"]["job"] for t in targets if t["health"] == "up"}
+        if "node" in up and "prometheus" in up:
+            break
+        time.sleep(5)
+    else:
+        raise SystemExit(f"prometheus: not scraping this host: {out[:800]}")
+
+
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"fail2ban": check_fail2ban, "dozzle": check_dozzle}
+AFTER_DEPLOY = {"fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():

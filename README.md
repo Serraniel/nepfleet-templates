@@ -26,9 +26,11 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [fail2ban](system/fail2ban) | [fail2ban](https://github.com/fail2ban/fail2ban) · [source](https://github.com/crazy-max/docker-fail2ban) | system | 🦾 |
 | [frpc](system/frpc) | [frp client (home side)](https://github.com/fatedier/frp) | system | 🦾 |
 | [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
+| [grafana](system/grafana) | [Grafana](https://grafana.com/oss/grafana) · [source](https://github.com/grafana/grafana) | system | 🌐 📈 🏠 💾 🦾 |
 | [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |
 | [neptide](system/neptide) | [neptide image updates](https://github.com/Serraniel/neptide) | system | 🐝 🦾 |
 | [pocket-id](system/pocket-id) | [Pocket ID](https://pocket-id.org) · [source](https://github.com/pocket-id/pocket-id) | system | 🌐 📈 🏠 🐝 💾 🦾 |
+| [prometheus](system/prometheus) | [Prometheus](https://prometheus.io) · [source](https://github.com/prometheus/prometheus) | system | 🦾 |
 | [uptime-kuma](system/uptime-kuma) | [Uptime Kuma + AutoKuma](https://github.com/louislam/uptime-kuma) | system | 🌐 📈 📊 🏠 🐝 💾 🦾 |
 | [volume-backup](system/volume-backup) | [Volume backups (docker-volume-backup)](https://offen.github.io/docker-volume-backup/) · [source](https://github.com/offen/docker-volume-backup) | system | 🦾 |
 | [watchtower](system/watchtower) | [Watchtower (maintained fork)](https://github.com/nicholas-fedor/watchtower) | system | 🦾 |
