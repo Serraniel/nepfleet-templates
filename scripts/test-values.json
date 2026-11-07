@@ -17,5 +17,9 @@
   },
   "volume-backup": {
     "AGE_RECIPIENTS": "{age_public_key}"
+  },
+  "wireguard": {
+    "VPN_HOST": "vpn.example.test",
+    "VPN_PORT": "51999"
   }
 }
