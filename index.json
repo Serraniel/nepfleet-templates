@@ -2679,7 +2679,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -2691,6 +2691,14 @@
         },
         {
           "name": "valkey/valkey",
+          "track": "minor"
+        },
+        {
+          "name": "apache/tika",
+          "track": "minor"
+        },
+        {
+          "name": "gotenberg/gotenberg",
           "track": "minor"
         }
       ],
@@ -2713,6 +2721,22 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "COMPOSE_PROFILES",
+          "type": "enum",
+          "title": "Extra services (office adds Tika and Gotenberg, and needs the next setting too)",
+          "default": "none",
+          "options": [
+            "none",
+            "office"
+          ]
+        },
+        {
+          "name": "OFFICE_DOCUMENTS",
+          "type": "bool",
+          "title": "Read Office documents (needs the office services above)",
+          "default": "false"
         },
         {
           "name": "OCR_LANGUAGE",

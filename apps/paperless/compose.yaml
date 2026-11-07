@@ -10,6 +10,10 @@ services:
       PAPERLESS_DBPASS: ${DB_PASSWORD}
       PAPERLESS_OCR_LANGUAGE: ${OCR_LANGUAGE}
       PAPERLESS_TIME_ZONE: ${TZ}
+      # On when COMPOSE_PROFILES is office. Its services below start only then.
+      PAPERLESS_TIKA_ENABLED: ${OFFICE_DOCUMENTS}
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
     volumes:
       - data:/usr/src/paperless/data
       - media:/usr/src/paperless/media
@@ -29,6 +33,19 @@ services:
       homepage.name: Paperless
       homepage.icon: paperless-ngx.svg
       homepage.href: ${NEPFLEET_URL}
+
+  # Read Office documents and turn them into PDFs. Sizable, so off unless asked for.
+  tika:
+    image: apache/tika:3.3.3.0
+    profiles: [office]
+    restart: unless-stopped
+
+  gotenberg:
+    image: gotenberg/gotenberg:9.1.0
+    profiles: [office]
+    restart: unless-stopped
+    # Documents are untrusted: no JavaScript, and no reaching out while converting.
+    command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
 
   broker:
     image: valkey/valkey:9.2-alpine
