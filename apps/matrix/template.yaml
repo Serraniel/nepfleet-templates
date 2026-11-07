@@ -1,0 +1,41 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: matrix
+  title: Matrix
+  description: "Chat with Synapse and the Element web client. Registration is off: create the first user with register_new_matrix_user in the synapse container, using REGISTRATION_SECRET from the stack's secrets. The domain becomes part of every user's name and can't change later."
+  tier: app
+  category: communication
+  homepage: https://matrix.org
+  source: https://github.com/element-hq/synapse
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: matrixdotorg/synapse
+      track: minor
+    - name: vectorim/element-web
+      track: minor
+    - name: postgres
+      track: patch
+  supports: { ingress: true, monitoring: true, dashboard: true, logs: true, backup: true, arm64: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Matrix domain, e.g. matrix.example.org
+      required: true
+    - name: ELEMENT_DOMAIN
+      type: hostname
+      title: Domain of the Element web client, e.g. chat.example.org
+      required: true
+  generate:
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    - { name: REGISTRATION_SECRET, kind: secret, length: 48, encoding: alnum }
+    - { name: MACAROON_SECRET, kind: secret, length: 48, encoding: alnum }
+    - { name: FORM_SECRET, kind: secret, length: 48, encoding: alnum }
+  files:
+    - { src: files/homeserver.yaml, dest: config/homeserver.yaml }
+    - { src: files/element.json, dest: config/element.json }
+  volumes:
+    - { name: data, backup: true }   # the signing key and media; media can grow large
+    - { name: db, backup: true }
