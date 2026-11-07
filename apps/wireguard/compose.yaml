@@ -1,0 +1,42 @@
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy:15.5.0
+    restart: unless-stopped
+    # The image's own health check reports the WireGuard interface.
+    environment:
+      # Unattended setup, used on the first start only.
+      INIT_ENABLED: "true"
+      INIT_USERNAME: admin
+      INIT_PASSWORD: ${ADMIN_PASSWORD}
+      INIT_HOST: ${VPN_HOST}
+      INIT_PORT: ${VPN_PORT}
+      INIT_DNS: ${CLIENT_DNS}
+      PORT: "51821"   # web UI, behind Caddy
+    ports:
+      - "${VPN_PORT}:${VPN_PORT}/udp"
+    volumes:
+      - data:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
+    cap_add: [NET_ADMIN, SYS_MODULE]
+    sysctls:
+      net.ipv4.ip_forward: "1"
+      net.ipv4.conf.all.src_valid_mark: "1"
+    networks: [ingress]
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # SQLite database
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 51821}}"
+      kuma.wireguard.http.name: WireGuard
+      kuma.wireguard.http.url: https://${DOMAIN}
+      homepage.group: Infrastructure
+      homepage.name: WireGuard
+      homepage.icon: wireguard.svg
+      homepage.href: https://${DOMAIN}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

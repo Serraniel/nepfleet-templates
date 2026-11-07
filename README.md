@@ -56,6 +56,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [tdarr](apps/tdarr) | [Tdarr](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🌐 📈 🏠 💾 🦾 |
 | [vaultwarden](apps/vaultwarden) | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [vpn-egress](apps/vpn-egress) | [VPN egress (gluetun)](https://github.com/qdm12/gluetun-wiki) · [source](https://github.com/qdm12/gluetun) | app | 🦾 |
+| [wireguard](apps/wireguard) | [WireGuard (wg-easy)](https://wg-easy.github.io/wg-easy/) · [source](https://github.com/wg-easy/wg-easy) | app | 🌐 📈 🏠 💾 🦾 |
 
 <!-- catalogue:end -->
 

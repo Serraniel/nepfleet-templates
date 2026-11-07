@@ -1,0 +1,43 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: wireguard
+  title: WireGuard (wg-easy)
+  description: "Your own VPN into the home network: phones and laptops connect from anywhere and reach home services as if they were there. Forward VPN_PORT (UDP) on the router to this host. The web UI creates client configs and QR codes; sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/wireguard/values.secret.yaml)."
+  tier: app
+  category: networking
+  homepage: https://wg-easy.github.io/wg-easy/
+  source: https://github.com/wg-easy/wg-easy
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/wg-easy/wg-easy
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain of the web UI
+      required: true
+    - name: VPN_HOST
+      type: hostname
+      title: Public host name clients connect to (e.g. your DynDNS name)
+      required: true
+    - name: VPN_PORT
+      type: int
+      title: UDP port for WireGuard (forward it on the router)
+      default: "51820"
+      required: true
+    - name: CLIENT_DNS
+      type: string
+      title: DNS servers for clients (e.g. your Pi-hole or AdGuard Home address)
+      default: "1.1.1.1,9.9.9.9"
+      required: true
+      pattern: '^[0-9a-fA-F.:]+(,[0-9a-fA-F.:]+)*$'
+  generate:
+    # Set on the first start (wg-easy's unattended setup), so the setup
+    # screen is never open.
+    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+  volumes:
+    - { name: data, backup: true }   # server keys, clients, settings
