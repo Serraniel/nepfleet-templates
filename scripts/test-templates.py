@@ -195,6 +195,9 @@ def deploy(nf, names):
             print(("ok   " if p.returncode == 0 else "FAIL ") + name)
             if p.returncode != 0:
                 failed.append(name)
+                # "Unhealthy" says little: the containers' own words are why.
+                logs = run("docker", "compose", "-p", stack_name(name), "logs", "--no-color", "--tail", "40", check=False)
+                print(logs.stdout + logs.stderr)
             elif name in AFTER_DEPLOY:
                 try:
                     AFTER_DEPLOY[name]()
