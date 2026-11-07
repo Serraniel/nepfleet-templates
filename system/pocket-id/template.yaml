@@ -1,0 +1,27 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: pocket-id
+  title: Pocket ID
+  description: "Sign in with passkeys across your apps: a small OpenID Connect provider. Passkeys need HTTPS, so use a domain. Set it up at /setup right after installing, as the first visitor becomes its admin."
+  tier: system
+  category: security
+  homepage: https://pocket-id.org
+  source: https://github.com/pocket-id/pocket-id
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: pocket-id, port: 1411 }
+  images:
+    - name: ghcr.io/pocket-id/pocket-id
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  generate:
+    - { name: ENCRYPTION_KEY, kind: secret, length: 32, encoding: base64url }
+  volumes:
+    - { name: data, backup: true, shared: true }

@@ -1,0 +1,39 @@
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v2.19.2
+    restart: unless-stopped
+    environment:
+      APP_URL: ${NEPFLEET_URL}
+      TRUST_PROXY: "true"
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ANALYTICS_DISABLED: "true"
+    volumes:
+      - data:/app/data
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 1411}}"
+      kuma.pocket-id.http.name: Pocket ID
+      kuma.pocket-id.http.url: ${NEPFLEET_URL}/healthz
+      homepage.group: Security
+      homepage.name: Pocket ID
+      homepage.icon: pocket-id.svg
+      homepage.href: ${NEPFLEET_URL}
+    deploy:
+      replicas: 1   # SQLite: never more than one
+      update_config: { order: stop-first }
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
