@@ -183,6 +183,9 @@ def deploy(nf, names):
     tpls = {t["name"]: t for t in catalogue(nf)}
     failed = []
     for name in names:
+        if name in OVERRIDES.get("_ci_only", {}) and not os.environ.get("CI"):
+            print(f"skip {name}: {OVERRIDES['_ci_only'][name]}")
+            continue
         fleet = Fleet(nf)
         try:
             fleet.new(tpls[name])
@@ -191,6 +194,13 @@ def deploy(nf, names):
             print(("ok   " if p.returncode == 0 else "FAIL ") + name)
             if p.returncode != 0:
                 failed.append(name)
+            elif name in AFTER_DEPLOY:
+                try:
+                    AFTER_DEPLOY[name]()
+                    print("ok   " + name + " works")
+                except SystemExit as e:
+                    print(e)
+                    failed.append(name)
         finally:
             # Only this test's own project, by its rendered files: without
             # --file, compose would pick up a compose.yaml from the cwd.
@@ -205,6 +215,23 @@ def deploy(nf, names):
             fleet.cleanup()
     if failed:
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
+
+
+def check_fail2ban():
+    """A ban must really reach the host's firewall: looking active isn't enough."""
+    address = "203.0.113.9"  # TEST-NET-3, nobody's
+    c = stack_name("fail2ban") + "-fail2ban-1"
+    run("docker", "exec", c, "fail2ban-client", "set", "sshd", "banip", address)
+    rules = run("sudo", "-n", "iptables", "-S").stdout
+    if "-A INPUT -p tcp" not in rules or "f2b-sshd" not in rules or address not in rules:
+        raise SystemExit(f"fail2ban: the ban is not in the host's firewall:\n{rules}")
+    run("docker", "exec", c, "fail2ban-client", "set", "sshd", "unbanip", address)
+    if address in run("sudo", "-n", "iptables", "-S").stdout:
+        raise SystemExit("fail2ban: unbanning did not remove the rule")
+
+
+# Checks beyond "healthy", for templates where that proves little.
+AFTER_DEPLOY = {"fail2ban": check_fail2ban}
 
 
 def main():

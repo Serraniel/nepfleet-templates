@@ -219,6 +219,77 @@
       "migrations": []
     },
     {
+      "name": "fail2ban",
+      "title": "fail2ban",
+      "description": "Bans addresses after repeated failed SSH logins, in the host's firewall. Privileged: it uses the host's network and changes its firewall, and reads the host's journal. It reacts after failures, so key-only SSH matters more (check with nepfleet doctor --security). Unban an address: docker exec <container> fail2ban-client set sshd unbanip <address>.",
+      "tier": "system",
+      "category": "security",
+      "homepage": "https://github.com/fail2ban/fail2ban",
+      "source": "https://github.com/crazy-max/docker-fail2ban",
+      "path": "system/fail2ban",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "crazymax/fail2ban",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "IGNORE_IP",
+          "type": "string",
+          "title": "Addresses never banned, separated by spaces",
+          "description": "Private networks by default, so you can't lock yourself out from your LAN or VPN. Add the public address you connect from, if it is fixed.",
+          "required": true,
+          "default": "127.0.0.1/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 fd00::/8",
+          "pattern": "^[0-9a-fA-F.:/]+( [0-9a-fA-F.:/]+)*$"
+        },
+        {
+          "name": "MAX_RETRY",
+          "type": "int",
+          "title": "Failed logins before a ban",
+          "required": true,
+          "default": "5"
+        },
+        {
+          "name": "FIND_TIME",
+          "type": "string",
+          "title": "Within this time",
+          "required": true,
+          "default": "10m",
+          "pattern": "^[0-9]+[smhd]$"
+        },
+        {
+          "name": "BAN_TIME",
+          "type": "string",
+          "title": "How long a ban lasts",
+          "required": true,
+          "default": "1h",
+          "pattern": "^[0-9]+[smhd]$"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data"
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "frpc",
       "title": "frp client (home side)",
       "description": "Publishes a local service through an frps on a public host. Add more [[proxies]] to frpc.toml in the fleet repository.",

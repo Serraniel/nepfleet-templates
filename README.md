@@ -22,6 +22,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [binfmt](system/binfmt) | [Foreign-architecture emulation](https://github.com/tonistiigi/binfmt) | system | 🦾 |
 | [caddy](system/caddy) | [Caddy ingress](https://github.com/lucaslorentz/caddy-docker-proxy) | system | 🐝 💾 🦾 |
 | [dozzle](system/dozzle) | [Dozzle](https://dozzle.dev) · [source](https://github.com/amir20/dozzle) | system | 🌐 📈 🏠 🐝 🦾 |
+| [fail2ban](system/fail2ban) | [fail2ban](https://github.com/fail2ban/fail2ban) · [source](https://github.com/crazy-max/docker-fail2ban) | system | 🦾 |
 | [frpc](system/frpc) | [frp client (home side)](https://github.com/fatedier/frp) | system | 🦾 |
 | [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
 | [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |

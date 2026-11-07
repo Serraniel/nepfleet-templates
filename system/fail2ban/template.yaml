@@ -1,0 +1,46 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: fail2ban
+  title: fail2ban
+  description: "Bans addresses after repeated failed SSH logins, in the host's firewall. Privileged: it uses the host's network and changes its firewall, and reads the host's journal. It reacts after failures, so key-only SSH matters more (check with nepfleet doctor --security). Unban an address: docker exec <container> fail2ban-client set sshd unbanip <address>."
+  tier: system
+  category: security
+  homepage: https://github.com/fail2ban/fail2ban
+  source: https://github.com/crazy-max/docker-fail2ban
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: crazymax/fail2ban
+      track: minor
+  supports: { arm64: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: IGNORE_IP
+      type: string
+      title: Addresses never banned, separated by spaces
+      description: Private networks by default, so you can't lock yourself out from your LAN or VPN. Add the public address you connect from, if it is fixed.
+      default: "127.0.0.1/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 fd00::/8"
+      required: true
+      pattern: '^[0-9a-fA-F.:/]+( [0-9a-fA-F.:/]+)*$'
+    - name: MAX_RETRY
+      type: int
+      title: Failed logins before a ban
+      default: "5"
+      required: true
+    - name: FIND_TIME
+      type: string
+      title: Within this time
+      default: 10m
+      required: true
+      pattern: '^[0-9]+[smhd]$'
+    - name: BAN_TIME
+      type: string
+      title: How long a ban lasts
+      default: 1h
+      required: true
+      pattern: '^[0-9]+[smhd]$'
+  files:
+    - { src: files/sshd.conf, dest: jail.d/sshd.conf }
+  volumes:
+    - { name: data }   # the ban database: bans can be rebuilt, so no backup
