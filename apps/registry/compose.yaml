@@ -8,6 +8,9 @@ services:
       REGISTRY_AUTH_HTPASSWD_PATH: /run/htpasswd
       REGISTRY_HTTP_SECRET: ${HTTP_SECRET}
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      # Metrics on a port of their own, which Caddy doesn't publish.
+      REGISTRY_HTTP_DEBUG_ADDR: ":5001"
+      REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED: "true"
       HTPASSWD: ${HTPASSWD}
     # The htpasswd file is written from the encrypted value at start, never to disk on the host.
     entrypoint: ["/bin/sh", "-c", "printf '%s\\n' \"$$HTPASSWD\" > /run/htpasswd && exec registry serve /etc/distribution/config.yml"]
@@ -22,6 +25,7 @@ services:
       kuma.registry.http.name: Registry
       kuma.registry.http.url: ${NEPFLEET_URL}/v2/
       kuma.registry.http.accepted_statuscodes: '["401"]'
+      nepfleet.metrics.port: "5001"
 
 volumes:
   data:

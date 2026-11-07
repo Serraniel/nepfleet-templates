@@ -9,7 +9,7 @@ metadata:
   homepage: https://immich.app
   source: https://github.com/immich-app/immich
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   web: { service: immich-server, port: 2283 }   # also reachable on a LAN port (access mode port)
   images:
@@ -24,7 +24,7 @@ spec:
       track: minor
     - name: ghcr.io/immich-power-tools/immich-power-tools
       track: patch   # pre-1.0
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, metrics: true }
   inputs:
     - name: DOMAIN
       type: hostname

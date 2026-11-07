@@ -22,6 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 NETWORK = "nepfleet_templates_it"  # never a real install's ingress network
+ALPINE = "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"
 OVERRIDES = json.loads((ROOT / "scripts" / "test-values.json").read_text())
 
 
@@ -198,10 +199,12 @@ def deploy(nf, names):
                 # "Unhealthy" says little: the containers' own words are why.
                 logs = run("docker", "compose", "-p", stack_name(name), "logs", "--no-color", "--tail", "40", check=False)
                 print(logs.stdout + logs.stderr)
-            elif name in AFTER_DEPLOY:
+            else:
                 try:
-                    AFTER_DEPLOY[name]()
-                    print("ok   " + name + " works")
+                    check_metrics(name)
+                    if name in AFTER_DEPLOY:
+                        AFTER_DEPLOY[name]()
+                        print("ok   " + name + " works")
                 except SystemExit as e:
                     print(e)
                     failed.append(name)
@@ -215,7 +218,7 @@ def deploy(nf, names):
                     "down", "--volumes", "--remove-orphans", cwd=d, check=False)
             run("docker", "network", "rm", NETWORK, check=False)
             # Bind mounts may hold files containers wrote as root.
-            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a", "rm", "-rf", "/w/paths", "/w/state", check=False)
+            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", ALPINE, "rm", "-rf", "/w/paths", "/w/state", check=False)
             fleet.cleanup()
     if failed:
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
@@ -245,6 +248,27 @@ def check_dozzle():
                f"http://127.0.0.1:2375/containers/{prefix}-dozzle-1/stop", check=False)
     if stop.returncode == 0:
         raise SystemExit("dozzle: its proxy let a container be stopped")
+
+
+def check_metrics(name):
+    """Every nepfleet.metrics label must lead to metrics, from the ingress network."""
+    ids = run("docker", "ps", "-q", "--filter", f"label=com.docker.compose.project={stack_name(name)}",
+              "--filter", "label=nepfleet.metrics.port").stdout.split()
+    for cid in ids:
+        fmt = ('{{index .Config.Labels "com.docker.compose.service"}} '
+               '{{index .Config.Labels "nepfleet.metrics.port"}} '
+               '{{index .Config.Labels "nepfleet.metrics.path"}}')
+        service, port, *path = run("docker", "inspect", "--format", fmt, cid).stdout.split() + [""]
+        url = f"http://{stack_name(name)}-{service}-1:{port}{path[0] or '/metrics'}"
+        for _ in range(12):
+            out = run("docker", "run", "--rm", "--network", NETWORK, ALPINE,
+                      "wget", "-qO-", url, check=False).stdout
+            if "# TYPE" in out or "# HELP" in out:
+                break
+            time.sleep(5)
+        else:
+            raise SystemExit(f"{name}: no metrics at {url}")
+        print(f"ok   {name} metrics at {url}")
 
 
 def check_prometheus():

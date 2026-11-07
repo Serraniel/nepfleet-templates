@@ -12,6 +12,8 @@ services:
       <<: *db
       REDIS_HOSTNAME: redis
       TZ: ${TZ}
+      # Prometheus metrics on 8081, a port Caddy doesn't publish.
+      IMMICH_TELEMETRY_INCLUDE: all
     volumes:
       - ${UPLOAD_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
@@ -27,6 +29,7 @@ services:
       kuma.immich.http.parent_name: immich-stack
       kuma.immich-stack.group.name: Immich
       kuma.immich.http.url: ${NEPFLEET_URL}/api/server/ping
+      nepfleet.metrics.port: "8081"
       homepage.group: Media
       homepage.name: Immich
       homepage.icon: immich.svg
