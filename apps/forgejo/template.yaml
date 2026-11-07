@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.1.1
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: codeberg.org/forgejo/forgejo

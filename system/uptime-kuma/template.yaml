@@ -8,7 +8,7 @@ metadata:
   category: monitoring
   homepage: https://github.com/louislam/uptime-kuma
 spec:
-  version: 0.1.1
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: louislam/uptime-kuma
@@ -17,7 +17,7 @@ spec:
       track: minor
     - name: lscr.io/linuxserver/socket-proxy
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, statusPage: true, dashboard: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, statusPage: true, dashboard: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname

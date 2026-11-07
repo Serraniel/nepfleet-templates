@@ -37,6 +37,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
       kuma.forgejo.http.name: Forgejo
+      kuma.forgejo.http.parent_name: forgejo-stack
+      kuma.forgejo-stack.group.name: Forgejo
       kuma.forgejo.http.url: https://${DOMAIN}/api/healthz
       homepage.group: Development
       homepage.name: Forgejo
@@ -74,6 +76,12 @@ services:
     depends_on:
       register-runner: { condition: service_completed_successfully }
       dind: { condition: service_started }
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.forgejo-runner.docker.name: Forgejo Actions runner
+      kuma.forgejo-runner.docker.docker_container: ${NEPFLEET_STACK}-runner-1
+      kuma.forgejo-runner.docker.docker_host_name: nepfleet-docker
+      kuma.forgejo-runner.docker.parent_name: forgejo-stack
 
   # Isolated daemon for CI jobs. Privileged, but holds nothing but job containers.
   dind:
@@ -84,6 +92,12 @@ services:
       DOCKER_TLS_CERTDIR: ""
     command: ["dockerd", "--host=tcp://0.0.0.0:2375"]
     networks: [ci]
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.forgejo-dind.docker.name: Forgejo runner's Docker
+      kuma.forgejo-dind.docker.docker_container: ${NEPFLEET_STACK}-dind-1
+      kuma.forgejo-dind.docker.docker_host_name: nepfleet-docker
+      kuma.forgejo-dind.docker.parent_name: forgejo-stack
 
   db:
     image: postgres:18-alpine
@@ -99,6 +113,11 @@ services:
       interval: 10s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.forgejo-db.docker.name: Forgejo database
+      kuma.forgejo-db.docker.docker_container: ${NEPFLEET_STACK}-db-1
+      kuma.forgejo-db.docker.docker_host_name: nepfleet-docker
+      kuma.forgejo-db.docker.parent_name: forgejo-stack
 
 volumes:
   data:

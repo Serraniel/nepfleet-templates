@@ -22,6 +22,8 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
       kuma.open-webui.http.name: Open WebUI
+      kuma.open-webui.http.parent_name: open-webui-stack
+      kuma.open-webui-stack.group.name: Open WebUI
       kuma.open-webui.http.url: https://${DOMAIN}/health
       homepage.group: AI
       homepage.name: Open WebUI
@@ -35,6 +37,12 @@ services:
     volumes:
       - ollama:/root/.ollama
     # GPU: add `gpus: all` (NVIDIA) or the ROCm image with /dev/kfd and /dev/dri (AMD).
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.open-webui-ollama.docker.name: Open WebUI Ollama
+      kuma.open-webui-ollama.docker.docker_container: ${NEPFLEET_STACK}-ollama-1
+      kuma.open-webui-ollama.docker.docker_host_name: nepfleet-docker
+      kuma.open-webui-ollama.docker.parent_name: open-webui-stack
 
   litellm:
     image: ghcr.io/berriai/litellm:v1.83.14-stable
@@ -45,6 +53,12 @@ services:
       LITELLM_MASTER_KEY: sk-${LITELLM_KEY}
     volumes:
       - ./litellm.yaml:/app/config.yaml:ro
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.open-webui-litellm.docker.name: Open WebUI LiteLLM
+      kuma.open-webui-litellm.docker.docker_container: ${NEPFLEET_STACK}-litellm-1
+      kuma.open-webui-litellm.docker.docker_host_name: nepfleet-docker
+      kuma.open-webui-litellm.docker.parent_name: open-webui-stack
 
 volumes:
   webui:

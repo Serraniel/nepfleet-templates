@@ -9,7 +9,7 @@ metadata:
   homepage: https://immich.app
   source: https://github.com/immich-app/immich
 spec:
-  version: 0.1.2
+  version: 0.2.0
   compose: compose.yaml
   images:
     # Server and machine learning must always run the same version.

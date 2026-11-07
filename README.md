@@ -26,7 +26,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
 | [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |
 | [neptide](system/neptide) | [neptide image updates](https://github.com/Serraniel/neptide) | system | 🐝 🦾 |
-| [uptime-kuma](system/uptime-kuma) | [Uptime Kuma + AutoKuma](https://github.com/louislam/uptime-kuma) | system | 🌐 📊 🏠 🐝 💾 🦾 |
+| [uptime-kuma](system/uptime-kuma) | [Uptime Kuma + AutoKuma](https://github.com/louislam/uptime-kuma) | system | 🌐 📈 📊 🏠 🐝 💾 🦾 |
 | [volume-backup](system/volume-backup) | [Volume backups (docker-volume-backup)](https://offen.github.io/docker-volume-backup/) · [source](https://github.com/offen/docker-volume-backup) | system | 🦾 |
 | [watchtower](system/watchtower) | [Watchtower (maintained fork)](https://github.com/nicholas-fedor/watchtower) | system | 🦾 |
 | [actual](apps/actual) | [Actual Budget](https://actualbudget.org) · [source](https://github.com/actualbudget/actual) | app | 🌐 📈 🏠 💾 🦾 |
@@ -61,6 +61,14 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 <!-- catalogue:end -->
 
 The table is generated from the templates (`scripts/catalogue.py`); CI keeps it current.
+
+## Monitoring
+
+Templates declare Uptime Kuma monitors as AutoKuma labels (`kuma.<id>.<type>.<setting>`), which the `uptime-kuma` system stack turns into monitors:
+
+- **Web UI:** an `http` monitor on the app's health URL.
+- **Sub-services:** databases, caches and workers get `docker` monitors. They check that the container is running and healthy through Kuma's Docker host `nepfleet-docker`, the read-only socket proxy of the `uptime-kuma` stack, so no database credentials are needed. The container is `${NEPFLEET_STACK}-<service>-1`.
+- **Groups:** a stack with sub-services gets a group (`<template>-stack`) that holds all of its monitors.
 
 ## Automation
 
