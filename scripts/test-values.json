@@ -26,6 +26,10 @@
     "DNS_PORT": "15353",
     "BIND_ADDR": "127.0.0.1"
   },
+  "authelia": {
+    "COOKIE_DOMAIN": "example.test",
+    "ADMIN_PASSWORD_HASH": "$argon2id$v=19$m=65536,t=3,p=4$171U8pCMbeYQwI1vE/xhsQ$gIWR7eYpzRzt9UBLFmIVQH2mFTnqLbw420wlQxHHYc8"
+  },
   "adguard-home": {
     "DNS_PORT": "15354",
     "BIND_ADDR": "127.0.0.1"

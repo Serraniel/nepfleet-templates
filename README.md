@@ -18,6 +18,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 
 | Template | Project | Tier | Integrations |
 |---|---|---|---|
+| [authelia](system/authelia) | [Authelia](https://www.authelia.com) · [source](https://github.com/authelia/authelia) | system | 🌐 📈 🏠 💾 🦾 |
 | [backrest](system/backrest) | [Backrest (restic)](https://github.com/garethgeorge/backrest) | system | 🌐 📈 🏠 💾 🦾 |
 | [beszel](system/beszel) | [Beszel](https://beszel.dev) · [source](https://github.com/henrygd/beszel) | system | 🌐 📈 🏠 💾 🦾 |
 | [binfmt](system/binfmt) | [Foreign-architecture emulation](https://github.com/tonistiigi/binfmt) | system | 🦾 |

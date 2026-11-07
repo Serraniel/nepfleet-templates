@@ -1,0 +1,31 @@
+services:
+  authelia:
+    image: authelia/authelia:4.39.28
+    restart: unless-stopped
+    environment:
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET: ${JWT_SECRET}
+      AUTHELIA_SESSION_SECRET: ${SESSION_SECRET}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${STORAGE_ENCRYPTION_KEY}
+    volumes:
+      - data:/data
+      - ./config/configuration.yml:/config/configuration.yml:ro
+      - ./config/users.yml:/config/users.yml:ro
+    networks: [ingress]
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9091}}"
+      kuma.authelia.http.name: Authelia
+      kuma.authelia.http.url: ${NEPFLEET_URL}/api/health
+      homepage.group: Security
+      homepage.name: Authelia
+      homepage.icon: authelia.svg
+      homepage.href: ${NEPFLEET_URL}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
