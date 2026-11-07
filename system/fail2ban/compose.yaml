@@ -1,0 +1,19 @@
+services:
+  fail2ban:
+    image: crazymax/fail2ban:1.1.1-debian   # Debian: reads the systemd journal
+    restart: unless-stopped
+    # The image's own health check asks fail2ban.
+    network_mode: host                      # changes the host's firewall
+    cap_add: [NET_ADMIN, NET_RAW]
+    environment:
+      TZ: ${TZ}
+      F2B_LOG_LEVEL: INFO
+    volumes:
+      - data:/data
+      - ./jail.d:/data/jail.d:ro
+      - /run/log/journal:/run/log/journal:ro
+      - /var/log/journal:/var/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+
+volumes:
+  data:
