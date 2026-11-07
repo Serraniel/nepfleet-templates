@@ -1,0 +1,39 @@
+services:
+  pihole:
+    image: pihole/pihole:2026.10.1
+    restart: unless-stopped
+    # The image's own health check asks its DNS server.
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${WEB_PASSWORD}
+      FTLCONF_dns_upstreams: ${UPSTREAM_DNS}
+      # Queries arrive from Docker's gateway, not the LAN: answer them all
+      # (only reachable through the published port).
+      FTLCONF_dns_listeningMode: all
+      # The host keeps the time: no NTP client or server in the container.
+      FTLCONF_ntp_sync_active: "false"
+      FTLCONF_ntp_ipv4_active: "false"
+      FTLCONF_ntp_ipv6_active: "false"
+    ports:
+      - "${BIND_ADDR}:${DNS_PORT}:53/udp"
+      - "${BIND_ADDR}:${DNS_PORT}:53/tcp"
+    volumes:
+      - data:/etc/pihole
+    networks: [ingress]
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      kuma.pihole.http.name: Pi-hole
+      kuma.pihole.http.url: ${NEPFLEET_URL}/admin/
+      homepage.group: Infrastructure
+      homepage.name: Pi-hole
+      homepage.icon: pi-hole.svg
+      homepage.href: ${NEPFLEET_URL}/admin/
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
