@@ -1428,7 +1428,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1473,6 +1473,46 @@
           "title": "Host port for git over SSH",
           "required": true,
           "default": "2222"
+        },
+        {
+          "name": "RUNNER_LABELS",
+          "type": "string",
+          "title": "Actions runner labels, separated by commas (label:docker://image)",
+          "required": true,
+          "default": "docker:docker://node:22-bookworm",
+          "pattern": "^[A-Za-z0-9._-]+:docker://[A-Za-z0-9./:@_-]+(,[A-Za-z0-9._-]+:docker://[A-Za-z0-9./:@_-]+)*$"
+        },
+        {
+          "name": "MAIL_ENABLED",
+          "type": "bool",
+          "title": "Send mail (notifications, password resets)",
+          "default": "false"
+        },
+        {
+          "name": "SMTP_SERVER",
+          "type": "string",
+          "title": "Mail server"
+        },
+        {
+          "name": "SMTP_PORT",
+          "type": "int",
+          "title": "Mail server port (STARTTLS)",
+          "default": "587"
+        },
+        {
+          "name": "SMTP_LOGIN",
+          "type": "string",
+          "title": "Mail login"
+        },
+        {
+          "name": "SMTP_PASSWORD",
+          "type": "secret",
+          "title": "Mail password"
+        },
+        {
+          "name": "SMTP_FROM_ADDRESS",
+          "type": "email",
+          "title": "Mail from address"
         }
       ],
       "generate": [

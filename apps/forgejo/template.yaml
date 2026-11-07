@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   images:
@@ -32,6 +32,32 @@ spec:
       title: Host port for git over SSH
       default: "2222"
       required: true
+    - name: RUNNER_LABELS
+      type: string
+      title: Actions runner labels, separated by commas (label:docker://image)
+      default: "docker:docker://node:22-bookworm"
+      required: true
+      pattern: '^[A-Za-z0-9._-]+:docker://[A-Za-z0-9./:@_-]+(,[A-Za-z0-9._-]+:docker://[A-Za-z0-9./:@_-]+)*$'
+    - name: MAIL_ENABLED
+      type: bool
+      title: Send mail (notifications, password resets)
+      default: "false"
+    - name: SMTP_SERVER
+      type: string
+      title: Mail server
+    - name: SMTP_PORT
+      type: int
+      title: Mail server port (STARTTLS)
+      default: "587"
+    - name: SMTP_LOGIN
+      type: string
+      title: Mail login
+    - name: SMTP_PASSWORD
+      type: secret
+      title: Mail password
+    - name: SMTP_FROM_ADDRESS
+      type: email
+      title: Mail from address
   generate:
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
     - { name: RUNNER_SECRET, kind: secret, length: 40, encoding: hex }
