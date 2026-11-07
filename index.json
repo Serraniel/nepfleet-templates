@@ -62,6 +62,52 @@
       "migrations": []
     },
     {
+      "name": "beszel",
+      "title": "Beszel",
+      "description": "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent, which the hub's Add System dialog explains.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://beszel.dev",
+      "source": "https://github.com/henrygd/beszel",
+      "path": "system/beszel",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "henrygd/beszel",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "binfmt",
       "title": "Foreign-architecture emulation",
       "description": "Registers QEMU user-mode emulators, so images built for another CPU (e.g. amd64 on an arm64 host) can run, slower. The NepFleet agent re-runs it after each boot (registrations do not survive a reboot). Privileged.",

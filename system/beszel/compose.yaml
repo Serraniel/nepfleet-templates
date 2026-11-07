@@ -1,0 +1,36 @@
+services:
+  beszel:
+    image: henrygd/beszel:0.21.1
+    restart: unless-stopped
+    environment:
+      APP_URL: ${NEPFLEET_URL}
+    volumes:
+      - data:/beszel_data
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "/beszel", "health", "--url", "http://localhost:8090"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8090}}"
+      kuma.beszel.http.name: Beszel
+      kuma.beszel.http.url: ${NEPFLEET_URL}/api/health
+      homepage.group: System
+      homepage.name: Beszel
+      homepage.icon: beszel.svg
+      homepage.href: ${NEPFLEET_URL}
+    deploy:
+      replicas: 1   # SQLite: never more than one
+      update_config: { order: stop-first }
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

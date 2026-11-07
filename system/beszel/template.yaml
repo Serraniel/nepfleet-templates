@@ -1,0 +1,25 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: beszel
+  title: Beszel
+  description: "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent, which the hub's Add System dialog explains."
+  tier: system
+  category: monitoring
+  homepage: https://beszel.dev
+  source: https://github.com/henrygd/beszel
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: beszel, port: 8090 }
+  images:
+    - name: henrygd/beszel
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  volumes:
+    - { name: data, backup: true }

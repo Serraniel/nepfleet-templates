@@ -19,6 +19,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | Template | Project | Tier | Integrations |
 |---|---|---|---|
 | [backrest](system/backrest) | [Backrest (restic)](https://github.com/garethgeorge/backrest) | system | 🌐 📈 🏠 💾 🦾 |
+| [beszel](system/beszel) | [Beszel](https://beszel.dev) · [source](https://github.com/henrygd/beszel) | system | 🌐 📈 🏠 💾 🦾 |
 | [binfmt](system/binfmt) | [Foreign-architecture emulation](https://github.com/tonistiigi/binfmt) | system | 🦾 |
 | [caddy](system/caddy) | [Caddy ingress](https://github.com/lucaslorentz/caddy-docker-proxy) | system | 🐝 💾 🦾 |
 | [dozzle](system/dozzle) | [Dozzle](https://dozzle.dev) · [source](https://github.com/amir20/dozzle) | system | 🌐 📈 🏠 🐝 🦾 |
