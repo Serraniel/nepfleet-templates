@@ -27,6 +27,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
 | [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |
 | [neptide](system/neptide) | [neptide image updates](https://github.com/Serraniel/neptide) | system | 🐝 🦾 |
+| [pocket-id](system/pocket-id) | [Pocket ID](https://pocket-id.org) · [source](https://github.com/pocket-id/pocket-id) | system | 🌐 📈 🏠 🐝 💾 🦾 |
 | [uptime-kuma](system/uptime-kuma) | [Uptime Kuma + AutoKuma](https://github.com/louislam/uptime-kuma) | system | 🌐 📈 📊 🏠 🐝 💾 🦾 |
 | [volume-backup](system/volume-backup) | [Volume backups (docker-volume-backup)](https://offen.github.io/docker-volume-backup/) · [source](https://github.com/offen/docker-volume-backup) | system | 🦾 |
 | [watchtower](system/watchtower) | [Watchtower (maintained fork)](https://github.com/nicholas-fedor/watchtower) | system | 🦾 |

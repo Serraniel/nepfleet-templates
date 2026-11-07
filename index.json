@@ -633,6 +633,60 @@
       "migrations": []
     },
     {
+      "name": "pocket-id",
+      "title": "Pocket ID",
+      "description": "Sign in with passkeys across your apps: a small OpenID Connect provider. Passkeys need HTTPS, so use a domain. Set it up at /setup right after installing, as the first visitor becomes its admin.",
+      "tier": "system",
+      "category": "security",
+      "homepage": "https://pocket-id.org",
+      "source": "https://github.com/pocket-id/pocket-id",
+      "path": "system/pocket-id",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/pocket-id/pocket-id",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [
+        {
+          "name": "ENCRYPTION_KEY",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "base64url"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true,
+          "shared": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "uptime-kuma",
       "title": "Uptime Kuma + AutoKuma",
       "description": "Uptime monitoring and status pages. AutoKuma creates monitors from kuma.* labels. Install it once for the whole fleet, or once per stack for a stack-local status page.",
