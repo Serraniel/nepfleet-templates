@@ -230,8 +230,21 @@ def check_fail2ban():
         raise SystemExit("fail2ban: unbanning did not remove the rule")
 
 
+def check_dozzle():
+    """Dozzle stays healthy with its logs refused: its proxy must let them through."""
+    prefix = stack_name("dozzle")
+    proxy = prefix + "-socket-proxy-1"
+    run("docker", "exec", proxy, "wget", "-q", "-O", "/dev/null",
+        f"http://127.0.0.1:2375/containers/{prefix}-dozzle-1/logs?stdout=1&tail=1")
+    # And it stays read-only.
+    stop = run("docker", "exec", proxy, "wget", "-q", "-O", "/dev/null", "--post-data=",
+               f"http://127.0.0.1:2375/containers/{prefix}-dozzle-1/stop", check=False)
+    if stop.returncode == 0:
+        raise SystemExit("dozzle: its proxy let a container be stopped")
+
+
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"fail2ban": check_fail2ban}
+AFTER_DEPLOY = {"fail2ban": check_fail2ban, "dozzle": check_dozzle}
 
 
 def main():
