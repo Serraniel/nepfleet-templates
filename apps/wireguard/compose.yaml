@@ -27,11 +27,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 51821}}"
       kuma.wireguard.http.name: WireGuard
-      kuma.wireguard.http.url: https://${DOMAIN}
+      kuma.wireguard.http.url: ${NEPFLEET_URL}
       homepage.group: Infrastructure
       homepage.name: WireGuard
       homepage.icon: wireguard.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

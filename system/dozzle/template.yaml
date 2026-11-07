@@ -9,7 +9,7 @@ metadata:
   homepage: https://dozzle.dev
   source: https://github.com/amir20/dozzle
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: amir20/dozzle

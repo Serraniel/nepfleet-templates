@@ -5,7 +5,7 @@ services:
     # init only writes a config on first start; later starts skip it.
     entrypoint: ["/bin/sh", "-c", "opencloud init || true; exec opencloud server"]
     environment:
-      OC_URL: https://${DOMAIN}
+      OC_URL: ${NEPFLEET_URL}
       OC_INSECURE: "false"
       FRONTEND_CHECK_FOR_UPDATES: "false"   # no update check from the web UI
       PROXY_TLS: "false"            # Caddy terminates TLS
@@ -19,11 +19,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 9200}}"
       kuma.opencloud.http.name: OpenCloud
-      kuma.opencloud.http.url: https://${DOMAIN}
+      kuma.opencloud.http.url: ${NEPFLEET_URL}
       homepage.group: Files
       homepage.name: OpenCloud
       homepage.icon: opencloud.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   config:

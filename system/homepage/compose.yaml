@@ -11,7 +11,7 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
       kuma.homepage.http.name: Homepage
-      kuma.homepage.http.url: https://${DOMAIN}
+      kuma.homepage.http.url: ${NEPFLEET_URL}
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.4.7

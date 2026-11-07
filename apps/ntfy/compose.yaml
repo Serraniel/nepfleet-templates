@@ -8,7 +8,7 @@ services:
     command: ['NTFY_AUTH_USERS="admin:$$(printf "%s\n%s\n" "$$ADMIN_PASSWORD" "$$ADMIN_PASSWORD" | ntfy user hash 2>/dev/null):admin" exec ntfy serve']
     environment:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      NTFY_BASE_URL: https://${DOMAIN}
+      NTFY_BASE_URL: ${NEPFLEET_URL}
       NTFY_BEHIND_PROXY: "true"
       NTFY_AUTH_FILE: /var/lib/ntfy/user.db
       NTFY_AUTH_DEFAULT_ACCESS: deny-all   # nothing without a login or token
@@ -29,11 +29,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 80}}"
       kuma.ntfy.http.name: ntfy
-      kuma.ntfy.http.url: https://${DOMAIN}/v1/health
+      kuma.ntfy.http.url: ${NEPFLEET_URL}/v1/health
       homepage.group: Infrastructure
       homepage.name: ntfy
       homepage.icon: ntfy.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

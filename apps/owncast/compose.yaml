@@ -11,11 +11,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
       kuma.owncast.http.name: Owncast
-      kuma.owncast.http.url: https://${DOMAIN}/api/status
+      kuma.owncast.http.url: ${NEPFLEET_URL}/api/status
       homepage.group: Media
       homepage.name: Owncast
       homepage.icon: owncast.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

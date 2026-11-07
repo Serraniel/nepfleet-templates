@@ -9,10 +9,10 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
       kuma.sweetfolio.http.name: Sweetfolio
-      kuma.sweetfolio.http.url: https://${DOMAIN}
+      kuma.sweetfolio.http.url: ${NEPFLEET_URL}
       homepage.group: Finance
       homepage.name: Sweetfolio
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
     deploy:
       replicas: 2
       update_config: { parallelism: 1, order: start-first, failure_action: rollback }

@@ -9,7 +9,7 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.1.1
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud

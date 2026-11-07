@@ -8,7 +8,7 @@ metadata:
   category: backup
   homepage: https://github.com/garethgeorge/backrest
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: garethgeorge/backrest

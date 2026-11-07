@@ -19,11 +19,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 80}}"
       kuma.audiobookshelf.http.name: Audiobookshelf
-      kuma.audiobookshelf.http.url: https://${DOMAIN}/healthcheck
+      kuma.audiobookshelf.http.url: ${NEPFLEET_URL}/healthcheck
       homepage.group: Media
       homepage.name: Audiobookshelf
       homepage.icon: audiobookshelf.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   config:

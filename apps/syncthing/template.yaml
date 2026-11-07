@@ -9,8 +9,9 @@ metadata:
   homepage: https://syncthing.net
   source: https://github.com/syncthing/syncthing
 spec:
-  version: 0.1.2
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: syncthing, port: 8384 }   # also reachable on a LAN port (access mode port)
   images:
     - name: syncthing/syncthing
       track: minor

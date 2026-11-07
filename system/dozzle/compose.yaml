@@ -13,11 +13,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
       kuma.dozzle.http.name: Dozzle
-      kuma.dozzle.http.url: https://${DOMAIN}/healthcheck
+      kuma.dozzle.http.url: ${NEPFLEET_URL}/healthcheck
       homepage.group: System
       homepage.name: Logs
       homepage.icon: dozzle.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   # Read-only API: logs and inspect only. Dozzle's start/stop actions stay off.
   socket-proxy:

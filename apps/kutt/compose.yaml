@@ -16,11 +16,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
       kuma.kutt.http.name: Kutt
-      kuma.kutt.http.url: https://${DOMAIN}
+      kuma.kutt.http.url: ${NEPFLEET_URL}
       homepage.group: Web
       homepage.name: Kutt
       homepage.icon: kutt.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

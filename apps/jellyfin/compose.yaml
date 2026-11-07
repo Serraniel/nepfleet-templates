@@ -3,7 +3,7 @@ services:
     image: jellyfin/jellyfin:10.11.11
     restart: unless-stopped
     environment:
-      JELLYFIN_PublishedServerUrl: https://${DOMAIN}
+      JELLYFIN_PublishedServerUrl: ${NEPFLEET_URL}
     volumes:
       - config:/config
       - cache:/cache
@@ -14,11 +14,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8096}}"
       kuma.jellyfin.http.name: Jellyfin
-      kuma.jellyfin.http.url: https://${DOMAIN}/health
+      kuma.jellyfin.http.url: ${NEPFLEET_URL}/health
       homepage.group: Media
       homepage.name: Jellyfin
       homepage.icon: jellyfin.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   config:

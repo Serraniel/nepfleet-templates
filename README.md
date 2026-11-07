@@ -70,6 +70,10 @@ Templates declare Uptime Kuma monitors as AutoKuma labels (`kuma.<id>.<type>.<se
 - **Sub-services:** databases, caches and workers get `docker` monitors. They check that the container is running and healthy through Kuma's Docker host `nepfleet-docker`, the read-only socket proxy of the `uptime-kuma` stack, so no database credentials are needed. The container is `${NEPFLEET_STACK}-<service>-1`.
 - **Groups:** a stack with sub-services gets a group (`<template>-stack`) that holds all of its monitors.
 
+## Access modes
+
+Templates write links and app base URLs as `${NEPFLEET_URL}`, never `https://${DOMAIN}`. A stack can then also run on a LAN port of its host instead of behind Caddy (`nepfleet new <template> --access port`); `${NEPFLEET_URL}` is `http://<host>:<port>` there. Templates whose web UI works over plain HTTP declare it as `spec.web`. Apps that need HTTPS stay domain-only: Vaultwarden, Actual, OpenCloud, n8n, wg-easy and the registry need it for browser crypto, secure cookies or clients. Home Assistant uses the host's network, so it stays domain-only too.
+
 ## Automation
 
 - **Validate** runs on every PR. It runs NepFleet's own validator and `docker compose config`, and checks that every pinned tag exists.

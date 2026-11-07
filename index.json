@@ -10,7 +10,7 @@
       "category": "backup",
       "homepage": "https://github.com/garethgeorge/backrest",
       "path": "system/backrest",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "garethgeorge/backrest",
@@ -182,7 +182,7 @@
       "homepage": "https://dozzle.dev",
       "source": "https://github.com/amir20/dozzle",
       "path": "system/dozzle",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "amir20/dozzle",
@@ -349,7 +349,7 @@
       "homepage": "https://gethomepage.dev",
       "source": "https://github.com/gethomepage/homepage",
       "path": "system/homepage",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/gethomepage/homepage",
@@ -563,7 +563,7 @@
       "category": "monitoring",
       "homepage": "https://github.com/louislam/uptime-kuma",
       "path": "system/uptime-kuma",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "louislam/uptime-kuma",
@@ -797,7 +797,7 @@
       "homepage": "https://actualbudget.org",
       "source": "https://github.com/actualbudget/actual",
       "path": "apps/actual",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "actualbudget/actual-server",
@@ -843,7 +843,7 @@
       "homepage": "https://www.audiobookshelf.org",
       "source": "https://github.com/advplyr/audiobookshelf",
       "path": "apps/audiobookshelf",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/advplyr/audiobookshelf",
@@ -907,7 +907,7 @@
       "homepage": "https://www.bookstackapp.com",
       "source": "https://github.com/BookStackApp/BookStack",
       "path": "apps/bookstack",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "lscr.io/linuxserver/bookstack",
@@ -980,7 +980,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1065,7 +1065,7 @@
       "homepage": "https://www.home-assistant.io",
       "source": "https://github.com/home-assistant/core",
       "path": "apps/homeassistant",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/home-assistant/home-assistant",
@@ -1122,7 +1122,7 @@
       "homepage": "https://homebox.software",
       "source": "https://github.com/sysadminsmedia/homebox",
       "path": "apps/homebox",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/sysadminsmedia/homebox",
@@ -1182,7 +1182,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1280,7 +1280,7 @@
       "homepage": "https://jellyfin.org",
       "source": "https://github.com/jellyfin/jellyfin",
       "path": "apps/jellyfin",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "jellyfin/jellyfin",
@@ -1340,7 +1340,7 @@
       "category": "web",
       "homepage": "https://github.com/thedevs-network/kutt",
       "path": "apps/kutt",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "kutt/kutt",
@@ -1399,7 +1399,7 @@
       "homepage": "https://mealie.io",
       "source": "https://github.com/mealie-recipes/mealie",
       "path": "apps/mealie",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/mealie-recipes/mealie",
@@ -1450,7 +1450,7 @@
       "category": "media",
       "homepage": "https://github.com/alexta69/metube",
       "path": "apps/metube",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/alexta69/metube",
@@ -1511,7 +1511,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -1578,7 +1578,7 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "deluan/navidrome",
@@ -1637,7 +1637,7 @@
       "homepage": "https://ntfy.sh",
       "source": "https://github.com/binwiederhier/ntfy",
       "path": "apps/ntfy",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "binwiederhier/ntfy",
@@ -1699,7 +1699,7 @@
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -1788,7 +1788,7 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "opencloudeu/opencloud",
@@ -1845,7 +1845,7 @@
       "homepage": "https://owncast.online",
       "source": "https://github.com/owncast/owncast",
       "path": "apps/owncast",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "owncast/owncast",
@@ -1898,7 +1898,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -1987,7 +1987,7 @@
       "homepage": "https://rclone.org",
       "source": "https://github.com/rclone/rclone",
       "path": "apps/rclone",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "rclone/rclone",
@@ -2053,7 +2053,7 @@
       "homepage": "https://distribution.github.io/distribution/",
       "source": "https://github.com/distribution/distribution",
       "path": "apps/registry",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "registry",
@@ -2114,7 +2114,7 @@
       "category": "files",
       "homepage": "https://github.com/Serraniel/sendan",
       "path": "apps/sendan",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/serraniel/sendan",
@@ -2161,7 +2161,7 @@
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",
@@ -2223,7 +2223,7 @@
       "category": "finance",
       "homepage": "https://github.com/Serraniel/Sweetfolio",
       "path": "apps/sweetfolio",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/serraniel/sweetfolio",
@@ -2264,7 +2264,7 @@
       "homepage": "https://syncthing.net",
       "source": "https://github.com/syncthing/syncthing",
       "path": "apps/syncthing",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "syncthing/syncthing",
@@ -2345,7 +2345,7 @@
       "homepage": "https://home.tdarr.io",
       "source": "https://github.com/HaveAGitGat/Tdarr",
       "path": "apps/tdarr",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/haveagitgat/tdarr",
@@ -2444,7 +2444,7 @@
       "category": "security",
       "homepage": "https://github.com/dani-garcia/vaultwarden",
       "path": "apps/vaultwarden",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "vaultwarden/server",
@@ -2587,7 +2587,7 @@
       "homepage": "https://wg-easy.github.io/wg-easy/",
       "source": "https://github.com/wg-easy/wg-easy",
       "path": "apps/wireguard",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/wg-easy/wg-easy",

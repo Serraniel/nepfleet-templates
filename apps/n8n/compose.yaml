@@ -7,7 +7,7 @@ services:
       N8N_PROTOCOL: https
       N8N_PROXY_HOPS: "1"          # behind Caddy: trust one X-Forwarded-For hop
       N8N_VERSION_NOTIFICATIONS_ENABLED: "false"   # no version check against api.n8n.io; updates come through NepFleet
-      WEBHOOK_URL: https://${DOMAIN}/
+      WEBHOOK_URL: ${NEPFLEET_URL}/
       N8N_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       GENERIC_TIMEZONE: ${TZ}
       TZ: ${TZ}
@@ -33,11 +33,11 @@ services:
       kuma.n8n.http.name: n8n
       kuma.n8n.http.parent_name: n8n-stack
       kuma.n8n-stack.group.name: n8n
-      kuma.n8n.http.url: https://${DOMAIN}/healthz
+      kuma.n8n.http.url: ${NEPFLEET_URL}/healthz
       homepage.group: Automation
       homepage.name: n8n
       homepage.icon: n8n.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   db:
     image: postgres:18-alpine

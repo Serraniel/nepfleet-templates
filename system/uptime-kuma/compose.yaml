@@ -14,7 +14,7 @@ services:
       homepage.group: System
       homepage.name: Uptime
       homepage.icon: uptime-kuma.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
   autokuma:
     image: ghcr.io/bigboot/autokuma:2

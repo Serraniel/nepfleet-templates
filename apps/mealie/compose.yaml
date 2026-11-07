@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     # The image's own health check (healthcheck.sh) is used.
     environment:
-      BASE_URL: https://${DOMAIN}
+      BASE_URL: ${NEPFLEET_URL}
       ALLOW_SIGNUP: ${ALLOW_SIGNUP}
       TZ: ${TZ}
       PUID: "1000"
@@ -17,11 +17,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 9000}}"
       kuma.mealie.http.name: Mealie
-      kuma.mealie.http.url: https://${DOMAIN}/api/app/about
+      kuma.mealie.http.url: ${NEPFLEET_URL}/api/app/about
       homepage.group: Home
       homepage.name: Mealie
       homepage.icon: mealie.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 volumes:
   data:

@@ -9,8 +9,9 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
+  web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   images:
     - name: codeberg.org/forgejo/forgejo
       track: minor

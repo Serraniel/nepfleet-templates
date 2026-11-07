@@ -9,8 +9,9 @@ metadata:
   homepage: https://rclone.org
   source: https://github.com/rclone/rclone
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
+  web: { service: rclone, port: 5572 }   # also reachable on a LAN port (access mode port)
   images:
     - name: rclone/rclone
       track: minor

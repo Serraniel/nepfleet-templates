@@ -13,11 +13,11 @@ services:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8081}}"
       kuma.metube.http.name: MeTube
-      kuma.metube.http.url: https://${DOMAIN}
+      kuma.metube.http.url: ${NEPFLEET_URL}
       homepage.group: Media
       homepage.name: MeTube
       homepage.icon: metube.svg
-      homepage.href: https://${DOMAIN}
+      homepage.href: ${NEPFLEET_URL}
 
 networks:
   ingress:
