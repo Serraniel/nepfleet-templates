@@ -1,0 +1,23 @@
+server:
+  address: tcp://:9091
+theme: auto
+authentication_backend:
+  file:
+    path: /config/users.yml
+    password:
+      algorithm: argon2
+access_control:
+  # Anything without a rule of its own needs a password and a second factor.
+  default_policy: two_factor
+session:
+  cookies:
+    - domain: "${COOKIE_DOMAIN}"
+      authelia_url: "${NEPFLEET_URL}"
+storage:
+  local:
+    path: /data/db.sqlite3
+# No mail server to assume: messages, such as the code to register a second factor,
+# land in this file in the data volume. Replace this with smtp in the stack's files/.
+notifier:
+  filesystem:
+    filename: /data/notifications.txt

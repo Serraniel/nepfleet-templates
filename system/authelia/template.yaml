@@ -1,0 +1,51 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: authelia
+  title: Authelia
+  description: "Sign-in with a second factor, in front of apps with no login of their own. Needs HTTPS and a domain. To protect an app, add Caddy's forward_auth to it, as Authelia's Caddy guide shows. Messages such as the code to register a second factor land in notifications.txt in its data volume until you set up mail."
+  tier: system
+  category: security
+  homepage: https://www.authelia.com
+  source: https://github.com/authelia/authelia
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: authelia/authelia
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain of its sign-in page, e.g. auth.example.org
+      required: true
+    - name: COOKIE_DOMAIN
+      type: hostname
+      title: Domain to protect, e.g. example.org
+      description: Must contain the domain above. Apps under it share the sign-in.
+      required: true
+    - name: ADMIN_USER
+      type: string
+      title: Admin user name
+      default: admin
+      required: true
+      pattern: '^[a-z0-9_.-]+$'
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin email
+      required: true
+    - name: ADMIN_PASSWORD_HASH
+      type: secret
+      title: Admin password, hashed
+      description: "Make one with: docker run --rm -it authelia/authelia:4.39.28 authelia crypto hash generate argon2"
+      required: true
+  generate:
+    - { name: JWT_SECRET, kind: secret, length: 64, encoding: alnum }
+    - { name: SESSION_SECRET, kind: secret, length: 64, encoding: alnum }
+    - { name: STORAGE_ENCRYPTION_KEY, kind: secret, length: 64, encoding: alnum }
+  files:
+    - { src: files/configuration.yml, dest: config/configuration.yml }
+    - { src: files/users.yml, dest: config/users.yml }
+  volumes:
+    - { name: data, backup: true }
