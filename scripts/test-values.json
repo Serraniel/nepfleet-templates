@@ -26,6 +26,10 @@
     "DNS_PORT": "15353",
     "BIND_ADDR": "127.0.0.1"
   },
+  "adguard-home": {
+    "DNS_PORT": "15354",
+    "BIND_ADDR": "127.0.0.1"
+  },
   "_ci_only": {
     "fail2ban": "changes the host's firewall: never on a developer's machine"
   }

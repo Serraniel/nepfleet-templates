@@ -1125,6 +1125,71 @@
       "migrations": []
     },
     {
+      "name": "adguard-home",
+      "title": "AdGuard Home",
+      "description": "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host.",
+      "tier": "app",
+      "category": "networking",
+      "homepage": "https://adguard.com/adguard-home",
+      "source": "https://github.com/AdguardTeam/AdGuardHome",
+      "path": "apps/adguard-home",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "adguard/adguardhome",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain of the web UI",
+          "required": true
+        },
+        {
+          "name": "BIND_ADDR",
+          "type": "string",
+          "title": "Address DNS listens on (0.0.0.0 = all; this host's LAN IP if systemd-resolved holds port 53)",
+          "required": true,
+          "default": "0.0.0.0",
+          "pattern": "^[0-9]{1,3}(\\.[0-9]{1,3}){3}$"
+        },
+        {
+          "name": "DNS_PORT",
+          "type": "int",
+          "title": "DNS port (53 for devices to use it)",
+          "required": true,
+          "default": "53"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "conf",
+          "backup": true
+        },
+        {
+          "name": "work",
+          "snapshot": false
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "audiobookshelf",
       "title": "Audiobookshelf",
       "description": "Audiobook and podcast server with apps for phones, progress sync and podcast downloads. Create the root user on the first visit.",
