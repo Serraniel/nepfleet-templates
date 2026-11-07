@@ -1,0 +1,21 @@
+# The gateway only. Its dashboard stores API keys and has no login of its own, so it
+# stays off until a stack puts sign-in in front of it. No Docker socket either.
+services:
+  hermes:
+    image: nousresearch/hermes-agent:v0.23.0
+    restart: unless-stopped
+    environment:
+      HERMES_UID: "10000"
+      HERMES_GID: "10000"
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_ALLOWED_USERS: ${TELEGRAM_ALLOWED_USERS}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
+      DISCORD_ALLOWED_USERS: ${DISCORD_ALLOWED_USERS}
+    volumes:
+      - data:/opt/data
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent copy of its memory
+
+volumes:
+  data:

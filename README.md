@@ -40,6 +40,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [audiobookshelf](apps/audiobookshelf) | [Audiobookshelf](https://www.audiobookshelf.org) · [source](https://github.com/advplyr/audiobookshelf) | app | 🌐 📈 🏠 💾 🦾 |
 | [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 💾 🦾 |
 | [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
+| [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
 | [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 💾 🦾 |
