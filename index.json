@@ -1736,7 +1736,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1770,7 +1770,7 @@
         "autoUpdate": true,
         "backup": true,
         "sso": false,
-        "metrics": false
+        "metrics": true
       },
       "inputs": [
         {
@@ -2974,7 +2974,7 @@
       "homepage": "https://distribution.github.io/distribution/",
       "source": "https://github.com/distribution/distribution",
       "path": "apps/registry",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "registry",
@@ -2992,7 +2992,7 @@
         "autoUpdate": true,
         "backup": true,
         "sso": false,
-        "metrics": false
+        "metrics": true
       },
       "inputs": [
         {

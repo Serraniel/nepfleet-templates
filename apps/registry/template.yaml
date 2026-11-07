@@ -9,12 +9,12 @@ metadata:
   homepage: https://distribution.github.io/distribution/
   source: https://github.com/distribution/distribution
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   images:
     - name: registry
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true, metrics: true }
   inputs:
     - name: DOMAIN
       type: hostname
