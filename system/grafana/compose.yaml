@@ -1,0 +1,40 @@
+services:
+  grafana:
+    image: grafana/grafana:13.3.0
+    restart: unless-stopped
+    environment:
+      GF_SERVER_ROOT_URL: ${NEPFLEET_URL}
+      GF_SECURITY_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      PROMETHEUS_URL: ${PROMETHEUS_URL}
+    volumes:
+      - data:/var/lib/grafana
+      - ./provisioning/datasources.yaml:/etc/grafana/provisioning/datasources/nepfleet.yaml:ro
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.grafana.http.name: Grafana
+      kuma.grafana.http.url: ${NEPFLEET_URL}/api/health
+      homepage.group: System
+      homepage.name: Grafana
+      homepage.icon: grafana.svg
+      homepage.href: ${NEPFLEET_URL}
+      nepfleet.metrics.port: "3000"
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

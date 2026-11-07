@@ -1,0 +1,54 @@
+# No Caddy labels on purpose: Prometheus has no login. Grafana reads it over the
+# ingress network, and that's also how it reaches what it scrapes.
+services:
+  prometheus:
+    image: prom/prometheus:v3.16.0-busybox   # has wget, for the health check
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=${RETENTION_DAYS}d
+    volumes:
+      - data:/prometheus
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks: [default, ingress, socket]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.10.2
+    restart: unless-stopped
+    command:
+      - --path.rootfs=/host
+    pid: host
+    read_only: true
+    volumes:
+      - /:/host:ro,rslave
+
+  # Read-only API: lists containers and networks, for finding what to scrape.
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/run]
+    environment:
+      CONTAINERS: 1
+      NETWORKS: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [socket]
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
+  socket:
+    internal: true

@@ -1,0 +1,30 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: prometheus
+  title: Prometheus
+  description: "Collects metrics from this host and from every service with nepfleet.metrics labels. It has no login, so it isn't published: use the grafana template to look at it."
+  tier: system
+  category: monitoring
+  homepage: https://prometheus.io
+  source: https://github.com/prometheus/prometheus
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: prom/prometheus
+      track: minor
+    - name: quay.io/prometheus/node-exporter
+      track: minor
+    - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+  supports: { arm64: true, logs: true, backup: false }
+  inputs:
+    - name: RETENTION_DAYS
+      type: int
+      title: Keep metrics for (days)
+      default: "30"
+  files:
+    - { src: files/prometheus.yml, dest: config/prometheus.yml }
+  volumes:
+    - { name: data, backup: false }
