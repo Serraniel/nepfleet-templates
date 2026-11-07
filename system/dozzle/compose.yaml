@@ -6,6 +6,7 @@ services:
       DOCKER_HOST: tcp://socket-proxy:2375
       DOZZLE_AUTH_PROVIDER: simple
       DOZZLE_NO_ANALYTICS: "true"
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL}
     volumes:
       - ./data:/data
     networks: [ingress, socket]
@@ -27,6 +28,7 @@ services:
     tmpfs: [/run]
     environment:
       CONTAINERS: 1
+      ALLOW_LOGS: 1
       INFO: 1
       EVENTS: 1
       POST: 0

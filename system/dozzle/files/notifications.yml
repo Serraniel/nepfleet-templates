@@ -1,0 +1,17 @@
+# Rendered by NepFleet: each apply overwrites this, including rules added in
+# Dozzle's own UI. To keep your own, put this file in the stack's files/ folder.
+#
+# $${...} stays as it is here, and Dozzle fills it in from its environment.
+dispatchers:
+  - id: 1
+    name: NepFleet alerts
+    type: webhook
+    url: $${ALERT_WEBHOOK_URL}
+subscriptions:
+  - id: 1
+    name: Fatal log lines
+    enabled: true
+    dispatcherId: 1
+    # Not Dozzle's own logs: a failed delivery must not cause another alert.
+    containerExpression: 'labels["com.docker.compose.service"] != "dozzle"'
+    logExpression: 'level == "fatal" || message matches "(?i)\\b(panic|fatal|out of memory|outofmemoryerror)\\b"'

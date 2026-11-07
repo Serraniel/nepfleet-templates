@@ -182,7 +182,7 @@
       "homepage": "https://dozzle.dev",
       "source": "https://github.com/amir20/dozzle",
       "path": "system/dozzle",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "amir20/dozzle",
@@ -212,6 +212,12 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "ALERT_WEBHOOK_URL",
+          "type": "secret",
+          "title": "Webhook for log alerts",
+          "description": "Log lines with fatal, panic or out of memory are sent here, as Dozzle's JSON. Every matching line sends one, with no limit, so use a receiver that copes. Leave empty for no alerts."
         }
       ],
       "generate": [],
