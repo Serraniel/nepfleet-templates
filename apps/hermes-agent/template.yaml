@@ -1,0 +1,36 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: hermes-agent
+  title: Hermes Agent
+  description: "Nous Research's AI agent, reached through messaging apps. It acts on what people send it, so set who may talk to it. Its browser dashboard isn't included, as it stores API keys and has no login of its own."
+  tier: app
+  category: ai
+  homepage: https://github.com/NousResearch/hermes-agent
+  source: https://github.com/NousResearch/hermes-agent
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: nousresearch/hermes-agent
+      track: minor
+  supports: { logs: true, backup: true }
+  inputs:
+    - name: OPENROUTER_API_KEY
+      type: secret
+      title: OpenRouter API key
+      description: For other providers, see its docs and set them in the data volume's configuration.
+    - name: TELEGRAM_BOT_TOKEN
+      type: secret
+      title: Telegram bot token
+    - name: TELEGRAM_ALLOWED_USERS
+      type: string
+      title: Telegram user IDs who may use it, separated by commas
+    - name: DISCORD_BOT_TOKEN
+      type: secret
+      title: Discord bot token
+    - name: DISCORD_ALLOWED_USERS
+      type: string
+      title: Discord user IDs who may use it, separated by commas
+  volumes:
+    - { name: data, backup: true }   # configuration, memory, sessions
