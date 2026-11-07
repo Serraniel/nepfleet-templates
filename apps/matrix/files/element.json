@@ -1,0 +1,11 @@
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "${NEPFLEET_URL}",
+      "server_name": "${DOMAIN}"
+    }
+  },
+  "disable_guests": true,
+  "disable_custom_urls": true,
+  "posthog": { "api_host": null, "project_api_key": null }
+}

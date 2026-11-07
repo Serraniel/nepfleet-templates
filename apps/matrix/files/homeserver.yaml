@@ -1,0 +1,29 @@
+server_name: "${DOMAIN}"
+public_baseurl: "${NEPFLEET_URL}/"
+# Federation over 443 through Caddy: no port 8448 to open.
+serve_server_wellknown: true
+report_stats: false
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ["0.0.0.0"]
+    resources:
+      - names: [client, federation]
+        compress: false
+database:
+  name: psycopg2
+  args:
+    host: db
+    user: synapse
+    password: "${DB_PASSWORD}"
+    database: synapse
+media_store_path: /data/media_store
+signing_key_path: /data/signing.key
+enable_registration: false
+registration_shared_secret: "${REGISTRATION_SECRET}"
+macaroon_secret_key: "${MACAROON_SECRET}"
+form_secret: "${FORM_SECRET}"
+trusted_key_servers:
+  - server_name: matrix.org
