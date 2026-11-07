@@ -9,7 +9,7 @@ metadata:
   homepage: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   web: { service: paperless, port: 8000 }   # also reachable on a LAN port (access mode port)
   images:
@@ -19,12 +19,25 @@ spec:
       track: minor
     - name: valkey/valkey
       track: minor
+    - name: apache/tika
+      track: minor
+    - name: gotenberg/gotenberg
+      track: minor
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
       title: Domain
       required: true
+    - name: COMPOSE_PROFILES
+      type: enum
+      title: Extra services (office adds Tika and Gotenberg, and needs the next setting too)
+      options: ["none", "office"]
+      default: "none"
+    - name: OFFICE_DOCUMENTS
+      type: bool
+      title: Read Office documents (needs the office services above)
+      default: "false"
     - name: OCR_LANGUAGE
       type: string
       title: OCR languages (tesseract codes, "+" separated)
