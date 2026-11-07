@@ -1,0 +1,134 @@
+x-mastodon: &mastodon
+  LOCAL_DOMAIN: ${DOMAIN}
+  RAILS_ENV: production
+  NODE_ENV: production
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_NAME: mastodon
+  DB_USER: mastodon
+  DB_PASS: ${DB_PASSWORD}
+  ES_ENABLED: "false"
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: ${AR_PRIMARY_KEY}
+  ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: ${AR_DETERMINISTIC_KEY}
+  ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: ${AR_KEY_DERIVATION_SALT}
+  VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+  VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+  SMTP_SERVER: ${SMTP_SERVER}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_LOGIN: ${SMTP_LOGIN}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+
+services:
+  # Sets up or upgrades the database, then ends. The web service waits for it.
+  migrate:
+    image: ghcr.io/mastodon/mastodon:v4.7.5
+    restart: "no"
+    environment: *mastodon
+    command: bundle exec rails db:prepare
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    image: ghcr.io/mastodon/mastodon:v4.7.5
+    restart: unless-stopped
+    environment: *mastodon
+    command: bundle exec puma -C config/puma.rb
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - media:/mastodon/public/system
+    networks: [default, ingress]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s --noproxy localhost localhost:3000/health | grep -q OK"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.mastodon.http.name: Mastodon
+      kuma.mastodon.http.url: ${NEPFLEET_URL}/health
+      homepage.group: Social
+      homepage.name: Mastodon
+      homepage.icon: mastodon.svg
+      homepage.href: ${NEPFLEET_URL}
+
+  streaming:
+    image: ghcr.io/mastodon/mastodon-streaming:v4.7.5
+    restart: unless-stopped
+    environment: *mastodon
+    command: node ./streaming/index.js
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [default, ingress]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q OK"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    labels:
+      caddy: ${DOMAIN}
+      caddy.@streaming.path: /api/v1/streaming*
+      caddy.reverse_proxy: "@streaming {{upstreams 4000}}"
+
+  sidekiq:
+    image: ghcr.io/mastodon/mastodon:v4.7.5
+    restart: unless-stopped
+    environment: *mastodon
+    command: bundle exec sidekiq
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - media:/mastodon/public/system
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[s]idekiq 8' || false"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mastodon
+      POSTGRES_USER: mastodon
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mastodon"]
+      interval: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+
+volumes:
+  media:
+  db:
+  redis:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

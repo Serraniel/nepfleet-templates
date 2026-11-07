@@ -1905,6 +1905,138 @@
       "migrations": []
     },
     {
+      "name": "mastodon",
+      "title": "Mastodon",
+      "description": "Fediverse server. The domain becomes part of every account's name and can never change after the first start. Sign-ups need mail, so set SMTP. For push notifications, make keys with: docker compose exec web bundle exec rails mastodon:webpush:generate_vapid_key.",
+      "tier": "app",
+      "category": "social",
+      "homepage": "https://joinmastodon.org",
+      "source": "https://github.com/mastodon/mastodon",
+      "path": "apps/mastodon",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/mastodon/mastodon",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/mastodon/mastodon-streaming",
+          "track": "minor"
+        },
+        {
+          "name": "postgres",
+          "track": "patch"
+        },
+        {
+          "name": "redis",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain (can never change after the first start)",
+          "required": true
+        },
+        {
+          "name": "SMTP_SERVER",
+          "type": "string",
+          "title": "Mail server"
+        },
+        {
+          "name": "SMTP_PORT",
+          "type": "int",
+          "title": "Mail server port",
+          "default": "587"
+        },
+        {
+          "name": "SMTP_LOGIN",
+          "type": "string",
+          "title": "Mail login"
+        },
+        {
+          "name": "SMTP_PASSWORD",
+          "type": "secret",
+          "title": "Mail password"
+        },
+        {
+          "name": "SMTP_FROM_ADDRESS",
+          "type": "email",
+          "title": "Mail from address"
+        },
+        {
+          "name": "VAPID_PRIVATE_KEY",
+          "type": "secret",
+          "title": "Push notification private key"
+        },
+        {
+          "name": "VAPID_PUBLIC_KEY",
+          "type": "string",
+          "title": "Push notification public key"
+        }
+      ],
+      "generate": [
+        {
+          "name": "DB_PASSWORD",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "alnum"
+        },
+        {
+          "name": "SECRET_KEY_BASE",
+          "kind": "secret",
+          "length": 128,
+          "encoding": "hex"
+        },
+        {
+          "name": "AR_PRIMARY_KEY",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        },
+        {
+          "name": "AR_DETERMINISTIC_KEY",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        },
+        {
+          "name": "AR_KEY_DERIVATION_SALT",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "db",
+          "backup": true
+        },
+        {
+          "name": "media",
+          "backup": true
+        },
+        {
+          "name": "redis"
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "matrix",
       "title": "Matrix",
       "description": "Chat with Synapse and the Element web client. Registration is off: create the first user with register_new_matrix_user in the synapse container, using REGISTRATION_SECRET from the stack's secrets. The domain becomes part of every user's name and can't change later.",
