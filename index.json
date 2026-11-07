@@ -2383,6 +2383,52 @@
       "migrations": []
     },
     {
+      "name": "openclaw",
+      "title": "OpenClaw",
+      "description": "AI assistant gateway for messaging apps. It runs tools for whoever can message it, so think hard before connecting personal accounts, and consider egress mode enforce. Set it up with: docker compose exec openclaw node dist/index.js onboard. Not published on the network.",
+      "tier": "app",
+      "category": "ai",
+      "homepage": "https://openclaw.ai",
+      "source": "https://github.com/openclaw/openclaw",
+      "path": "apps/openclaw",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/openclaw/openclaw",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": false,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": false,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [],
+      "generate": [
+        {
+          "name": "GATEWAY_TOKEN",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "opencloud",
       "title": "OpenCloud",
       "description": "File sync and share (stable channel).",

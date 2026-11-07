@@ -53,6 +53,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |
 | [ntfy](apps/ntfy) | [ntfy](https://ntfy.sh) · [source](https://github.com/binwiederhier/ntfy) | app | 🌐 📈 🏠 💾 🦾 |
 | [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 💾 |
+| [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 💾 🦾 |
 | [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 💾 🦾 |
 | [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 💾 🦾 |

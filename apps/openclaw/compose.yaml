@@ -1,0 +1,36 @@
+# It runs tools on behalf of whoever can message it, so it gets less than other
+# templates: no Docker socket, no published ports, a read-only root and no capabilities.
+services:
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:2026.11.1
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+      OPENCLAW_GATEWAY_PORT: "18789"
+      OPENCLAW_GATEWAY_TOKEN: ${GATEWAY_TOKEN}
+      TZ: ${TZ}
+    # Until onboarding has written its configuration, it starts and waits.
+    command: ["node", "dist/index.js", "gateway", "--allow-unconfigured", "--bind", "loopback", "--port", "18789"]
+    volumes:
+      - data:/home/node/.openclaw
+    healthcheck:
+      test: ["CMD", "node", "dist/docker-healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent copy of its state
+
+volumes:
+  data:
