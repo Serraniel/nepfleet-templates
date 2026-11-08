@@ -42,6 +42,10 @@
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOMAIN": "office.opencloud.example.test"
   },
+  "sweetcaptcha": {
+    "SITEKEY": "sc_ci_test_site",
+    "SITE_HOSTNAMES": "forms.example.test, www.example.test"
+  },
   "paperless": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOCUMENTS": "true"

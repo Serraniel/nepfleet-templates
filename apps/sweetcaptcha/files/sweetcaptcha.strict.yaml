@@ -1,0 +1,24 @@
+# Rendered by NepFleet: the strict edition, proof of work only. Secrets come from
+# the environment.
+server:
+  listen: ":8080"
+  # Caddy, on the ingress network: only containers there reach this service.
+  trusted_proxies: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]
+  # Prometheus, on the ingress network only (Caddy doesn't publish it).
+  metrics_listen: ":9090"
+  demo: false
+store:
+  type: valkey
+  url: redis://valkey:6379/0
+secret:
+  master_key: $${SWEETCAPTCHA_MASTER_KEY}
+admin:
+  token: $${SWEETCAPTCHA_ADMIN_TOKEN}
+sites:
+  - name: ${SITE_NAME}
+    sitekey: ${SITEKEY}
+    secret: $${SWEETCAPTCHA_SITE_SECRET}
+    mode: strict
+    hostnames: [${SITE_HOSTNAMES}]
+    privacy_url: "${PRIVACY_URL}"
+    imprint_url: "${IMPRINT_URL}"

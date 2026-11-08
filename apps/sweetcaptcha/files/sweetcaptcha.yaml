@@ -1,0 +1,28 @@
+# Rendered by NepFleet: the standard edition. Secrets come from the environment.
+server:
+  listen: ":8080"
+  # Caddy, on the ingress network: only containers there reach this service.
+  trusted_proxies: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]
+  # Prometheus, on the ingress network only (Caddy doesn't publish it).
+  metrics_listen: ":9090"
+  demo: false
+store:
+  type: valkey
+  url: redis://valkey:6379/0
+secret:
+  master_key: $${SWEETCAPTCHA_MASTER_KEY}
+admin:
+  token: $${SWEETCAPTCHA_ADMIN_TOKEN}
+ipdata:
+  dir: /data/ipdata
+sites:
+  - name: ${SITE_NAME}
+    sitekey: ${SITEKEY}
+    secret: $${SWEETCAPTCHA_SITE_SECRET}
+    mode: ${SITE_MODE}
+    hostnames: [${SITE_HOSTNAMES}]
+    privacy_url: "${PRIVACY_URL}"
+    imprint_url: "${IMPRINT_URL}"
+    policy:
+      # Run in shadow first: it decides, but lets everyone through. See its docs/OPERATIONS.md.
+      shadow: ${SHADOW}
