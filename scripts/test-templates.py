@@ -340,6 +340,19 @@ def check_bot_check(name):
     print(f"ok   {name} behind Anubis: / is checked, {BOT_CHECK[name]} passes")
 
 
+def check_forgejo():
+    """The identity provider from the test values is a sign-in option, and the
+    runner runs with its rendered config."""
+    c = stack_name("forgejo")
+    auths = run("docker", "exec", "-u", "1000", f"{c}-forgejo-1", "forgejo", "admin", "auth", "list").stdout
+    if not any(line.split()[1:3] == ["SSO", "OAuth2"] for line in auths.splitlines() if len(line.split()) >= 3):
+        raise SystemExit(f"forgejo: no identity provider named SSO:\n{auths}")
+    state = run("docker", "inspect", "--format", "{{.State.Status}} {{.RestartCount}}", f"{c}-runner-1").stdout.split()
+    if state != ["running", "0"]:
+        logs = run("docker", "logs", "--tail", "20", f"{c}-runner-1", check=False)
+        raise SystemExit(f"forgejo: the runner isn't running steadily ({state}):\n{logs.stdout}{logs.stderr}")
+
+
 def check_garage():
     """The bucket and key Garage made on first start must store and return an object."""
     c = stack_name("garage") + "-garage-1"
@@ -385,7 +398,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():

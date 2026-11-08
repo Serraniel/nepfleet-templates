@@ -1,0 +1,4 @@
+# Rendered by NepFleet. Unset settings keep forgejo-runner's defaults.
+runner:
+  file: .runner
+  capacity: ${RUNNER_CAPACITY}
