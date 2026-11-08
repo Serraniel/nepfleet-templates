@@ -290,7 +290,7 @@ def check_bot_check(name):
     marker = ".within.website/x/"  # the check page's own assets
 
     def get(path):
-        p = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-S", "--max-redirect", "0", "-O", "-",
+        p = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-S", "-O", "-",
                 "-U", "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
                 "--header", "X-Real-Ip: 203.0.113.7", base + path, check=False)
         return p.stdout, p.stderr

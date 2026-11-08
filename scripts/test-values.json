@@ -48,7 +48,7 @@
     "audiobookshelf": "/healthcheck",
     "navidrome": "/ping",
     "mealie": "/api/app/about",
-    "bookstack": "/api/docs",
+    "bookstack": "/api/books",
     "paperless": "/api/",
     "kutt": "/api/v2/health"
   },
