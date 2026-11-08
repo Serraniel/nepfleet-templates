@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.6.0
+  version: 0.7.0
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/[^/]+/[^/]+\\.git/", "^/[^/]+/[^/]+/(info/lfs|git-upload-pack|git-receive-pack)", "^/\\.well-known/"] }

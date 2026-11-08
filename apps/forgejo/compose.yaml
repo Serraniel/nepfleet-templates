@@ -100,9 +100,18 @@ services:
     environment:
       DOCKER_HOST: tcp://dind:2375
       RUNNER_SECRET: ${RUNNER_SECRET}
-    command: >-
-      sh -c 'test -f .runner || forgejo-runner create-runner-file --instance http://forgejo:3000
-      --name default --secret "$$RUNNER_SECRET"; exec forgejo-runner daemon --config /etc/runner.yaml'
+    # The connection is declared in the config: its UUID is the secret's first 16
+    # characters as bytes, and its token the whole secret (as Forgejo registered it).
+    command:
+      - sh
+      - -euc
+      - |
+        hex="$$(printf %s "$$RUNNER_SECRET" | head -c 16 | od -An -tx1 | tr -d ' \n')"
+        uuid="$$(echo "$$hex" | sed -E 's/^(.{8})(.{4})(.{4})(.{4})(.{12})$$/\1-\2-\3-\4-\5/')"
+        umask 077
+        sed -e "s/@UUID@/$$uuid/" -e "s/@TOKEN@/$$RUNNER_SECRET/" /etc/runner.yaml > /data/runner.yaml
+        rm -f /data/.runner   # from create-runner-file, which this replaces
+        exec forgejo-runner daemon --config /data/runner.yaml
     working_dir: /data
     volumes:
       - runner:/data

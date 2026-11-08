@@ -1,4 +1,12 @@
 # Rendered by NepFleet. Unset settings keep forgejo-runner's defaults.
+# The runner's start fills in @UUID@ and @TOKEN@ from RUNNER_SECRET, into its own
+# volume, so the secret is never in this file.
 runner:
-  file: .runner
   capacity: ${RUNNER_CAPACITY}
+server:
+  connections:
+    forgejo:
+      url: http://forgejo:3000/
+      uuid: "@UUID@"
+      token: "@TOKEN@"
+      labels: [${RUNNER_LABELS}]

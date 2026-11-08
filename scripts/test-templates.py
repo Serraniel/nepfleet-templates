@@ -349,9 +349,12 @@ def check_forgejo():
     if not any(line.split()[1:3] == ["SSO", "OAuth2"] for line in auths.splitlines() if len(line.split()) >= 3):
         raise SystemExit(f"forgejo: no identity provider named SSO:\n{auths}")
     state = run("docker", "inspect", "--format", "{{.State.Status}} {{.RestartCount}}", f"{c}-runner-1").stdout.split()
+    logs = run("docker", "logs", "--tail", "40", f"{c}-runner-1", check=False)
     if state != ["running", "0"]:
-        logs = run("docker", "logs", "--tail", "20", f"{c}-runner-1", check=False)
         raise SystemExit(f"forgejo: the runner isn't running steadily ({state}):\n{logs.stdout}{logs.stderr}")
+    # Connected with the UUID and token from its config: Forgejo accepted it.
+    if "declared successfully" not in logs.stdout + logs.stderr:
+        raise SystemExit(f"forgejo: the runner didn't declare itself to Forgejo:\n{logs.stdout}{logs.stderr}")
 
 
 def check_opencloud():
