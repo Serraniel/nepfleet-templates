@@ -23,6 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 NETWORK = "nepfleet_templates_it"  # never a real install's ingress network
 ALPINE = "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"
+RCLONE = "rclone/rclone:1.76.0@sha256:7cbeec24a44f206067597c0368be4de90ae19a64d5113c7d1938bd737a81e466"
 OVERRIDES = json.loads((ROOT / "scripts" / "test-values.json").read_text())
 # Templates deployed behind Anubis, each with a path its spec.botCheck.allow lets through.
 BOT_CHECK = OVERRIDES.get("_bot_check", {})
@@ -302,10 +303,33 @@ def check_bot_check(name):
         time.sleep(5)
     else:
         raise SystemExit(f"{name}: a browser on / didn't get Anubis's check:\n{head}\n{body[:500]}")
-    body, head = get(BOT_CHECK[name])
+    for _ in range(12):  # healthy isn't always answering yet: a 502 may pass
+        body, head = get(BOT_CHECK[name])
+        if marker in body:
+            break  # the check itself: no point waiting
+        if "HTTP/1.1 502" not in head and "HTTP/" in head:
+            break
+        time.sleep(5)
     if marker in body or "HTTP/1.1 502" in head or "HTTP/" not in head:
         raise SystemExit(f"{name}: {BOT_CHECK[name]} must reach the app past Anubis:\n{head}\n{body[:500]}")
     print(f"ok   {name} behind Anubis: / is checked, {BOT_CHECK[name]} passes")
+
+
+def check_garage():
+    """The bucket and key Garage made on first start must store and return an object."""
+    c = stack_name("garage") + "-garage-1"
+    env = dict(line.split("=", 1) for line in run(
+        "docker", "inspect", "--format", "{{range .Config.Env}}{{println .}}{{end}}", c).stdout.split() if "=" in line)
+    s3 = ["-e", "RCLONE_CONFIG_G_TYPE=s3", "-e", "RCLONE_CONFIG_G_PROVIDER=Other",
+          "-e", f"RCLONE_CONFIG_G_ACCESS_KEY_ID={env['GARAGE_DEFAULT_ACCESS_KEY']}",
+          "-e", f"RCLONE_CONFIG_G_SECRET_ACCESS_KEY={env['GARAGE_DEFAULT_SECRET_KEY']}",
+          "-e", f"RCLONE_CONFIG_G_ENDPOINT=http://{c}:3900", "-e", "RCLONE_CONFIG_G_REGION=garage",
+          "-e", "RCLONE_CONFIG_G_FORCE_PATH_STYLE=true"]
+    bucket = env["GARAGE_DEFAULT_BUCKET"]
+    out = run("docker", "run", "--rm", "--network", NETWORK, *s3, "--entrypoint", "sh", RCLONE, "-c",
+              f"echo stored-by-ci | rclone rcat g:{bucket}/ci.txt && rclone cat g:{bucket}/ci.txt", check=False)
+    if out.stdout.strip() != "stored-by-ci":
+        raise SystemExit(f"garage: an object didn't round-trip:\n{out.stdout}{out.stderr}")
 
 
 def check_prometheus():
@@ -323,7 +347,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():

@@ -1,0 +1,41 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.5.0
+    restart: unless-stopped
+    # One node: Garage sets up its own layout, key and bucket on first start.
+    command: ["/garage", "server", "--single-node", "--default-access-key", "--default-bucket"]
+    environment:
+      GARAGE_RPC_SECRET: ${RPC_SECRET}
+      GARAGE_ADMIN_TOKEN: ${ADMIN_TOKEN}
+      GARAGE_DEFAULT_ACCESS_KEY: GK${ACCESS_KEY_ID}
+      GARAGE_DEFAULT_SECRET_KEY: ${SECRET_ACCESS_KEY}
+      GARAGE_DEFAULT_BUCKET: ${BUCKET}
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - meta:/var/lib/garage/meta
+      - data:/var/lib/garage/data
+    networks: [ingress]
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+    labels:
+      # The S3 API. The admin API (3903) stays on the ingress network.
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3900}}"
+      caddy.request_body.max_size: 0   # large objects
+      nepfleet.metrics.port: "3903"
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.garage.docker.name: Garage
+      kuma.garage.docker.docker_container: ${NEPFLEET_STACK}-garage-1
+      kuma.garage.docker.docker_host_name: nepfleet-docker
+
+volumes:
+  meta:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true

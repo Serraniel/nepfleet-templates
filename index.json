@@ -1607,6 +1607,97 @@
       "migrations": []
     },
     {
+      "name": "garage",
+      "title": "Garage",
+      "description": "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key on first start, from the generated values in the stack's secrets. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command.",
+      "tier": "app",
+      "category": "storage",
+      "homepage": "https://garagehq.deuxfleurs.fr",
+      "source": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+      "path": "apps/garage",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "dxflrs/garage",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": true
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain of the S3 API",
+          "required": true
+        },
+        {
+          "name": "BUCKET",
+          "type": "string",
+          "title": "Bucket created on first start",
+          "required": true,
+          "default": "default",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+        },
+        {
+          "name": "S3_REGION",
+          "type": "string",
+          "title": "Region name clients use",
+          "required": true,
+          "default": "garage",
+          "pattern": "^[a-z0-9-]+$"
+        }
+      ],
+      "generate": [
+        {
+          "name": "RPC_SECRET",
+          "kind": "secret",
+          "length": 64,
+          "encoding": "hex"
+        },
+        {
+          "name": "ADMIN_TOKEN",
+          "kind": "secret",
+          "length": 48,
+          "encoding": "base64url"
+        },
+        {
+          "name": "ACCESS_KEY_ID",
+          "kind": "secret",
+          "length": 32,
+          "encoding": "hex"
+        },
+        {
+          "name": "SECRET_ACCESS_KEY",
+          "kind": "secret",
+          "length": 64,
+          "encoding": "hex"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "meta",
+          "backup": true
+        },
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "hermes-agent",
       "title": "Hermes Agent",
       "description": "Nous Research's AI agent, reached through messaging apps. It acts on what people send it, so set who may talk to it. Its browser dashboard isn't included, as it stores API keys and has no login of its own.",
