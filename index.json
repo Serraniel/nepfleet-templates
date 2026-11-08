@@ -2865,10 +2865,14 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "opencloudeu/opencloud",
+          "track": "minor"
+        },
+        {
+          "name": "ghcr.io/euro-office/documentserver",
           "track": "minor"
         }
       ],
@@ -2891,6 +2895,21 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "COMPOSE_PROFILES",
+          "type": "enum",
+          "title": "Extra services (office adds Euro-Office, and needs the office domain too)",
+          "default": "none",
+          "options": [
+            "none",
+            "office"
+          ]
+        },
+        {
+          "name": "OFFICE_DOMAIN",
+          "type": "hostname",
+          "title": "Domain for editing Office documents (Euro-Office); empty for none"
         }
       ],
       "generate": [
@@ -2898,6 +2917,12 @@
           "name": "ADMIN_PASSWORD",
           "kind": "secret",
           "length": 24,
+          "encoding": "alnum"
+        },
+        {
+          "name": "OFFICE_JWT_SECRET",
+          "kind": "secret",
+          "length": 48,
           "encoding": "alnum"
         }
       ],

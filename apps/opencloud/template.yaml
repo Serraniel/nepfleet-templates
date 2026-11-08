@@ -9,10 +9,12 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud
+      track: minor
+    - name: ghcr.io/euro-office/documentserver
       track: minor
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   botCheck: { service: opencloud, port: 9200, allow: ["^/remote\\.php/", "^/dav/", "^/ocs/", "^/graph/", "^/status\\.php$", "^/\\.well-known/", "^/konnect/"] }
@@ -21,8 +23,19 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: COMPOSE_PROFILES
+      type: enum
+      title: Extra services (office adds Euro-Office, and needs the office domain too)
+      options: ["none", "office"]
+      default: "none"
+    - name: OFFICE_DOMAIN
+      type: hostname
+      title: Domain for editing Office documents (Euro-Office); empty for none
   generate:
     - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - { name: OFFICE_JWT_SECRET, kind: secret, length: 48, encoding: alnum }
+  files:
+    - { src: files/app-registry.yaml, dest: app-registry.yaml }
   volumes:
     - { name: config, backup: true }
     - { name: data, backup: true }

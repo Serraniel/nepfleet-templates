@@ -353,6 +353,23 @@ def check_forgejo():
         raise SystemExit(f"forgejo: the runner isn't running steadily ({state}):\n{logs.stdout}{logs.stderr}")
 
 
+def check_opencloud():
+    """With the office profile, Euro-Office answers WOPI discovery on the ingress
+    network. (OpenCloud registers it by its domain, which doesn't resolve here, so
+    that part can only be seen on a real host.)"""
+    c = stack_name("opencloud")
+    checks = {f"http://{c}-euro-office-1/hosting/discovery": "wopi-discovery"}
+    for url, want in checks.items():
+        out = ""
+        for _ in range(24):
+            out = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-qO-", url, check=False).stdout
+            if want in out:
+                break
+            time.sleep(5)
+        else:
+            raise SystemExit(f"opencloud: {url} lacks {want!r}:\n{out[:500]}")
+
+
 def check_garage():
     """The bucket and key Garage made on first start must store and return an object."""
     c = stack_name("garage") + "-garage-1"
@@ -398,7 +415,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():
