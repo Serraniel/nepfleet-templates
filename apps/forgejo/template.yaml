@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.5.0
+  version: 0.6.0
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/[^/]+/[^/]+\\.git/", "^/[^/]+/[^/]+/(info/lfs|git-upload-pack|git-receive-pack)", "^/\\.well-known/"] }
@@ -59,6 +59,29 @@ spec:
     - name: SMTP_FROM_ADDRESS
       type: email
       title: Mail from address
+    - name: RUNNER_CAPACITY
+      type: int
+      title: Actions jobs that run at once
+      default: "1"
+      required: true
+    - name: OIDC_ISSUER
+      type: url
+      title: Identity provider (OpenID Connect issuer), for signing in
+      description: "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. It must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
+    - name: OIDC_NAME
+      type: string
+      title: Its name on the sign-in page
+      default: SSO
+      required: true
+      pattern: '^[A-Za-z0-9._-]{1,40}$'
+    - name: OIDC_CLIENT_ID
+      type: string
+      title: Identity provider client ID
+    - name: OIDC_CLIENT_SECRET
+      type: secret
+      title: Identity provider client secret
+  files:
+    - { src: files/runner.yaml, dest: runner.yaml }
   generate:
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
     - { name: RUNNER_SECRET, kind: secret, length: 40, encoding: hex }

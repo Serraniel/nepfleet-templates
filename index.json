@@ -1562,7 +1562,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1647,6 +1647,37 @@
           "name": "SMTP_FROM_ADDRESS",
           "type": "email",
           "title": "Mail from address"
+        },
+        {
+          "name": "RUNNER_CAPACITY",
+          "type": "int",
+          "title": "Actions jobs that run at once",
+          "required": true,
+          "default": "1"
+        },
+        {
+          "name": "OIDC_ISSUER",
+          "type": "url",
+          "title": "Identity provider (OpenID Connect issuer), for signing in",
+          "description": "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. It must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
+        },
+        {
+          "name": "OIDC_NAME",
+          "type": "string",
+          "title": "Its name on the sign-in page",
+          "required": true,
+          "default": "SSO",
+          "pattern": "^[A-Za-z0-9._-]{1,40}$"
+        },
+        {
+          "name": "OIDC_CLIENT_ID",
+          "type": "string",
+          "title": "Identity provider client ID"
+        },
+        {
+          "name": "OIDC_CLIENT_SECRET",
+          "type": "secret",
+          "title": "Identity provider client secret"
         }
       ],
       "generate": [

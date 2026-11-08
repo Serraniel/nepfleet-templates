@@ -34,6 +34,10 @@
     "ALERTS_API_URL": "http://it-dozzle-recv:8080",
     "ALERTS_TOKEN": "nft_ci-not-a-real-token"
   },
+  "forgejo": {
+    "OIDC_ISSUER": "https://accounts.google.com",
+    "OIDC_CLIENT_ID": "ci-forgejo"
+  },
   "paperless": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOCUMENTS": "true"
