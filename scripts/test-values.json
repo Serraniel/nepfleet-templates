@@ -54,7 +54,10 @@
     "mealie": "/api/app/about",
     "bookstack": "/api/books",
     "paperless": "/api/",
-    "kutt": "/api/v2/health"
+    "kutt": "/api/v2/health",
+    "vaultwarden": "/alive",
+    "mastodon": "/health",
+    "opencloud": "/status.php"
   },
   "_ci_only": {
     "fail2ban": "changes the host's firewall: never on a developer's machine"
