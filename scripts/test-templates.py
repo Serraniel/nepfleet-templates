@@ -254,6 +254,30 @@ def check_dozzle():
                f"http://127.0.0.1:2375/containers/{prefix}-dozzle-1/stop", check=False)
     if stop.returncode == 0:
         raise SystemExit("dozzle: its proxy let a container be stopped")
+    # A log line with "panic" must reach "NepFleet's API" (a stand-in that
+    # prints requests) in NepFleet's alert format, with the token.
+    recv, emitter = prefix + "-recv", prefix + "-emitter"
+    for c in (recv, emitter):
+        run("docker", "rm", "-f", c, check=False)
+    try:
+        run("docker", "run", "-d", "--name", recv, "--network", NETWORK, ALPINE, "sh", "-c",
+            r'while true; do printf "HTTP/1.1 202 Accepted\r\nContent-Length: 0\r\nConnection: close\r\n\r\n" | nc -l -p 8080; echo; done')
+        run("docker", "run", "-d", "--name", emitter, ALPINE, "sh", "-c",
+            "sleep 10; echo 'panic: ci test line'; sleep 60")
+        got = ""
+        for _ in range(24):
+            time.sleep(5)
+            got = run("docker", "logs", recv, check=False).stdout
+            if '"rule":"Fatal log lines"' in got:
+                break
+        token = OVERRIDES["dozzle"]["ALERTS_TOKEN"]
+        for want in ("POST /api/v1/alerts", f"Authorization: Bearer {token}", '"source":"dozzle"',
+                     f'"container":"{emitter}"', "panic: ci test line"):
+            if want not in got:
+                raise SystemExit(f"dozzle: the alert lacks {want!r}:\n{got[-1500:]}")
+    finally:
+        for c in (recv, emitter):
+            run("docker", "rm", "-f", c, check=False)
 
 
 def check_metrics(name):

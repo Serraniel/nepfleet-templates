@@ -9,7 +9,7 @@ metadata:
   homepage: https://dozzle.dev
   source: https://github.com/amir20/dozzle
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   images:
     - name: amir20/dozzle
@@ -22,10 +22,14 @@ spec:
       type: hostname
       title: Domain
       required: true
-    - name: ALERT_WEBHOOK_URL
+    - name: ALERTS_API_URL
+      type: url
+      title: NepFleet's API, for log alerts
+      description: "Log lines with fatal, panic or out of memory go to its /api/v1/alerts, and from there to the fleet's notification channels, deduplicated. For example https://fleet.example.org. Leave empty for no alerts."
+    - name: ALERTS_TOKEN
       type: secret
-      title: Webhook for log alerts
-      description: "Log lines with fatal, panic or out of memory are sent here, as Dozzle's JSON. Every matching line sends one, with no limit, so use a receiver that copes. Leave empty for no alerts."
+      title: API token for alerts
+      description: "A notify token, which only sends alerts: nepfleet token create --name dozzle --scope notify --expires 365d"
   files:
     - { src: files/users.yml, dest: data/users.yml }
     - { src: files/notifications.yml, dest: data/notifications.yml }
