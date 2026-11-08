@@ -1,0 +1,44 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: wokko
+  title: Wokko
+  description: "Recipe manager that is simple to run and hard to lose data with. Create the admin account right after installing, as the first visitor does. It makes its own backups into the backups volume; NepFleet's backups copy the recipes and photos too."
+  tier: app
+  category: home
+  homepage: https://github.com/Serraniel/Wokko
+  source: https://github.com/Serraniel/Wokko
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: wokko, port: 8080 }   # also reachable on a LAN port (access mode port)
+  images:
+    - name: ghcr.io/serraniel/wokko
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  # Its own API, the Kitshn app's API, photos, and Claude's connectors (MCP and OAuth).
+  botCheck: { allow: ["^/api/", "^/media/", "^/mcp$", "^/oauth/(token|register)$", "^/\\.well-known/", "^/_allauth/"] }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: BACKUP_INTERVAL_HOURS
+      type: int
+      title: Hours between Wokko's own backups
+      default: "24"
+      required: true
+    - name: BACKUP_RETENTION_DAYS
+      type: int
+      title: Days Wokko keeps its backups
+      default: "30"
+      required: true
+    - name: TRASH_RETENTION_DAYS
+      type: int
+      title: Days deleted recipes stay in the trash
+      default: "30"
+      required: true
+  volumes:
+    - { name: data, backup: true }
+    # Copies of data, made by Wokko itself: backing them up again would double it.
+    - { name: backups, backup: false }

@@ -1,0 +1,36 @@
+services:
+  wokko:
+    image: ghcr.io/serraniel/wokko:0.3.0
+    restart: unless-stopped
+    # The image's own health check runs /wokko healthcheck.
+    environment:
+      # For share links, secure cookies, passkeys and Claude's connectors.
+      PUBLIC_URL: ${NEPFLEET_URL}
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS}
+      TRASH_RETENTION_DAYS: ${TRASH_RETENTION_DAYS}
+    volumes:
+      # Recipes and photos, in SQLite: on a local disk, never a network share.
+      - data:/data
+      # Wokko's own backups.
+      - backups:/backups
+    networks: [ingress]
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # consistent database copy
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      kuma.wokko.http.name: Wokko
+      kuma.wokko.http.url: ${NEPFLEET_URL}/api/v1/health
+      homepage.group: Home
+      homepage.name: Wokko
+      homepage.icon: mdi-chef-hat
+      homepage.href: ${NEPFLEET_URL}
+
+volumes:
+  data:
+  backups:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
