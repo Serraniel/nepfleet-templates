@@ -354,11 +354,11 @@ def check_forgejo():
 
 
 def check_opencloud():
-    """With the office profile, Euro-Office answers WOPI discovery, and OpenCloud
-    offers it as an app."""
+    """With the office profile, Euro-Office answers WOPI discovery on the ingress
+    network. (OpenCloud registers it by its domain, which doesn't resolve here, so
+    that part can only be seen on a real host.)"""
     c = stack_name("opencloud")
-    checks = {f"http://{c}-euro-office-1/hosting/discovery": "wopi-discovery",
-              f"http://{c}-opencloud-1:9200/app/list": "Euro-Office"}
+    checks = {f"http://{c}-euro-office-1/hosting/discovery": "wopi-discovery"}
     for url, want in checks.items():
         out = ""
         for _ in range(24):
