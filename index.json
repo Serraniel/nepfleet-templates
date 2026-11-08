@@ -1659,7 +1659,7 @@
           "name": "OIDC_ISSUER",
           "type": "url",
           "title": "Identity provider (OpenID Connect issuer), for signing in",
-          "description": "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
+          "description": "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. It must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
         },
         {
           "name": "OIDC_NAME",

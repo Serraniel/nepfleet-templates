@@ -35,7 +35,7 @@
     "ALERTS_TOKEN": "nft_ci-not-a-real-token"
   },
   "forgejo": {
-    "OIDC_ISSUER": "https://id.example.test",
+    "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-forgejo"
   },
   "paperless": {
