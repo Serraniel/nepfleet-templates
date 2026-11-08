@@ -2178,7 +2178,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2834,7 +2834,7 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "opencloudeu/opencloud",
@@ -3590,7 +3590,7 @@
       "category": "security",
       "homepage": "https://github.com/dani-garcia/vaultwarden",
       "path": "apps/vaultwarden",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "vaultwarden/server",

@@ -9,7 +9,7 @@ metadata:
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon
@@ -21,6 +21,7 @@ spec:
     - name: redis
       track: minor
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  botCheck: { service: web, port: 3000, allow: ["^/api/", "^/oauth/", "^/\\.well-known/", "^/nodeinfo", "^/inbox$", "^/users/[^/]+/(inbox|outbox|followers|following|collections)", "^/system/", "^/health$"] }
   inputs:
     - name: DOMAIN
       type: hostname

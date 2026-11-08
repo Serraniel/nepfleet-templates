@@ -263,7 +263,8 @@ def check_dozzle():
         run("docker", "run", "-d", "--name", recv, "--network", NETWORK, ALPINE, "sh", "-c",
             r'while true; do printf "HTTP/1.1 202 Accepted\r\nContent-Length: 0\r\nConnection: close\r\n\r\n" | nc -l -p 8080; echo; done')
         run("docker", "run", "-d", "--name", emitter, ALPINE, "sh", "-c",
-            "sleep 10; echo 'panic: ci test line'; sleep 60")
+            # Again and again: Dozzle may start following it after the first.
+            "while :; do sleep 10; echo 'panic: ci test line'; done")
         got = ""
         for _ in range(24):
             time.sleep(5)
