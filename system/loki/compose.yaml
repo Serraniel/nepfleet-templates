@@ -30,7 +30,7 @@ services:
       kuma.loki-alloy.docker.docker_container: ${NEPFLEET_STACK}-alloy-1
       kuma.loki-alloy.docker.docker_host_name: nepfleet-docker
 
-  # Read-only API: container lists, logs and events. No starting, stopping or exec.
+  # Read-only API: container and network lists, logs and events. No starting, stopping or exec.
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.4.7
     restart: unless-stopped
@@ -40,6 +40,7 @@ services:
       CONTAINERS: 1
       ALLOW_LOGS: 1
       EVENTS: 1
+      NETWORKS: 1   # discovery labels containers with their networks
       INFO: 1
       POST: 0
     volumes:
