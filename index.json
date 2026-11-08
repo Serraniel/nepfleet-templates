@@ -1562,7 +1562,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
