@@ -30,6 +30,10 @@
     "HUB_URL": "https://beszel.example.test",
     "KEY": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbgVdlBqfQq3Xz6pqPTZJ2pma9u55vaj6IJazJZ1xbO"
   },
+  "dozzle": {
+    "ALERTS_API_URL": "http://it-dozzle-recv:8080",
+    "ALERTS_TOKEN": "nft_ci-not-a-real-token"
+  },
   "paperless": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOCUMENTS": "true"

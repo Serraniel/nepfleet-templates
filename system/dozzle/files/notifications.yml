@@ -6,7 +6,11 @@ dispatchers:
   - id: 1
     name: NepFleet alerts
     type: webhook
-    url: $${ALERT_WEBHOOK_URL}
+    url: $${ALERTS_API_URL}/api/v1/alerts
+    headers:
+      Authorization: Bearer $${ALERTS_TOKEN}
+    # NepFleet's alert format. Only fields every kind of alert has.
+    template: '{"source": "dozzle", "rule": "{{.Subscription.Name}}", "container": "{{.Container.Name}}", "host": "{{.Container.HostName}}", "detail": "{{.Detail}}"}'
 subscriptions:
   - id: 1
     name: Fatal log lines

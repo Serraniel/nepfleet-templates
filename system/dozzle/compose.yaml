@@ -6,7 +6,8 @@ services:
       DOCKER_HOST: tcp://socket-proxy:2375
       DOZZLE_AUTH_PROVIDER: simple
       DOZZLE_NO_ANALYTICS: "true"
-      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL}
+      ALERTS_API_URL: ${ALERTS_API_URL}
+      ALERTS_TOKEN: ${ALERTS_TOKEN}
     volumes:
       - ./data:/data
     networks: [ingress, socket]
