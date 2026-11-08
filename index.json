@@ -841,6 +841,65 @@
       "migrations": []
     },
     {
+      "name": "loki",
+      "title": "Loki",
+      "description": "Keeps every container's logs on this host, searchable in Grafana by stack and service. Alloy collects them through a read-only Docker proxy. In Grafana, add a Loki data source at http://<stack>-loki-1:3100. Some apps log tokens or personal data, so treat the logs like the apps' own data. No usage reports go to Grafana Labs.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://grafana.com/oss/loki/",
+      "source": "https://github.com/grafana/loki",
+      "path": "system/loki",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "grafana/loki",
+          "track": "minor"
+        },
+        {
+          "name": "grafana/alloy",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": true
+      },
+      "inputs": [
+        {
+          "name": "RETENTION",
+          "type": "string",
+          "title": "Keep logs for",
+          "required": true,
+          "default": "14d",
+          "pattern": "^[0-9]+[hdw]$"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "alloy"
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "neptide",
       "title": "neptide image updates",
       "description": "Health-gated image updates with automatic rollback, for containers and swarm services labelled neptide.enable=true.",

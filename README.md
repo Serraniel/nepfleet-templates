@@ -30,6 +30,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [frps](system/frps) | [frp server (public side)](https://github.com/fatedier/frp) | system | 🌐 🦾 |
 | [grafana](system/grafana) | [Grafana](https://grafana.com/oss/grafana) · [source](https://github.com/grafana/grafana) | system | 🌐 📈 🏠 💾 🦾 |
 | [homepage](system/homepage) | [Homepage](https://gethomepage.dev) · [source](https://github.com/gethomepage/homepage) | system | 🌐 📈 🐝 💾 🦾 |
+| [loki](system/loki) | [Loki](https://grafana.com/oss/loki/) · [source](https://github.com/grafana/loki) | system | 📈 💾 🦾 |
 | [neptide](system/neptide) | [neptide image updates](https://github.com/Serraniel/neptide) | system | 🐝 🦾 |
 | [pocket-id](system/pocket-id) | [Pocket ID](https://pocket-id.org) · [source](https://github.com/pocket-id/pocket-id) | system | 🌐 📈 🏠 🐝 💾 🦾 |
 | [prometheus](system/prometheus) | [Prometheus](https://prometheus.io) · [source](https://github.com/prometheus/prometheus) | system | 🦾 |
