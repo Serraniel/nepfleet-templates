@@ -9,9 +9,10 @@ metadata:
   homepage: https://www.audiobookshelf.org
   source: https://github.com/advplyr/audiobookshelf
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   web: { service: audiobookshelf, port: 80 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/api/", "^/login", "^/logout", "^/auth/", "^/socket\\.io/", "^/hls/", "^/feed/", "^/public/", "^/status", "^/ping", "^/healthcheck"] }
   images:
     - name: ghcr.io/advplyr/audiobookshelf
       track: minor

@@ -9,9 +9,10 @@ metadata:
   homepage: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   web: { service: paperless, port: 8000 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/api/", "^/ws/"] }
   images:
     - name: ghcr.io/paperless-ngx/paperless-ngx
       track: minor

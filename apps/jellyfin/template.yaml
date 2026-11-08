@@ -9,9 +9,10 @@ metadata:
   homepage: https://jellyfin.org
   source: https://github.com/jellyfin/jellyfin
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   web: { service: jellyfin, port: 8096 }   # also reachable on a LAN port (access mode port)
+  botCheck: { supported: false }
   images:
     - name: jellyfin/jellyfin
       track: minor

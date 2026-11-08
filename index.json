@@ -1353,7 +1353,7 @@
       "homepage": "https://www.audiobookshelf.org",
       "source": "https://github.com/advplyr/audiobookshelf",
       "path": "apps/audiobookshelf",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/advplyr/audiobookshelf",
@@ -1417,7 +1417,7 @@
       "homepage": "https://www.bookstackapp.com",
       "source": "https://github.com/BookStackApp/BookStack",
       "path": "apps/bookstack",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "lscr.io/linuxserver/bookstack",
@@ -1490,7 +1490,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1798,7 +1798,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -1896,7 +1896,7 @@
       "homepage": "https://jellyfin.org",
       "source": "https://github.com/jellyfin/jellyfin",
       "path": "apps/jellyfin",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "jellyfin/jellyfin",
@@ -1956,7 +1956,7 @@
       "category": "web",
       "homepage": "https://github.com/thedevs-network/kutt",
       "path": "apps/kutt",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "kutt/kutt",
@@ -2236,7 +2236,7 @@
       "homepage": "https://mealie.io",
       "source": "https://github.com/mealie-recipes/mealie",
       "path": "apps/mealie",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/mealie-recipes/mealie",
@@ -2415,7 +2415,7 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "deluan/navidrome",
@@ -2781,7 +2781,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",

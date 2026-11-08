@@ -8,9 +8,10 @@ metadata:
   category: web
   homepage: https://github.com/thedevs-network/kutt
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   web: { service: kutt, port: 3000 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/api/"] }
   images:
     - name: kutt/kutt
       track: minor

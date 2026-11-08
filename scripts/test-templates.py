@@ -24,6 +24,8 @@ ROOT = Path(__file__).resolve().parent.parent
 NETWORK = "nepfleet_templates_it"  # never a real install's ingress network
 ALPINE = "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"
 OVERRIDES = json.loads((ROOT / "scripts" / "test-values.json").read_text())
+# Templates deployed behind Anubis, each with a path its spec.botCheck.allow lets through.
+BOT_CHECK = OVERRIDES.get("_bot_check", {})
 
 
 def run(*args, cwd=None, env=None, check=True, capture=True):
@@ -111,9 +113,11 @@ class Fleet:
                 cwd=self.fleet, env=self.env, check=False)
         if p.returncode != 0:
             raise SystemExit(f"{tpl['name']}: nepfleet new refused the test values (add one to scripts/test-values.json):\n{p.stdout}{p.stderr}")
+        stack = self.fleet / ("system" if tpl["tier"] == "system" else "stacks") / stack_name(tpl["name"]) / "stack.yaml"
         if mode == "swarm":
-            stack = self.fleet / ("system" if tpl["tier"] == "system" else "stacks") / stack_name(tpl["name"]) / "stack.yaml"
             stack.write_text(replace(stack.read_text(), "\nspec:\n", "\nspec:\n    mode: swarm\n"))  # yaml.v3 indents by 4
+        elif tpl["name"] in BOT_CHECK:
+            stack.write_text(replace(stack.read_text(), "\nspec:\n", "\nspec:\n    botCheck:\n        enabled: true\n"))
 
     def cleanup(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -202,6 +206,7 @@ def deploy(nf, names):
             else:
                 try:
                     check_metrics(name)
+                    check_bot_check(name)
                     if name in AFTER_DEPLOY:
                         AFTER_DEPLOY[name]()
                         print("ok   " + name + " works")
@@ -269,6 +274,38 @@ def check_metrics(name):
         else:
             raise SystemExit(f"{name}: no metrics at {url}")
         print(f"ok   {name} metrics at {url}")
+
+
+def check_bot_check(name):
+    """Behind Anubis, a browser gets the check, and an allowed path reaches the app."""
+    if name not in BOT_CHECK:
+        return
+    ids = run("docker", "ps", "-q", "--filter", f"label=com.docker.compose.project={stack_name(name)}").stdout.split()
+    services = [run("docker", "inspect", "--format", '{{index .Config.Labels "com.docker.compose.service"}}', c).stdout.strip()
+                for c in ids]
+    anubis = [s for s in services if s.endswith("-anubis")]
+    if not anubis:
+        raise SystemExit(f"{name}: botCheck is on, but no Anubis service runs: {services}")
+    base = f"http://{stack_name(name)}-{anubis[0]}-1:8923"
+    marker = ".within.website/x/"  # the check page's own assets
+
+    def get(path):
+        p = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-S", "-O", "-",
+                "-U", "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0",
+                "--header", "X-Real-Ip: 203.0.113.7", base + path, check=False)
+        return p.stdout, p.stderr
+
+    for _ in range(12):
+        body, head = get("/")
+        if marker in body:
+            break
+        time.sleep(5)
+    else:
+        raise SystemExit(f"{name}: a browser on / didn't get Anubis's check:\n{head}\n{body[:500]}")
+    body, head = get(BOT_CHECK[name])
+    if marker in body or "HTTP/1.1 502" in head or "HTTP/" not in head:
+        raise SystemExit(f"{name}: {BOT_CHECK[name]} must reach the app past Anubis:\n{head}\n{body[:500]}")
+    print(f"ok   {name} behind Anubis: / is checked, {BOT_CHECK[name]} passes")
 
 
 def check_prometheus():

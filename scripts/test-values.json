@@ -42,6 +42,16 @@
     "DNS_PORT": "15354",
     "BIND_ADDR": "127.0.0.1"
   },
+  "_bot_check": {
+    "immich": "/api/server/ping",
+    "forgejo": "/api/healthz",
+    "audiobookshelf": "/healthcheck",
+    "navidrome": "/ping",
+    "mealie": "/api/app/about",
+    "bookstack": "/api/books",
+    "paperless": "/api/",
+    "kutt": "/api/v2/health"
+  },
   "_ci_only": {
     "fail2ban": "changes the host's firewall: never on a developer's machine"
   }
