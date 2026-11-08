@@ -9,9 +9,10 @@ metadata:
   homepage: https://www.navidrome.org
   source: https://github.com/navidrome/navidrome
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   web: { service: navidrome, port: 4533 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/rest/", "^/ping"] }
   images:
     - name: deluan/navidrome
       track: patch   # pre-1.0

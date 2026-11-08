@@ -9,9 +9,10 @@ metadata:
   homepage: https://www.bookstackapp.com
   source: https://github.com/BookStackApp/BookStack
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   web: { service: bookstack, port: 80 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/api/"] }
   images:
     - name: lscr.io/linuxserver/bookstack
       track: minor

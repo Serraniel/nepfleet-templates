@@ -9,9 +9,10 @@ metadata:
   homepage: https://immich.app
   source: https://github.com/immich-app/immich
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   web: { service: immich-server, port: 2283 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/api/", "^/\\.well-known/"] }
   images:
     # Server and machine learning must always run the same version.
     - name: ghcr.io/immich-app/immich-server
