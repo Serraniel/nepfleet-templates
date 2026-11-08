@@ -5,3 +5,8 @@ datasources:
     access: proxy
     url: ${PROMETHEUS_URL}
     isDefault: true
+  # From the loki template; without it, queries to this source fail.
+  - name: Loki
+    type: loki
+    access: proxy
+    url: ${LOKI_URL}
