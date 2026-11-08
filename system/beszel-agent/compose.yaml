@@ -1,0 +1,45 @@
+services:
+  agent:
+    image: henrygd/beszel-agent:0.21.1
+    restart: unless-stopped
+    environment:
+      # The agent connects out to the hub, so it listens on no port.
+      HUB_URL: ${HUB_URL}
+      KEY: ${KEY}
+      TOKEN: ${TOKEN}
+      DISABLE_SSH: "true"
+      DOCKER_HOST: tcp://socket-proxy:2375
+    volumes:
+      - data:/var/lib/beszel-agent
+    networks: [default, socket]
+    healthcheck:
+      test: ["CMD", "/agent", "health"]
+      interval: 60s
+      timeout: 5s
+      start_period: 15s
+    labels:
+      # Running and healthy (Docker monitor; no credentials needed).
+      kuma.beszel-agent.docker.name: Beszel agent
+      kuma.beszel-agent.docker.docker_container: ${NEPFLEET_STACK}-agent-1
+      kuma.beszel-agent.docker.docker_host_name: nepfleet-docker
+
+  # Read-only API: container lists and stats. No starting, stopping or exec.
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/run]
+    environment:
+      CONTAINERS: 1
+      INFO: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [socket]
+
+volumes:
+  data:
+
+networks:
+  socket:
+    internal: true

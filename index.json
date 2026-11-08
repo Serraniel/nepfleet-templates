@@ -157,13 +157,13 @@
     {
       "name": "beszel",
       "title": "Beszel",
-      "description": "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent, which the hub's Add System dialog explains.",
+      "description": "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent: the beszel-agent template.",
       "tier": "system",
       "category": "monitoring",
       "homepage": "https://beszel.dev",
       "source": "https://github.com/henrygd/beszel",
       "path": "system/beszel",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "henrygd/beszel",
@@ -196,6 +196,68 @@
         {
           "name": "data",
           "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "beszel-agent",
+      "title": "Beszel agent",
+      "description": "Sends this host's and its containers' metrics to a Beszel hub. In the hub, Add System with the WebSocket option gives the key and token. It connects out to the hub and opens no port, and reads Docker through a read-only proxy. Network traffic is the container's own, not the host's.",
+      "tier": "system",
+      "category": "monitoring",
+      "homepage": "https://beszel.dev",
+      "source": "https://github.com/henrygd/beszel",
+      "path": "system/beszel-agent",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "henrygd/beszel-agent",
+          "track": "minor"
+        },
+        {
+          "name": "lscr.io/linuxserver/socket-proxy",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "HUB_URL",
+          "type": "url",
+          "title": "The hub's address",
+          "required": true
+        },
+        {
+          "name": "KEY",
+          "type": "string",
+          "title": "The hub's public key (from Add System)",
+          "required": true,
+          "pattern": "^ssh-ed25519 [A-Za-z0-9+/=]+$"
+        },
+        {
+          "name": "TOKEN",
+          "type": "secret",
+          "title": "The token from Add System",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data"
         }
       ],
       "migrations": []
