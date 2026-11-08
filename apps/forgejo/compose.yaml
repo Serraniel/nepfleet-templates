@@ -110,6 +110,9 @@ services:
     networks: [default, ci]
     depends_on:
       register-runner: { condition: service_completed_successfully }
+      # Not needed by the runner: compose only accepts a one-shot that exits when
+      # something waits for it.
+      identity-provider: { condition: service_completed_successfully }
       dind: { condition: service_started }
     labels:
       # Running and healthy (Docker monitor; no credentials needed).
