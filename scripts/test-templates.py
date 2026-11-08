@@ -292,9 +292,10 @@ def check_metrics(name):
         service, port, *path = run("docker", "inspect", "--format", fmt, cid).stdout.split() + [""]
         url = f"http://{stack_name(name)}-{service}-1:{port}{path[0] or '/metrics'}"
         for _ in range(12):
-            out = run("docker", "run", "--rm", "--network", NETWORK, ALPINE,
-                      "wget", "-qO-", url, check=False).stdout
-            if "# TYPE" in out or "# HELP" in out:
+            p = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-qO-", url, check=False)
+            out = p.stdout
+            # An app with nothing counted yet may answer empty: still a valid scrape.
+            if "# TYPE" in out or "# HELP" in out or (p.returncode == 0 and not out.strip()):
                 break
             time.sleep(5)
         else:
@@ -370,6 +371,15 @@ def check_opencloud():
             raise SystemExit(f"opencloud: {url} lacks {want!r}:\n{out[:500]}")
 
 
+def check_sweetcaptcha():
+    """The widget's script and the health check answer, from the ingress network."""
+    base = f"http://{stack_name('sweetcaptcha')}-sweetcaptcha-1:8080"
+    for path, want in (("/healthz", ""), ("/v1/api.js", "sweetcaptcha")):
+        p = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-qO-", base + path, check=False)
+        if p.returncode != 0 or want not in p.stdout.lower():
+            raise SystemExit(f"sweetcaptcha: {path} didn't answer as expected:\n{p.stdout[:300]}{p.stderr}")
+
+
 def check_garage():
     """The bucket and key Garage made on first start must store and return an object."""
     c = stack_name("garage") + "-garage-1"
@@ -415,7 +425,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():

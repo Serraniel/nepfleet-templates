@@ -1,0 +1,84 @@
+x-sweetcaptcha: &sweetcaptcha
+  restart: unless-stopped
+  command: ["serve", "--config", "/etc/sweetcaptcha/config.yaml"]
+  environment:
+    SWEETCAPTCHA_MASTER_KEY: ${MASTER_KEY}
+    SWEETCAPTCHA_ADMIN_TOKEN: ${ADMIN_TOKEN}
+    SWEETCAPTCHA_SITE_SECRET: ${SITE_SECRET}
+  depends_on:
+    valkey: { condition: service_healthy }
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  networks: [ingress, backend]
+  healthcheck:
+    test: ["CMD", "/sweetcaptcha", "healthcheck"]
+    interval: 15s
+    timeout: 5s
+    retries: 3
+    start_period: 5s
+  labels:
+    caddy: ${DOMAIN}
+    caddy.reverse_proxy: "{{upstreams 8080}}"
+    nepfleet.metrics.port: "9090"
+    kuma.sweetcaptcha.http.name: SweetCaptcha
+    kuma.sweetcaptcha.http.url: ${NEPFLEET_URL}/healthz
+
+services:
+  # One of the two editions runs, by COMPOSE_PROFILES.
+  sweetcaptcha:
+    <<: *sweetcaptcha
+    image: ghcr.io/serraniel/sweetcaptcha:0.1.0-beta.1
+    profiles: [standard]
+    volumes:
+      - ./sweetcaptcha.yaml:/etc/sweetcaptcha/config.yaml:ro
+      - ipdata:/data/ipdata:ro
+
+  # Proof of work only: the image has no detection code, and no route out.
+  sweetcaptcha-strict:
+    <<: *sweetcaptcha
+    image: ghcr.io/serraniel/sweetcaptcha:0.1.0-beta.1-strict
+    profiles: [strict]
+    volumes:
+      - ./sweetcaptcha.strict.yaml:/etc/sweetcaptcha/config.yaml:ro
+
+  # Refreshes the public address lists the standard edition classifies with. The
+  # only service that goes out; it sends no visitor data.
+  ipdata:
+    image: ghcr.io/serraniel/sweetcaptcha:0.1.0-beta.1
+    profiles: [standard]
+    restart: unless-stopped
+    command: ["ipdata", "--dir", "/data/ipdata", "--every", "24h"]
+    volumes:
+      - ipdata:/data/ipdata
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks: [default]
+
+  # Short-lived state only: no persistence, on an internal network.
+  valkey:
+    image: valkey/valkey:9.2-alpine
+    restart: unless-stopped
+    command: ["valkey-server", "--save", "", "--appendonly", "no", "--maxmemory", "256mb", "--maxmemory-policy", "volatile-ttl"]
+    read_only: true
+    tmpfs: ["/data"]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID]
+    security_opt: ["no-new-privileges:true"]
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  ipdata:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
+  backend:
+    internal: true

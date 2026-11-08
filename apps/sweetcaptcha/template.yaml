@@ -1,0 +1,69 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: sweetcaptcha
+  title: SweetCaptcha
+  description: "Self-hosted CAPTCHA with reCAPTCHA, hCaptcha and Turnstile compatible APIs; nothing goes to a third party. Beta: it starts in shadow mode, which decides but lets everyone through, so you can see what it would do first. Your site's server verifies tokens with the site secret from the stack's encrypted secrets (SITE_SECRET). More sites: put your own sweetcaptcha.yaml in the stack's files/ folder."
+  tier: app
+  category: security
+  homepage: https://github.com/Serraniel/SweetCaptcha
+  source: https://github.com/Serraniel/SweetCaptcha
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: ghcr.io/serraniel/sweetcaptcha
+      track: minor
+    - name: valkey/valkey
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, metrics: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain the widget and its API are served from
+      required: true
+    - name: COMPOSE_PROFILES
+      type: enum
+      title: Edition (strict has no detection code at all, only proof of work)
+      options: ["standard", "strict"]
+      default: "standard"
+    - name: SITE_NAME
+      type: string
+      title: Name of the site that uses it
+      default: site
+      required: true
+      pattern: '^[a-z0-9][a-z0-9-]{0,40}$'
+    - name: SITEKEY
+      type: string
+      title: Sitekey, the public ID your pages use (data-sitekey)
+      required: true
+      pattern: '^[A-Za-z0-9_-]{8,64}$'
+    - name: SITE_HOSTNAMES
+      type: string
+      title: Hostnames of the pages that show the widget, separated by commas
+      required: true
+      pattern: '^[A-Za-z0-9.-]+( *, *[A-Za-z0-9.-]+)*$'
+    - name: SITE_MODE
+      type: enum
+      title: Mode in the standard edition (strict is proof of work only)
+      options: ["standard", "strict"]
+      default: "standard"
+    - name: SHADOW
+      type: bool
+      title: Shadow mode (decide, but let everyone through), in the standard edition
+      default: "true"
+    - name: PRIVACY_URL
+      type: url
+      title: Your privacy notice, linked from the widget
+    - name: IMPRINT_URL
+      type: url
+      title: Your imprint, linked from the widget
+  generate:
+    - { name: MASTER_KEY, kind: secret, length: 64, encoding: hex }
+    - { name: ADMIN_TOKEN, kind: secret, length: 48, encoding: hex }
+    - { name: SITE_SECRET, kind: secret, length: 48, encoding: hex }
+  files:
+    - { src: files/sweetcaptcha.yaml, dest: sweetcaptcha.yaml }
+    - { src: files/sweetcaptcha.strict.yaml, dest: sweetcaptcha.strict.yaml }
+  volumes:
+    - { name: ipdata, backup: false }   # public lists, fetched again
