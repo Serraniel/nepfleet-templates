@@ -9,7 +9,7 @@ metadata:
   homepage: https://grafana.com/oss/grafana
   source: https://github.com/grafana/grafana
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   web: { service: grafana, port: 3000 }
   images:
@@ -26,6 +26,11 @@ spec:
       title: Prometheus address
       description: The prometheus template's address on the ingress network.
       default: http://prometheus:9090
+    - name: LOKI_URL
+      type: url
+      title: Loki address
+      description: The loki template's address on the ingress network, for logs.
+      default: http://loki:3100
   generate:
     - { name: ADMIN_PASSWORD, kind: secret, length: 32, encoding: alnum }
   files:

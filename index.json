@@ -627,7 +627,7 @@
       "homepage": "https://grafana.com/oss/grafana",
       "source": "https://github.com/grafana/grafana",
       "path": "system/grafana",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "grafana/grafana",
@@ -660,6 +660,13 @@
           "title": "Prometheus address",
           "description": "The prometheus template's address on the ingress network.",
           "default": "http://prometheus:9090"
+        },
+        {
+          "name": "LOKI_URL",
+          "type": "url",
+          "title": "Loki address",
+          "description": "The loki template's address on the ingress network, for logs.",
+          "default": "http://loki:3100"
         }
       ],
       "generate": [
@@ -843,13 +850,13 @@
     {
       "name": "loki",
       "title": "Loki",
-      "description": "Keeps every container's logs on this host, searchable in Grafana by stack and service. Alloy collects them through a read-only Docker proxy. In Grafana, add a Loki data source at http://<stack>-loki-1:3100. Some apps log tokens or personal data, so treat the logs like the apps' own data. No usage reports go to Grafana Labs.",
+      "description": "Keeps every container's logs on this host, searchable in Grafana by stack and service. Alloy collects them through a read-only Docker proxy. The grafana template has it as a data source already (http://loki:3100). Some apps log tokens or personal data, so treat the logs like the apps' own data. No usage reports go to Grafana Labs.",
       "tier": "system",
       "category": "monitoring",
       "homepage": "https://grafana.com/oss/loki/",
       "source": "https://github.com/grafana/loki",
       "path": "system/loki",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "grafana/loki",
