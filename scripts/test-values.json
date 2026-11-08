@@ -38,6 +38,10 @@
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-forgejo"
   },
+  "opencloud": {
+    "COMPOSE_PROFILES": "office",
+    "OFFICE_DOMAIN": "office.opencloud.example.test"
+  },
   "paperless": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOCUMENTS": "true"
