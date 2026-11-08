@@ -1,0 +1,44 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: garage
+  title: Garage
+  description: "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key on first start, from the generated values in the stack's secrets. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command."
+  tier: app
+  category: storage
+  homepage: https://garagehq.deuxfleurs.fr
+  source: https://git.deuxfleurs.fr/Deuxfleurs/garage
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  images:
+    - name: dxflrs/garage
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true, metrics: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain of the S3 API
+      required: true
+    - name: BUCKET
+      type: string
+      title: Bucket created on first start
+      default: default
+      required: true
+      pattern: '^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$'
+    - name: S3_REGION
+      type: string
+      title: Region name clients use
+      default: garage
+      required: true
+      pattern: '^[a-z0-9-]+$'
+  generate:
+    - { name: RPC_SECRET, kind: secret, length: 64, encoding: hex }
+    - { name: ADMIN_TOKEN, kind: secret, length: 48, encoding: base64url }
+    - { name: ACCESS_KEY_ID, kind: secret, length: 32, encoding: hex }
+    - { name: SECRET_ACCESS_KEY, kind: secret, length: 64, encoding: hex }
+  files:
+    - { src: files/garage.toml, dest: garage.toml }
+  volumes:
+    - { name: meta, backup: true }
+    - { name: data, backup: true }
