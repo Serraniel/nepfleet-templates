@@ -3853,6 +3853,76 @@
         }
       ],
       "migrations": []
+    },
+    {
+      "name": "wokko",
+      "title": "Wokko",
+      "description": "Recipe manager that is simple to run and hard to lose data with. Create the admin account right after installing, as the first visitor does. It makes its own backups into the backups volume; NepFleet's backups copy the recipes and photos too.",
+      "tier": "app",
+      "category": "home",
+      "homepage": "https://github.com/Serraniel/Wokko",
+      "source": "https://github.com/Serraniel/Wokko",
+      "path": "apps/wokko",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/serraniel/wokko",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "BACKUP_INTERVAL_HOURS",
+          "type": "int",
+          "title": "Hours between Wokko's own backups",
+          "required": true,
+          "default": "24"
+        },
+        {
+          "name": "BACKUP_RETENTION_DAYS",
+          "type": "int",
+          "title": "Days Wokko keeps its backups",
+          "required": true,
+          "default": "30"
+        },
+        {
+          "name": "TRASH_RETENTION_DAYS",
+          "type": "int",
+          "title": "Days deleted recipes stay in the trash",
+          "required": true,
+          "default": "30"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        },
+        {
+          "name": "backups"
+        }
+      ],
+      "migrations": []
     }
   ]
 }
