@@ -26,6 +26,10 @@
     "DNS_PORT": "15353",
     "BIND_ADDR": "127.0.0.1"
   },
+  "beszel-agent": {
+    "HUB_URL": "https://beszel.example.test",
+    "KEY": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbgVdlBqfQq3Xz6pqPTZJ2pma9u55vaj6IJazJZ1xbO"
+  },
   "paperless": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOCUMENTS": "true"
