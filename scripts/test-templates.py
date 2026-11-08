@@ -332,6 +332,19 @@ def check_garage():
         raise SystemExit(f"garage: an object didn't round-trip:\n{out.stdout}{out.stderr}")
 
 
+def check_loki():
+    """Logs from this host's containers must arrive in Loki, labelled by stack."""
+    url = f"http://{stack_name('loki')}-loki-1:3100/loki/api/v1/query_range?limit=5&query=%7Bstack%3D~%22.%2B%22%7D"
+    out = ""
+    for _ in range(24):
+        out = run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-qO-", url, check=False).stdout
+        if '"values":[[' in out:
+            return
+        time.sleep(5)
+    logs = run("docker", "logs", "--tail", "30", stack_name("loki") + "-alloy-1", check=False)
+    raise SystemExit(f"loki: no logs arrived:\n{out[:500]}\n{logs.stdout}{logs.stderr}")
+
+
 def check_prometheus():
     """Ready says little: it must really scrape this host, and find services by label."""
     c = stack_name("prometheus") + "-prometheus-1"
@@ -347,7 +360,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
 
 
 def main():
