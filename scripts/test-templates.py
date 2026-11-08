@@ -303,7 +303,13 @@ def check_bot_check(name):
         time.sleep(5)
     else:
         raise SystemExit(f"{name}: a browser on / didn't get Anubis's check:\n{head}\n{body[:500]}")
-    body, head = get(BOT_CHECK[name])
+    for _ in range(12):  # healthy isn't always answering yet: a 502 may pass
+        body, head = get(BOT_CHECK[name])
+        if marker in body:
+            break  # the check itself: no point waiting
+        if "HTTP/1.1 502" not in head and "HTTP/" in head:
+            break
+        time.sleep(5)
     if marker in body or "HTTP/1.1 502" in head or "HTTP/" not in head:
         raise SystemExit(f"{name}: {BOT_CHECK[name]} must reach the app past Anubis:\n{head}\n{body[:500]}")
     print(f"ok   {name} behind Anubis: / is checked, {BOT_CHECK[name]} passes")
