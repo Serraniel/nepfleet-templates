@@ -9,9 +9,16 @@ services:
       HBOX_WEB_MAX_UPLOAD_SIZE: "50"
       HBOX_OPTIONS_TRUST_PROXY: "true"   # behind Caddy
       HBOX_AUTH_API_KEY_PEPPER: ${API_KEY_PEPPER}
+      HBOX_LABEL_MAKER_WIDTH: ${LABEL_WIDTH}
+      HBOX_LABEL_MAKER_HEIGHT: ${LABEL_HEIGHT}
+      HBOX_LABEL_MAKER_PADDING: ${LABEL_PADDING}
+      HBOX_LABEL_MAKER_MARGIN: ${LABEL_MARGIN}
+      HBOX_LABEL_MAKER_FONT_SIZE: ${LABEL_FONT_SIZE}
+      HBOX_LABEL_MAKER_PRINT_COMMAND: ${LABEL_PRINT_COMMAND}
       TZ: ${TZ}
     volumes:
       - data:/data
+      - labels:/labels
     networks: [ingress]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
@@ -28,6 +35,8 @@ services:
 
 volumes:
   data:
+  labels:
+    name: ${NEPFLEET_STACK}-labels
 
 networks:
   ingress:
