@@ -3711,13 +3711,13 @@
     {
       "name": "tdarr",
       "title": "Tdarr",
-      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding.",
+      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts (the tdarr-node template) connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding.",
       "tier": "app",
       "category": "media",
       "homepage": "https://home.tdarr.io",
       "source": "https://github.com/HaveAGitGat/Tdarr",
       "path": "apps/tdarr",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/haveagitgat/tdarr",
@@ -3801,6 +3801,117 @@
         {
           "name": "configs",
           "backup": true
+        },
+        {
+          "name": "logs"
+        }
+      ],
+      "migrations": []
+    },
+    {
+      "name": "tdarr-node",
+      "title": "Tdarr node",
+      "description": "An extra Tdarr worker on another host, connecting to a Tdarr server's node port. Give it the server's key, in stack.yaml as API_KEY with from tdarr and secret API_KEY. It must see the media and the cache under the same paths as the server (/media and /temp in the container), for example through a network share mounted at the same host folders. Pick a GPU for hardware transcoding.",
+      "tier": "app",
+      "category": "media",
+      "homepage": "https://home.tdarr.io",
+      "source": "https://github.com/HaveAGitGat/Tdarr",
+      "path": "apps/tdarr-node",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "ghcr.io/haveagitgat/tdarr_node",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": false,
+        "monitoring": false,
+        "statusPage": false,
+        "dashboard": false,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": false,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "SERVER_HOST",
+          "type": "hostname",
+          "title": "The Tdarr server's host",
+          "description": "The host or address where the tdarr stack runs.",
+          "required": true
+        },
+        {
+          "name": "SERVER_PORT",
+          "type": "int",
+          "title": "The server's node port",
+          "required": true,
+          "default": "8266"
+        },
+        {
+          "name": "API_KEY",
+          "type": "secret",
+          "title": "The server's API key",
+          "description": "Take it from the server's stack: API_KEY with from tdarr and secret API_KEY.",
+          "required": true
+        },
+        {
+          "name": "MEDIA_PATH",
+          "type": "path",
+          "title": "Host folder with the media, as the server sees it",
+          "required": true
+        },
+        {
+          "name": "CACHE_PATH",
+          "type": "path",
+          "title": "Host folder for the transcode cache, shared with the server",
+          "required": true,
+          "default": "/srv/tdarr-cache"
+        },
+        {
+          "name": "CPU_WORKERS",
+          "type": "int",
+          "title": "Transcodes on the CPU at a time",
+          "required": true,
+          "default": "1"
+        },
+        {
+          "name": "GPU_WORKERS",
+          "type": "int",
+          "title": "Transcodes on the GPU at a time",
+          "description": "Needs a GPU picked below.",
+          "required": true,
+          "default": "0"
+        },
+        {
+          "name": "PUID",
+          "type": "int",
+          "title": "User id owning the media",
+          "required": true,
+          "default": "1000"
+        },
+        {
+          "name": "PGID",
+          "type": "int",
+          "title": "Group id owning the media",
+          "required": true,
+          "default": "1000"
+        },
+        {
+          "name": "GPU",
+          "type": "gpu",
+          "title": "Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)",
+          "default": "none"
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "configs"
         },
         {
           "name": "logs"

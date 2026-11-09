@@ -9,6 +9,7 @@ services:
       internalNode: "true"
       inContainer: "true"
       ffmpegVersion: "7"
+      maxLogSizeMB: "10"   # Tdarr logs a lot
       nodeName: ${NEPFLEET_STACK}-internal
       # Authentication stays on (the server port is published). The seeded
       # key also creates the "admin" user with this key as its password.

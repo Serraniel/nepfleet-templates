@@ -1,0 +1,28 @@
+services:
+  node:
+    image: ghcr.io/haveagitgat/tdarr_node:3.06.00
+    restart: unless-stopped
+    environment:
+      serverIP: ${SERVER_HOST}
+      serverPort: ${SERVER_PORT}
+      apiKey: tapi_${API_KEY}
+      nodeName: ${NEPFLEET_STACK}
+      inContainer: "true"
+      ffmpegVersion: "7"
+      transcodecpuWorkers: ${CPU_WORKERS}
+      transcodegpuWorkers: ${GPU_WORKERS}
+      healthcheckcpuWorkers: "1"
+      healthcheckgpuWorkers: "0"
+      maxLogSizeMB: "10"   # Tdarr logs a lot
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - configs:/app/configs
+      - logs:/app/logs
+      - ${MEDIA_PATH}:/media
+      - ${CACHE_PATH}:/temp
+
+volumes:
+  configs:
+  logs:
