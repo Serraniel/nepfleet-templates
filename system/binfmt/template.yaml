@@ -3,12 +3,12 @@ kind: Template
 metadata:
   name: binfmt
   title: Foreign-architecture emulation
-  description: Registers QEMU user-mode emulators, so images built for another CPU (e.g. amd64 on an arm64 host) can run, slower. The NepFleet agent re-runs it after each boot (registrations do not survive a reboot). Privileged.
+  description: Registers QEMU user-mode emulators, so images built for another CPU (e.g. amd64 on an arm64 host) can run, slower. Registrations do not survive a reboot, so nepfleet serve starts this stack again when it starts and the emulators are missing (NepFleet 0.2 or later). Privileged.
   tier: system
   category: host
   homepage: https://github.com/tonistiigi/binfmt
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: tonistiigi/binfmt
