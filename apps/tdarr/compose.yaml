@@ -1,6 +1,6 @@
 services:
   tdarr:
-    image: ghcr.io/haveagitgat/tdarr:3.06.00
+    image: ghcr.io/haveagitgat/tdarr:3.07.00
     restart: unless-stopped
     environment:
       serverIP: 0.0.0.0
