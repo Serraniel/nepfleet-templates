@@ -2,7 +2,7 @@
 # templates: no Docker socket, no published ports, a read-only root and no capabilities.
 services:
   openclaw:
-    image: ghcr.io/openclaw/openclaw:2026.11.2
+    image: ghcr.io/openclaw/openclaw:2026.11.3
     restart: unless-stopped
     init: true
     read_only: true
