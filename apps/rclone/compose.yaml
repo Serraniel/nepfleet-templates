@@ -1,6 +1,6 @@
 services:
   rclone:
-    image: rclone/rclone:1.75
+    image: rclone/rclone:1.76
     restart: unless-stopped
     command:
       - rcd
