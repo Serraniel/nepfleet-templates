@@ -6,7 +6,7 @@ x-db: &db
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:v3.3.6
+    image: ghcr.io/immich-app/immich-server:v3.4.1
     restart: unless-stopped
     environment:
       <<: *db
