@@ -1,6 +1,6 @@
 services:
   node:
-    image: ghcr.io/haveagitgat/tdarr_node:3.06.00
+    image: ghcr.io/haveagitgat/tdarr_node:3.07.00
     restart: unless-stopped
     environment:
       serverIP: ${SERVER_HOST}
