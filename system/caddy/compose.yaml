@@ -12,6 +12,8 @@ services:
       CADDY_DOCKER_CADDYFILE_PATH: /etc/caddy/Caddyfile
       ACME_EMAIL: ${ACME_EMAIL}
       CADDY_DNS_PROVIDER: ${CADDY_DNS_PROVIDER}
+      CADDY_WILDCARD: ${WILDCARD}
+      WILDCARD_DOMAIN: ${WILDCARD_DOMAIN}
       DNS_API_TOKEN: ${DNS_API_TOKEN}
     extra_hosts:
       # lets stacks on host networking (e.g. Home Assistant) be proxied
@@ -19,6 +21,7 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./dns:/etc/caddy/dns:ro
+      - ./wildcard:/etc/caddy/wildcard:ro
       - data:/data
     networks: [ingress, socket]
     depends_on: [socket-proxy]

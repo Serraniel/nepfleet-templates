@@ -1,0 +1,6 @@
+# Manages *.WILDCARD_DOMAIN through DNS-01. Since Caddy 2.10, names under it use
+# this certificate instead of their own, so they don't appear one by one in
+# public Certificate Transparency logs. Names no stack serves get nothing.
+*.{$WILDCARD_DOMAIN} {
+	abort
+}
