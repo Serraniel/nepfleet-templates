@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
 
   gotenberg:
-    image: gotenberg/gotenberg:9.2.0
+    image: gotenberg/gotenberg:9.3.0
     profiles: [office]
     restart: unless-stopped
     # Documents are untrusted: no JavaScript, and no reaching out while converting.
