@@ -232,6 +232,29 @@ def deploy(nf, names):
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
 
 
+def check_sure():
+    """The worker processes jobs, the sign-up page renders for the stack's
+    domain, and no usage data goes to Sure's PostHog project."""
+    c = stack_name("sure")
+    state = run("docker", "inspect", "--format", "{{.State.Status}} {{.RestartCount}}", f"{c}-worker-1").stdout.split()
+    # A running Sidekiq registers itself in Redis (database 1, REDIS_URL).
+    workers = []
+    for _ in range(30):
+        workers = run("docker", "exec", f"{c}-redis-1", "valkey-cli", "-n", "1", "smembers", "processes").stdout.split()
+        if workers:
+            break
+        time.sleep(2)
+    if state != ["running", "0"] or not workers:
+        logs = run("docker", "logs", "--tail", "40", f"{c}-worker-1", check=False)
+        raise SystemExit(f"sure: the worker isn't processing jobs ({state}):\n{logs.stdout}{logs.stderr}")
+    domain = run("docker", "exec", f"{c}-web-1", "printenv", "APP_DOMAIN").stdout.strip()
+    code = run("docker", "exec", f"{c}-web-1", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+               "-H", f"Host: {domain}", "-H", "X-Forwarded-Proto: https", "http://localhost:3000/registration/new").stdout
+    if code != "200":
+        raise SystemExit(f"sure: the sign-up page answered {code}")
+    if run("docker", "exec", f"{c}-web-1", "printenv", "POSTHOG_FEEDBACK_ENABLED").stdout.strip() != "false":
+        raise SystemExit("sure: shared PostHog feedback is on")
+
 def check_pihole():
     """Names under the home domain answer with the server's address, never upstream."""
     v = OVERRIDES["pihole"]
@@ -438,7 +461,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole}
+AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.

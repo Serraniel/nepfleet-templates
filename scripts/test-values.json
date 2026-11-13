@@ -41,6 +41,10 @@
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-forgejo"
   },
+  "sure": {
+    "OIDC_ISSUER": "https://accounts.google.com",
+    "OIDC_CLIENT_ID": "ci-sure"
+  },
   "opencloud": {
     "COMPOSE_PROFILES": "office",
     "OFFICE_DOMAIN": "office.opencloud.example.test"
