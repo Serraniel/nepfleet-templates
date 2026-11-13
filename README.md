@@ -95,7 +95,7 @@ Templates write links and app base URLs as `${NEPFLEET_URL}`, never `https://${D
 ## Automation
 
 - **Validate** runs on every PR. It runs NepFleet's own validator and `docker compose config`, and checks that every pinned tag exists.
-- **Validate** also installs every template the way a user does (`scripts/test-templates.py`): `nepfleet new` with test values from each input's type or `scripts/test-values.json`, then a health-gated `nepfleet apply`, then teardown.
+- **Validate** also installs templates the way a user does (`scripts/test-templates.py`): `nepfleet new` with test values from each input's type or `scripts/test-values.json`, then a health-gated `nepfleet apply`, then teardown. Pull requests install the templates they change (all of them when the test script or the workflow changes); a daily run installs every template.
 - **`index.json`** is the catalogue frontends read (`nepfleet template index .`); CI fails when it is stale.
 - **Image updates** runs weekly. It opens an issue when an image publishes a release beyond its template's `track`, usually a new major version.
 - **Images** builds `images/*` on change and weekly to pick up base-image fixes, then checks that the image can be pulled without logging in.

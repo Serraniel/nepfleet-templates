@@ -4,7 +4,9 @@
 
   test-templates.py swarm  <nepfleet>             docker stack config for every swarm template
   test-templates.py deploy <nepfleet> NAME...     nepfleet apply (health-gated), then tear down
-  test-templates.py list   [--deploy]             template names (for a CI matrix)
+  test-templates.py list   [--deploy] [--changed BASE]
+                                                 template names (for a CI matrix); with
+                                                 --changed, only those touched since BASE
 
 Needs docker, git, sops and age-keygen on PATH. Values come from each
 input's default, else from its type; scripts/test-values.json overrides
@@ -439,6 +441,39 @@ def check_prometheus():
 AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole}
 
 
+# Changing these can affect every template, so all of them are tested again.
+SHARED = ("scripts/test-templates.py", ".github/workflows/validate.yml")
+
+
+def changed_templates(base):
+    """The templates a change since base touches, or None for all of them: no
+    base (a scheduled run), an unknown one (a new branch), or shared files."""
+    if not base or set(base) == {"0"}:
+        return None
+    diff = run("git", "diff", "--name-only", f"{base}...HEAD", cwd=ROOT, check=False)
+    if diff.returncode != 0:
+        return None
+    files = diff.stdout.split()
+    if any(f in SHARED for f in files):
+        return None
+    names = {f.split("/")[1] for f in files if f.split("/")[0] in ("apps", "system") and f.count("/") >= 2}
+    if "scripts/test-values.json" in files:
+        before = run("git", "show", f"{base}:scripts/test-values.json", cwd=ROOT, check=False)
+        if before.returncode != 0:
+            return None
+        old = json.loads(before.stdout)
+        keys = set(old) | set(OVERRIDES)
+        changed = {k for k in keys if old.get(k) != OVERRIDES.get(k)}
+        # Skipping a template, or no longer skipping it, concerns that one only.
+        if "_skip_deploy" in changed:
+            changed.discard("_skip_deploy")
+            changed |= set(old.get("_skip_deploy", {})) ^ set(OVERRIDES.get("_skip_deploy", {}))
+        if any(k.startswith("_") for k in changed):
+            return None  # other shared settings: test everything
+        names |= changed
+    return names
+
+
 def main():
     cmd, args = sys.argv[1], sys.argv[2:]
     if cmd == "list":
@@ -446,6 +481,10 @@ def main():
         names = [p.parent.name for tier in ("system", "apps") for p in sorted((ROOT / tier).glob("*/template.yaml"))]
         if "--deploy" in args:
             names = [n for n in names if n not in skip]
+        if "--changed" in args:
+            only = changed_templates(args[args.index("--changed") + 1])
+            if only is not None:
+                names = [n for n in names if n in only]
         print(json.dumps(names))
     elif cmd == "swarm":
         swarm(args[0])
