@@ -9,7 +9,7 @@ metadata:
   homepage: https://pi-hole.net
   source: https://github.com/pi-hole/docker-pi-hole
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   web: { service: pihole, port: 80 }   # also reachable on a LAN port (access mode port)
   images:
@@ -38,6 +38,18 @@ spec:
       default: "9.9.9.9;149.112.112.112"
       required: true
       pattern: '^[0-9a-fA-F.:#]+(;[0-9a-fA-F.:#]+)*$'
+    - name: HOME_DOMAIN
+      type: string
+      title: Home domain, answered with the server's LAN address
+      description: "For example home.example.org, the same as Caddy's wildcard domain: that name and every name under it go to HOME_ADDRESS, and never upstream. The reserved home.arpa changes nothing."
+      default: home.arpa
+      required: true
+      pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$'
+    - name: HOME_ADDRESS
+      type: string
+      title: LAN address of the server running Caddy
+      description: For example 192.168.1.20. Empty answers the home domain with "no such name".
+      pattern: '^([0-9]{1,3}(\.[0-9]{1,3}){3})?$'
   generate:
     - { name: WEB_PASSWORD, kind: secret, length: 24, encoding: alnum }
   volumes:

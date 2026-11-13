@@ -25,7 +25,9 @@
   },
   "pihole": {
     "DNS_PORT": "15353",
-    "BIND_ADDR": "127.0.0.1"
+    "BIND_ADDR": "127.0.0.1",
+    "HOME_DOMAIN": "home.example.test",
+    "HOME_ADDRESS": "192.0.2.10"
   },
   "beszel-agent": {
     "HUB_URL": "https://beszel.example.test",

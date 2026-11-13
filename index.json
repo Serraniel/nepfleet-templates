@@ -1373,13 +1373,13 @@
     {
       "name": "adguard-home",
       "title": "AdGuard Home",
-      "description": "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host.",
+      "description": "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address.",
       "tier": "app",
       "category": "networking",
       "homepage": "https://adguard.com/adguard-home",
       "source": "https://github.com/AdguardTeam/AdGuardHome",
       "path": "apps/adguard-home",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "adguard/adguardhome",
@@ -3176,7 +3176,7 @@
       "homepage": "https://pi-hole.net",
       "source": "https://github.com/pi-hole/docker-pi-hole",
       "path": "apps/pihole",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "pihole/pihole",
@@ -3225,6 +3225,22 @@
           "required": true,
           "default": "9.9.9.9;149.112.112.112",
           "pattern": "^[0-9a-fA-F.:#]+(;[0-9a-fA-F.:#]+)*$"
+        },
+        {
+          "name": "HOME_DOMAIN",
+          "type": "string",
+          "title": "Home domain, answered with the server's LAN address",
+          "description": "For example home.example.org, the same as Caddy's wildcard domain: that name and every name under it go to HOME_ADDRESS, and never upstream. The reserved home.arpa changes nothing.",
+          "required": true,
+          "default": "home.arpa",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+        },
+        {
+          "name": "HOME_ADDRESS",
+          "type": "string",
+          "title": "LAN address of the server running Caddy",
+          "description": "For example 192.168.1.20. Empty answers the home domain with \"no such name\".",
+          "pattern": "^([0-9]{1,3}(\\.[0-9]{1,3}){3})?$"
         }
       ],
       "generate": [
