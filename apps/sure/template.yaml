@@ -1,0 +1,108 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: sure
+  title: Sure
+  description: "Personal finance: accounts, budgets, investments and net worth (the community fork of Maybe Finance). Create the first account right after installing, then set onboarding to closed or invite_only. Back up this stack's secrets with the fleet's: the ENCRYPTION_* keys encrypt bank provider tokens, which are unreadable without them. It sends no usage data to Sure's PostHog project. Market data lookups tell Yahoo Finance or Twelve Data which currencies and tickers you hold, and AI features, when set up, send transactions to that provider."
+  tier: app
+  category: finance
+  homepage: https://sure.am
+  source: https://github.com/we-promise/sure
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: web, port: 3000 }
+  images:
+    - name: ghcr.io/we-promise/sure
+      track: patch # pre-1.0, with migrations in most releases
+    - name: pgvector/pgvector
+      track: patch
+    - name: valkey/valkey
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: ONBOARDING
+      type: enum
+      title: Who can create an account
+      description: Open is needed for the first account. Afterwards, invite_only (an existing user invites) or closed.
+      options: [open, invite_only, closed]
+      default: open
+      required: true
+    - name: OIDC_ISSUER
+      type: url
+      title: Identity provider (OpenID Connect issuer), for signing in
+      description: "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/auth/openid_connect/callback. The provider must report the email as verified. Leave empty for none."
+    - name: OIDC_CLIENT_ID
+      type: string
+      title: Identity provider client ID
+    - name: OIDC_CLIENT_SECRET
+      type: secret
+      title: Identity provider client secret
+    - name: OIDC_BUTTON_LABEL
+      type: string
+      title: The provider's button on the sign-in page
+      default: Sign in with SSO
+      required: true
+    - name: OIDC_NEW_ACCOUNTS
+      type: enum
+      title: Provider sign-ins without an account
+      description: "link_only: only people who already have an account (same email) can sign in through the provider. create_and_link: the provider can create accounts too."
+      options: [link_only, create_and_link]
+      default: link_only
+      required: true
+    - name: OIDC_ALLOWED_DOMAINS
+      type: string
+      title: Email domains the provider may create accounts for, separated by commas
+      description: Only with create_and_link. Empty allows any.
+    - name: SMTP_ADDRESS
+      type: hostname
+      title: Mail server, for invites and password resets
+    - name: SMTP_PORT
+      type: int
+      title: Mail server port
+      default: "587"
+      required: true
+    - name: SMTP_USERNAME
+      type: string
+      title: Mail server user
+    - name: SMTP_PASSWORD
+      type: secret
+      title: Mail server password
+    - name: EMAIL_SENDER
+      type: email
+      title: Mail from address
+    - name: MARKET_DATA
+      type: enum
+      title: Exchange rates and prices from
+      description: Yahoo Finance needs no key. Twelve Data needs TWELVE_DATA_API_KEY.
+      options: [yahoo_finance, twelve_data]
+      default: yahoo_finance
+      required: true
+    - name: TWELVE_DATA_API_KEY
+      type: secret
+      title: Twelve Data API key
+    - name: OPENAI_ACCESS_TOKEN
+      type: secret
+      title: API key of an OpenAI-compatible provider, for AI features
+      description: Chat, categorizing and rules. They send transactions to that provider. Empty turns them off.
+    - name: OPENAI_URI_BASE
+      type: url
+      title: Its address, for a provider other than OpenAI
+      description: For example a local model's OpenAI-compatible endpoint.
+    - name: OPENAI_MODEL
+      type: string
+      title: Model
+  generate:
+    - { name: SECRET_KEY_BASE, kind: secret, length: 128, encoding: hex }
+    - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    # Encrypt sensitive columns; losing them makes those unreadable.
+    - { name: ENCRYPTION_PRIMARY_KEY, kind: secret, length: 32, encoding: alnum }
+    - { name: ENCRYPTION_DETERMINISTIC_KEY, kind: secret, length: 32, encoding: alnum }
+    - { name: ENCRYPTION_KEY_DERIVATION_SALT, kind: secret, length: 32, encoding: alnum }
+  volumes:
+    - { name: storage, backup: true } # uploaded statements and attachments
+    - { name: db, backup: true }

@@ -1,0 +1,141 @@
+x-sure-env: &sure-env
+  SELF_HOSTED: "true"
+  APP_DOMAIN: ${DOMAIN}
+  ONBOARDING_STATE: ${ONBOARDING}
+  # TLS ends at Caddy.
+  RAILS_ASSUME_SSL: "true"
+  RAILS_FORCE_SSL: "false"
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  # Encrypts provider tokens and other sensitive columns: all three, or none.
+  ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: ${ENCRYPTION_PRIMARY_KEY}
+  ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: ${ENCRYPTION_DETERMINISTIC_KEY}
+  ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: ${ENCRYPTION_KEY_DERIVATION_SALT}
+  DB_HOST: db
+  DB_PORT: "5432"
+  POSTGRES_USER: sure
+  POSTGRES_PASSWORD: ${DB_PASSWORD}
+  POSTGRES_DB: sure
+  REDIS_URL: redis://redis:6379/1
+  # No usage data to Sure's shared PostHog project (on by default for
+  # self-hosted instances), and no merchant names to Brandfetch for logos.
+  POSTHOG_FEEDBACK_ENABLED: "false"
+  BRAND_FETCH_CLIENT_ID: ""
+  # Passkeys for this domain only.
+  WEBAUTHN_RP_ID: ${DOMAIN}
+  WEBAUTHN_ALLOWED_ORIGINS: ${NEPFLEET_URL}
+  # Sign-in through an identity provider, when an issuer is set.
+  OIDC_ISSUER: ${OIDC_ISSUER}
+  OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+  OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+  OIDC_REDIRECT_URI: ${NEPFLEET_URL}/auth/openid_connect/callback
+  OIDC_BUTTON_LABEL: ${OIDC_BUTTON_LABEL}
+  AUTH_JIT_MODE: ${OIDC_NEW_ACCOUNTS}
+  ALLOWED_OIDC_DOMAINS: ${OIDC_ALLOWED_DOMAINS}
+  # Mail for invites and password resets.
+  SMTP_ADDRESS: ${SMTP_ADDRESS}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_TLS_ENABLED: "true"
+  EMAIL_SENDER: ${EMAIL_SENDER}
+  # Exchange rates and prices: each lookup tells the provider the currency or
+  # ticker asked for.
+  EXCHANGE_RATE_PROVIDER: ${MARKET_DATA}
+  SECURITIES_PROVIDER: ${MARKET_DATA}
+  TWELVE_DATA_API_KEY: ${TWELVE_DATA_API_KEY}
+  # AI features send transactions to this provider; off without a key.
+  OPENAI_ACCESS_TOKEN: ${OPENAI_ACCESS_TOKEN}
+  OPENAI_URI_BASE: ${OPENAI_URI_BASE}
+  OPENAI_MODEL: ${OPENAI_MODEL}
+  TZ: ${TZ}
+
+services:
+  web:
+    image: ghcr.io/we-promise/sure:0.7.6
+    restart: unless-stopped
+    # Migrates the database on start (db:prepare), so it starts before the worker.
+    environment: *sure-env
+    volumes:
+      - storage:/rails/storage
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:3000/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+    networks: [ingress, default]
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      kuma.sure.http.name: Sure
+      kuma.sure.http.url: ${NEPFLEET_URL}/up
+      kuma.sure.http.parent_name: sure-stack
+      kuma.sure-stack.group.name: Sure
+      homepage.group: Finance
+      homepage.name: Sure
+      homepage.icon: sure.svg
+      homepage.href: ${NEPFLEET_URL}
+
+  # Background jobs: account syncs, imports and market data.
+  worker:
+    image: ghcr.io/we-promise/sure:0.7.6
+    restart: unless-stopped
+    command: ["bundle", "exec", "sidekiq"]
+    environment: *sure-env
+    volumes:
+      - storage:/rails/storage
+    depends_on:
+      web: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    labels:
+      kuma.sure-worker.docker.name: Sure worker
+      kuma.sure-worker.docker.docker_container: ${NEPFLEET_STACK}-worker-1
+      kuma.sure-worker.docker.docker_host_name: nepfleet-docker
+      kuma.sure-worker.docker.parent_name: sure-stack
+
+  db:
+    # Postgres 16 as upstream uses, with pgvector for Sure's optional
+    # document search, so turning it on later needs no move to another image.
+    image: pgvector/pgvector:0.8.1-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sure
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: sure
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "sure", "-d", "sure"]
+      interval: 10s
+    labels:
+      docker-volume-backup.stop-during-backup: "true" # consistent database copy
+      kuma.sure-db.docker.name: Sure database
+      kuma.sure-db.docker.docker_container: ${NEPFLEET_STACK}-db-1
+      kuma.sure-db.docker.docker_host_name: nepfleet-docker
+      kuma.sure-db.docker.parent_name: sure-stack
+
+  # Sidekiq's queue: jobs in it are retried, so it keeps no data worth a backup.
+  redis:
+    image: valkey/valkey:9.2-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+    labels:
+      kuma.sure-redis.docker.name: Sure Redis
+      kuma.sure-redis.docker.docker_container: ${NEPFLEET_STACK}-redis-1
+      kuma.sure-redis.docker.docker_host_name: nepfleet-docker
+      kuma.sure-redis.docker.parent_name: sure-stack
+
+volumes:
+  storage:
+  db:
+
+networks:
+  default:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
