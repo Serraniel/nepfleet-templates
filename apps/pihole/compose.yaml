@@ -10,6 +10,10 @@ services:
       # Queries arrive from Docker's gateway, not the LAN: answer them all
       # (only reachable through the published port).
       FTLCONF_dns_listeningMode: all
+      # The home domain and every name under it answer with the server's LAN address,
+      # and never go upstream. Without an address, the reserved home.arpa is
+      # answered locally and nothing else changes.
+      FTLCONF_misc_dnsmasq_lines: "address=/${HOME_DOMAIN}/${HOME_ADDRESS};local=/${HOME_DOMAIN}/"
       # The host keeps the time: no NTP client or server in the container.
       FTLCONF_ntp_sync_active: "false"
       FTLCONF_ntp_ipv4_active: "false"

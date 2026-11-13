@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: adguard-home
   title: AdGuard Home
-  description: "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host."
+  description: "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address."
   tier: app
   category: networking
   homepage: https://adguard.com/adguard-home
   source: https://github.com/AdguardTeam/AdGuardHome
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   web: { service: adguard-home, port: 3000 }
   images:

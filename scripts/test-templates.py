@@ -230,6 +230,14 @@ def deploy(nf, names):
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
 
 
+def check_pihole():
+    """Names under the home domain answer with the server's address, never upstream."""
+    v = OVERRIDES["pihole"]
+    c = stack_name("pihole") + "-pihole-1"
+    got = run("docker", "exec", c, "dig", "+short", "@127.0.0.1", "jellyfin." + v["HOME_DOMAIN"]).stdout.split()
+    if got != [v["HOME_ADDRESS"]]:
+        raise SystemExit(f"pihole: jellyfin.{v['HOME_DOMAIN']} answered {got}, not {v['HOME_ADDRESS']}")
+
 def check_fail2ban():
     """A ban must really reach the host's firewall: looking active isn't enough."""
     address = "203.0.113.9"  # TEST-NET-3, nobody's
@@ -428,7 +436,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus}
+AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole}
 
 
 def main():
