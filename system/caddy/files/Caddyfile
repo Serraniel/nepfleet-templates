@@ -3,3 +3,5 @@
 	email {$ACME_EMAIL}
 	import /etc/caddy/dns/{$CADDY_DNS_PROVIDER}.caddy
 }
+
+import /etc/caddy/wildcard/{$CADDY_WILDCARD}-site.caddy

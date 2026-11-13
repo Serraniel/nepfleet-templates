@@ -9,7 +9,7 @@ metadata:
   homepage: https://github.com/lucaslorentz/caddy-docker-proxy
   source: https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: ghcr.io/serraniel/nepfleet-caddy
@@ -32,6 +32,18 @@ spec:
       type: secret
       title: DNS provider API token
       description: Leave empty when the provider is none.
+    - name: WILDCARD
+      type: enum
+      title: One wildcard certificate for a home domain
+      description: "Every certificate is published in Certificate Transparency logs, so one per name lists what runs at home publicly. With on, names under the wildcard domain share one certificate. Needs a DNS provider."
+      options: ["off", "on"]
+      default: "off"
+    - name: WILDCARD_DOMAIN
+      type: string
+      title: Wildcard domain
+      description: "For example home.example.org: covers jellyfin.home.example.org, but not deeper names. Used when the wildcard is on."
+      default: home.example.org
+      pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$'
   volumes:
     - name: data
       backup: true
@@ -42,3 +54,5 @@ spec:
     - { src: files/dns/cloudflare.caddy, dest: dns/cloudflare.caddy }
     - { src: files/dns/hetzner.caddy, dest: dns/hetzner.caddy }
     - { src: files/dns/desec.caddy, dest: dns/desec.caddy }
+    - { src: files/wildcard/off-site.caddy, dest: wildcard/off-site.caddy }
+    - { src: files/wildcard/on-site.caddy, dest: wildcard/on-site.caddy }
