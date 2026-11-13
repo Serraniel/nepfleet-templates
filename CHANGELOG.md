@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.2.0](https://github.com/Serraniel/nepfleet-templates/compare/v0.1.0...v0.2.0) (2026-11-13)
+
+
+### Features
+
+* **caddy:** one wildcard certificate for a home domain ([#157](https://github.com/Serraniel/nepfleet-templates/issues/157)) ([a3f8afe](https://github.com/Serraniel/nepfleet-templates/commit/a3f8afe4d63fbca848dee30c433eba27c8c1422e))
+* **homebox:** label maker settings and a shared labels volume ([#137](https://github.com/Serraniel/nepfleet-templates/issues/137)) ([e400979](https://github.com/Serraniel/nepfleet-templates/commit/e400979151b5cb63d42946710d78a364b63f5e45))
+* **pihole:** answer the home domain with the server's address ([#158](https://github.com/Serraniel/nepfleet-templates/issues/158)) ([a4d81a7](https://github.com/Serraniel/nepfleet-templates/commit/a4d81a7851a8c462653a0b6efb296f2f0f37b352))
+* Sure template (personal finance) ([#160](https://github.com/Serraniel/nepfleet-templates/issues/160)) ([9911698](https://github.com/Serraniel/nepfleet-templates/commit/99116989e77657a2083bb8b1bc1c51ad49e370e3))
+* tdarr-node template for workers on other hosts ([#136](https://github.com/Serraniel/nepfleet-templates/issues/136)) ([d74ab4a](https://github.com/Serraniel/nepfleet-templates/commit/d74ab4a524612c26258eb0923d0b06a2930c36c7))
+
+
+### Bug Fixes
+
+* **binfmt:** say what registers the emulators after a reboot ([#135](https://github.com/Serraniel/nepfleet-templates/issues/135)) ([c2fd72f](https://github.com/Serraniel/nepfleet-templates/commit/c2fd72f95c6418304105b60771cf768c9c822761))
+
+
+### Dependencies
+
+* Bump caddy from 2.11.7-alpine to 2.11.9-alpine in /images/caddy ([#139](https://github.com/Serraniel/nepfleet-templates/issues/139)) ([63b7b21](https://github.com/Serraniel/nepfleet-templates/commit/63b7b2167b4430218b3bb8748e6485224eecf493))
+* Bump fatedier/frpc from v0.71.1 to v0.72.0 in /system/frpc ([#126](https://github.com/Serraniel/nepfleet-templates/issues/126)) ([066e498](https://github.com/Serraniel/nepfleet-templates/commit/066e498b65237edb7eb1d7ae7fde36d12366466b))
+* Bump fatedier/frps from v0.71.1 to v0.72.0 in /system/frps ([#127](https://github.com/Serraniel/nepfleet-templates/issues/127)) ([6a4792d](https://github.com/Serraniel/nepfleet-templates/commit/6a4792dda2ddcf90ad779f681e766a6c8bfa9eb7))
+* Bump gotenberg/gotenberg from 9.1.0 to 9.2.0 in /apps/paperless ([#153](https://github.com/Serraniel/nepfleet-templates/issues/153)) ([1bf8337](https://github.com/Serraniel/nepfleet-templates/commit/1bf8337b266b83106f5b0b58727e830e2900f697))
+* Bump gotenberg/gotenberg from 9.2.0 to 9.3.0 in /apps/paperless ([#156](https://github.com/Serraniel/nepfleet-templates/issues/156)) ([ca24fe8](https://github.com/Serraniel/nepfleet-templates/commit/ca24fe884bf8043850a23dabf63055f3d14449c5))
+* Bump haveagitgat/tdarr from 3.06.00 to 3.07.00 in /apps/tdarr ([#146](https://github.com/Serraniel/nepfleet-templates/issues/146)) ([2c9ee5c](https://github.com/Serraniel/nepfleet-templates/commit/2c9ee5c8ff5635b32b19ae0cf522e9b465bd4952))
+* Bump haveagitgat/tdarr_node from 3.06.00 to 3.07.00 in /apps/tdarr-node ([#154](https://github.com/Serraniel/nepfleet-templates/issues/154)) ([ae04eb8](https://github.com/Serraniel/nepfleet-templates/commit/ae04eb80abdbfaa5c39f29f44d75f381369b01a0))
+* Bump immich-app/immich-server from v3.3.6 to v3.4.1 in /apps/immich ([#152](https://github.com/Serraniel/nepfleet-templates/issues/152)) ([1d9ec4b](https://github.com/Serraniel/nepfleet-templates/commit/1d9ec4b8abb8461ddd6f1ff45364a72743b5d4c6))
+* Bump linuxserver/bookstack from 26.09.2 to 26.09.3 in /apps/bookstack in the templates group across 1 directory ([#151](https://github.com/Serraniel/nepfleet-templates/issues/151)) ([6be79d9](https://github.com/Serraniel/nepfleet-templates/commit/6be79d9a64ed599caf3a9a28a1f5c65a9bc5061a))
+* Bump n8nio/n8n from 2.46.6 to 2.47.2 in /apps/n8n ([#144](https://github.com/Serraniel/nepfleet-templates/issues/144)) ([7d2acd9](https://github.com/Serraniel/nepfleet-templates/commit/7d2acd9297062770a291752cff6de5547ce6d1be))
+* Bump prometheus/node-exporter from v1.10.2 to v1.12.1 in /system/prometheus ([#128](https://github.com/Serraniel/nepfleet-templates/issues/128)) ([b16d2bf](https://github.com/Serraniel/nepfleet-templates/commit/b16d2bf74d05dbb6c3c81a7296c3e48cb0c2f7f3))
+* Bump rclone/rclone from 1.75 to 1.76 in /apps/rclone ([#145](https://github.com/Serraniel/nepfleet-templates/issues/145)) ([7385870](https://github.com/Serraniel/nepfleet-templates/commit/73858701446c16eeb40233eda389d4153147b6e8))
+* Bump the templates group across 2 directories with 2 updates ([#142](https://github.com/Serraniel/nepfleet-templates/issues/142)) ([9a6131a](https://github.com/Serraniel/nepfleet-templates/commit/9a6131adb74d68d5e2f546a939f5b96b59b4f459))
+* Bump the templates group across 2 directories with 2 updates ([#155](https://github.com/Serraniel/nepfleet-templates/issues/155)) ([77fd0f4](https://github.com/Serraniel/nepfleet-templates/commit/77fd0f4e749eaacae4679a502d5c91d092fff8b4))
+* Bump the templates group across 4 directories with 5 updates ([#140](https://github.com/Serraniel/nepfleet-templates/issues/140)) ([b4f334a](https://github.com/Serraniel/nepfleet-templates/commit/b4f334a0677ca985f596cc8b1ca55db15a9c2180))
+
 ## 0.1.0 (2026-11-08)
 
 
