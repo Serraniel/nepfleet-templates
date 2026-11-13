@@ -5,6 +5,11 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Every template once a day: nepfleet@main and upstream images change under
+  # templates nobody touched.
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -62,13 +67,20 @@ jobs:
       templates: ${{ steps.list.outputs.templates }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      # Pull requests and pushes test the templates they touch (all of them when
+      # the test script or this workflow changes); scheduled and manual runs, all.
       - id: list
-        run: echo "templates=$(python3 -I scripts/test-templates.py list --deploy)" >> "$GITHUB_OUTPUT"
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: echo "templates=$(python3 -I scripts/test-templates.py list --deploy --changed "$BASE")" >> "$GITHUB_OUTPUT"
 
-  # Every template is installed with test values through nepfleet apply,
+  # Each selected template is installed with test values through nepfleet apply,
   # which waits for each service's health check, then torn down.
   deploy:
     needs: deploy-matrix
+    if: needs.deploy-matrix.outputs.templates != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
