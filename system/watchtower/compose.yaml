@@ -7,9 +7,18 @@ services:
       WATCHTOWER_LABEL_ENABLE: "true"   # only containers labelled com.centurylinklabs.watchtower.enable=true
       WATCHTOWER_SCHEDULE: ${SCHEDULE}
       WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_NOTIFICATION_URL: ${NOTIFICATION_URL}
+      # The person's URL, else NepFleet's alerts API with this stack's token.
+      WATCHTOWER_NOTIFICATION_URL: ${NOTIFICATION_URL:-generic://${NEPFLEET_API_HOST}/api/v1/alerts?disabletls=yes&template=json&@Authorization=Bearer%20${NOTIFY_TOKEN}}
       TZ: ${TZ}
     # Full socket: updating means recreating containers. Monitor-only does not
     # need write access, but Watchtower cannot be restricted further.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks: [default, nepfleet-api]
+
+networks:
+  default:
+  # Reaches NepFleet's API (as nepfleet), and nothing else.
+  nepfleet-api:
+    name: ${NEPFLEET_API_NETWORK}
+    external: true

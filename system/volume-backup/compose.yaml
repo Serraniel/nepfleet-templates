@@ -21,14 +21,15 @@ services:
       # Safety copies left by nepfleet restore (<volume>-before-restore-<time>)
       # are not backed up either.
       BACKUP_EXCLUDE_REGEXP: ${EXCLUDE_REGEXP}|/backup/volumes/(${NEPFLEET_NO_BACKUP_VOLUMES})/|/backup/volumes/[^/]+-before-restore-[0-9-]+/
-      NOTIFICATION_URLS: ${NOTIFICATION_URLS}
+      # The person's URLs, else NepFleet's alerts API with this stack's token.
+      NOTIFICATION_URLS: ${NOTIFICATION_URLS:-generic://${NEPFLEET_API_HOST}/api/v1/alerts?disabletls=yes&template=json&@Authorization=Bearer%20${NOTIFY_TOKEN}}
       NOTIFICATION_LEVEL: error
       DOCKER_HOST: tcp://socket-proxy:2375
       TZ: ${TZ}
     volumes:
       - /var/lib/docker/volumes:/backup/volumes:ro
       - ${ARCHIVE_PATH}:/archive
-    networks: [socket, default]
+    networks: [socket, default, nepfleet-api]
     depends_on: [socket-proxy]
 
   # Exactly what stop-during-backup needs: list containers, read /info
@@ -52,3 +53,7 @@ networks:
   default:
   socket:
     internal: true
+  # Reaches NepFleet's API (as nepfleet), and nothing else.
+  nepfleet-api:
+    name: ${NEPFLEET_API_NETWORK}
+    external: true

@@ -8,7 +8,7 @@ metadata:
   category: updates
   homepage: https://github.com/Serraniel/neptide
 spec:
-  version: 0.1.1
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: ghcr.io/serraniel/neptide
@@ -25,5 +25,9 @@ spec:
       default: "false"
     - name: NOTIFY
       type: secret
-      title: Notification URLs
-      description: Comma separated shoutrrr URLs, e.g. discord://token@webhookid
+      title: Notification URLs (override)
+      description: "Leave empty: notifications go to NepFleet, which sends them to the fleet's notification channels. Set comma separated shoutrrr URLs (e.g. discord://token@webhookid) only to send somewhere else instead."
+  generate:
+    # Sends to NepFleet's alerts API, whose channels deliver (see the URL input).
+    - name: NOTIFY_TOKEN
+      kind: notify-token

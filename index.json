@@ -963,7 +963,7 @@
       "category": "updates",
       "homepage": "https://github.com/Serraniel/neptide",
       "path": "system/neptide",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/serraniel/neptide",
@@ -999,11 +999,16 @@
         {
           "name": "NOTIFY",
           "type": "secret",
-          "title": "Notification URLs",
-          "description": "Comma separated shoutrrr URLs, e.g. discord://token@webhookid"
+          "title": "Notification URLs (override)",
+          "description": "Leave empty: notifications go to NepFleet, which sends them to the fleet's notification channels. Set comma separated shoutrrr URLs (e.g. discord://token@webhookid) only to send somewhere else instead."
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "NOTIFY_TOKEN",
+          "kind": "notify-token"
+        }
+      ],
       "volumes": [],
       "migrations": []
     },
@@ -1190,7 +1195,7 @@
       "homepage": "https://offen.github.io/docker-volume-backup/",
       "source": "https://github.com/offen/docker-volume-backup",
       "path": "system/volume-backup",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "offen/docker-volume-backup",
@@ -1281,11 +1286,16 @@
         {
           "name": "NOTIFICATION_URLS",
           "type": "secret",
-          "title": "Notification URLs (shoutrrr, comma separated)",
-          "description": "Failed backups are always reported here, e.g. discord://token@webhookid"
+          "title": "Notification URLs (override)",
+          "description": "Leave empty: failed backups are reported to NepFleet, which sends them to the fleet's notification channels. Set comma separated shoutrrr URLs (e.g. discord://token@webhookid) only to send somewhere else instead."
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "NOTIFY_TOKEN",
+          "kind": "notify-token"
+        }
+      ],
       "volumes": [],
       "migrations": []
     },
@@ -1297,7 +1307,7 @@
       "category": "updates",
       "homepage": "https://github.com/nicholas-fedor/watchtower",
       "path": "system/watchtower",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "images": [
         {
           "name": "nickfedor/watchtower",
@@ -1332,8 +1342,8 @@
         {
           "name": "NOTIFICATION_URL",
           "type": "secret",
-          "title": "Notification URL",
-          "description": "A shoutrrr URL, e.g. ntfy://ntfy.sh/my-topic"
+          "title": "Notification URL (override)",
+          "description": "Leave empty: notifications go to NepFleet, which sends them to the fleet's notification channels. Set a shoutrrr URL (e.g. ntfy://ntfy.sh/my-topic) only to send somewhere else instead."
         },
         {
           "name": "SCHEDULE",
@@ -1343,7 +1353,12 @@
           "default": "0 0 4 * * *"
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "NOTIFY_TOKEN",
+          "kind": "notify-token"
+        }
+      ],
       "volumes": [],
       "migrations": []
     },

@@ -7,12 +7,21 @@ services:
     user: "65532:${DOCKER_GID:-${NEPFLEET_DOCKER_GID:?the host's docker group ID is unknown: set DOCKER_GID}}"
     environment:
       NEPTIDE_MONITOR_ONLY: ${MONITOR_ONLY}
-      NEPTIDE_NOTIFY: ${NOTIFY}
+      # The person's URLs, else NepFleet's alerts API with this stack's token.
+      NEPTIDE_NOTIFY: ${NOTIFY:-generic://${NEPFLEET_API_HOST}/api/v1/alerts?disabletls=yes&template=json&@Authorization=Bearer%20${NOTIFY_TOKEN}}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks: [default, nepfleet-api]
     labels:
       neptide.self: "true"
     deploy:
       # On swarm: one instance on a manager updates the services.
       placement:
         constraints: [node.role == manager]
+
+networks:
+  default:
+  # Reaches NepFleet's API (as nepfleet), and nothing else.
+  nepfleet-api:
+    name: ${NEPFLEET_API_NETWORK}
+    external: true
