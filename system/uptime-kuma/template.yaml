@@ -8,7 +8,7 @@ metadata:
   category: monitoring
   homepage: https://github.com/louislam/uptime-kuma
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   images:
     - name: louislam/uptime-kuma
@@ -33,6 +33,10 @@ spec:
       type: secret
       title: Admin password
       required: true
+  generate:
+    # Kuma's alerts go to NepFleet's alerts API with this token.
+    - name: NOTIFY_TOKEN
+      kind: notify-token
   files:
     - { src: files/setup.js, dest: setup/setup.js }
   volumes:

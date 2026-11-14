@@ -1127,7 +1127,7 @@
       "category": "monitoring",
       "homepage": "https://github.com/louislam/uptime-kuma",
       "path": "system/uptime-kuma",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "louislam/uptime-kuma",
@@ -1177,7 +1177,12 @@
           "required": true
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "NOTIFY_TOKEN",
+          "kind": "notify-token"
+        }
+      ],
       "volumes": [
         {
           "name": "data",
