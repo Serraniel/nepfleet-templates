@@ -51,10 +51,16 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: "1.27.4"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Serraniel/nepfleet
+          ref: main
+          path: .nepfleet-src
+          persist-credentials: false
       - name: Install nepfleet, sops and age
         run: |
-          # One go install per module: it refuses packages from several.
-          go install github.com/Serraniel/nepfleet/cmd/nepfleet@main
+          # nepfleet from its main branch, built from the pinned checkout above.
+          go build -C .nepfleet-src -o "$(go env GOPATH)/bin/nepfleet" ./cmd/nepfleet
           go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
           go install filippo.io/age/cmd/...@v1.3.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
@@ -92,10 +98,16 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: "1.27.4"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Serraniel/nepfleet
+          ref: main
+          path: .nepfleet-src
+          persist-credentials: false
       - name: Install nepfleet, sops and age
         run: |
-          # One go install per module: it refuses packages from several.
-          go install github.com/Serraniel/nepfleet/cmd/nepfleet@main
+          # nepfleet from its main branch, built from the pinned checkout above.
+          go build -C .nepfleet-src -o "$(go env GOPATH)/bin/nepfleet" ./cmd/nepfleet
           go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
           go install filippo.io/age/cmd/...@v1.3.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
