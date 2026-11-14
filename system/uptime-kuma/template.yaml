@@ -8,7 +8,7 @@ metadata:
   category: monitoring
   homepage: https://github.com/louislam/uptime-kuma
 spec:
-  version: 0.3.0
+  version: 0.4.0
   compose: compose.yaml
   images:
     - name: louislam/uptime-kuma
@@ -26,13 +26,15 @@ spec:
     - name: KUMA_USERNAME
       type: string
       title: Admin user
-      description: NepFleet creates this admin right after the first apply (nepfleet 0.x with first-run setup), so Kuma's setup screen is never open; AutoKuma logs in with it.
+      description: Created on Kuma's first start, so its setup screen is never open; sign in with it, and AutoKuma does too.
       default: admin
       required: true
     - name: KUMA_PASSWORD
       type: secret
       title: Admin password
       required: true
+  files:
+    - { src: files/setup.js, dest: setup/setup.js }
   volumes:
     - name: data
       backup: true
