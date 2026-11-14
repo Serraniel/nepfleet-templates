@@ -1581,7 +1581,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -2055,7 +2055,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -2272,7 +2272,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2404,7 +2404,7 @@
       "homepage": "https://matrix.org",
       "source": "https://github.com/element-hq/synapse",
       "path": "apps/matrix",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "matrixdotorg/synapse",
@@ -2605,7 +2605,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -3063,7 +3063,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -3505,7 +3505,7 @@
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",

@@ -108,7 +108,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "sure", "-d", "sure"]
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "sure", "-d", "sure"]
       interval: 10s
     labels:
       docker-volume-backup.stop-during-backup: "true" # consistent database copy
