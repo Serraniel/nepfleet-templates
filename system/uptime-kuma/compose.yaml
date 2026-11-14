@@ -6,7 +6,8 @@ services:
       - data:/app/data
     # socket: Docker monitors (workers, databases) ask the read-only proxy
     # whether a container runs and is healthy.
-    networks: [ingress, default, socket]
+    # nepfleet-api: alerts go to NepFleet (the notification below).
+    networks: [ingress, default, socket, nepfleet-api]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}
@@ -41,6 +42,8 @@ services:
       AUTOKUMA__KUMA__PASSWORD: ${KUMA_PASSWORD}
       AUTOKUMA__DOCKER__HOSTS: tcp://socket-proxy:2375
       AUTOKUMA__DOCKER__LABEL_PREFIX: kuma
+      # Every monitor alerts through NepFleet, whose channels deliver.
+      AUTOKUMA__DEFAULT_SETTINGS: '*.notification_name_list: ["nepfleet"]'
     networks: [default, socket]
     depends_on:
       uptime-kuma: { condition: service_started }
@@ -53,6 +56,12 @@ services:
       kuma.nepfleet-docker.docker_host.name: Docker (NepFleet)
       kuma.nepfleet-docker.docker_host.connection_type: tcp
       kuma.nepfleet-docker.docker_host.host: http://socket-proxy:2375
+      # Down and up alerts go to NepFleet's alerts API with this stack's
+      # token, and from there to the fleet's notification channels. raw:
+      # the {{ }} are Kuma's (Liquid), not AutoKuma's (Tera).
+      kuma.nepfleet.notification.name: NepFleet
+      kuma.nepfleet.notification.active: "true"
+      kuma.nepfleet.notification.config: '{"type": "webhook", "webhookURL": "${NEPFLEET_API_URL}/api/v1/alerts", "webhookContentType": "custom", "webhookCustomBody": "{\"source\": \"uptime-kuma\", \"rule\": {% raw %}{{ name | json }}{% endraw %}, \"detail\": {% raw %}{{ msg | json }}{% endraw %}}", "webhookAdditionalHeaders": "{\"Authorization\": \"Bearer ${NOTIFY_TOKEN}\", \"Content-Type\": \"application/json\"}"}'
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.4.7
@@ -78,3 +87,7 @@ networks:
     external: true
   socket:
     internal: true
+  # Reaches NepFleet's API (as nepfleet), and nothing else.
+  nepfleet-api:
+    name: ${NEPFLEET_API_NETWORK}
+    external: true
