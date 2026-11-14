@@ -17,25 +17,32 @@ if (!username || !password) {
 
 const kuma = process.env.KUMA_URL || "http://uptime-kuma:3001";
 
-// The database page answers only while Kuma has no database yet.
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// The database page answers only while Kuma has no database yet. Until Kuma
+// answers at all (on Swarm nothing waits for it), keep asking.
 async function chooseDatabase() {
-    let info;
-    try {
-        const res = await fetch(kuma + "/setup-database-info");
-        info = res.ok ? await res.json() : null;
-    } catch {
-        info = null;
+    let res;
+    for (;;) {
+        try {
+            res = await fetch(kuma + "/setup-database-info");
+            break;
+        } catch (e) {
+            console.log("waiting for Uptime Kuma: " + e.message);
+            await sleep(2000);
+        }
     }
+    const info = res.ok ? await res.json().catch(() => null) : null;
     if (!info || !info.needSetup) {
         return;
     }
-    const res = await fetch(kuma + "/setup-database", {
+    const chosen = await fetch(kuma + "/setup-database", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dbConfig: { type: "sqlite" } }),
     });
-    if (!res.ok) {
-        console.error("Uptime Kuma refused the database setup: " + (await res.text()));
+    if (!chosen.ok) {
+        console.error("Uptime Kuma refused the database setup: " + (await chosen.text()));
         process.exit(1);
     }
     console.log("database: SQLite");
