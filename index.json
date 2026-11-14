@@ -313,7 +313,7 @@
       "homepage": "https://github.com/lucaslorentz/caddy-docker-proxy",
       "source": "https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy",
       "path": "system/caddy",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/serraniel/nepfleet-caddy",

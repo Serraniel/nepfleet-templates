@@ -9,7 +9,7 @@ metadata:
   homepage: https://github.com/lucaslorentz/caddy-docker-proxy
   source: https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   images:
     - name: ghcr.io/serraniel/nepfleet-caddy
