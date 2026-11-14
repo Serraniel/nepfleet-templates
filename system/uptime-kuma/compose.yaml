@@ -16,6 +16,22 @@ services:
       homepage.icon: uptime-kuma.svg
       homepage.href: ${NEPFLEET_URL}
 
+  # Creates the admin on the first start (setup.js), then exits; later runs
+  # find it and do nothing.
+  setup:
+    image: louislam/uptime-kuma:2
+    restart: "no"
+    entrypoint: ["node", "/setup/setup.js"]
+    environment:
+      NODE_PATH: /app/node_modules
+      KUMA_USERNAME: ${KUMA_USERNAME}
+      KUMA_PASSWORD: ${KUMA_PASSWORD}
+    volumes:
+      - ./setup:/setup:ro
+    networks: [default]
+    depends_on:
+      uptime-kuma: { condition: service_healthy }
+
   autokuma:
     image: ghcr.io/bigboot/autokuma:2
     restart: unless-stopped
@@ -26,7 +42,11 @@ services:
       AUTOKUMA__DOCKER__HOSTS: tcp://socket-proxy:2375
       AUTOKUMA__DOCKER__LABEL_PREFIX: kuma
     networks: [default, socket]
-    depends_on: [uptime-kuma, socket-proxy]
+    depends_on:
+      uptime-kuma: { condition: service_started }
+      socket-proxy: { condition: service_started }
+      # Compose only accepts a one-shot that exits when something waits for it.
+      setup: { condition: service_completed_successfully }
     labels:
       # The Docker host that templates' docker monitors name with
       # docker_host_name: nepfleet-docker.

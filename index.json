@@ -1117,7 +1117,7 @@
       "category": "monitoring",
       "homepage": "https://github.com/louislam/uptime-kuma",
       "path": "system/uptime-kuma",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "images": [
         {
           "name": "louislam/uptime-kuma",
@@ -1156,7 +1156,7 @@
           "name": "KUMA_USERNAME",
           "type": "string",
           "title": "Admin user",
-          "description": "NepFleet creates this admin right after the first apply (nepfleet 0.x with first-run setup), so Kuma's setup screen is never open; AutoKuma logs in with it.",
+          "description": "Created on Kuma's first start, so its setup screen is never open; sign in with it, and AutoKuma does too.",
           "required": true,
           "default": "admin"
         },
