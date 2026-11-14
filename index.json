@@ -361,7 +361,7 @@
           "name": "DNS_API_TOKEN",
           "type": "secret",
           "title": "DNS provider API token",
-          "description": "Leave empty when the provider is none."
+          "description": "Only for the TXT records Caddy writes. Cloudflare: Zone → Zone → Read and Zone → DNS → Edit, for your zone only. Hetzner: a project API token with Read & Write, in a project with only the DNS zone. deSEC: a token without token management, with a policy that allows only TXT records. Details: nepfleet docs/home-tls.md. Leave empty when the provider is none."
         },
         {
           "name": "WILDCARD",
