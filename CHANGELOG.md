@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Serraniel/nepfleet-templates/compare/v0.3.0...v0.3.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* Postgres templates are healthy only once the database answers over TCP ([#175](https://github.com/Serraniel/nepfleet-templates/issues/175)) ([e724d8a](https://github.com/Serraniel/nepfleet-templates/commit/e724d8a40cb94474ad77a98274244c74716a80bf))
+
 ## [0.3.0](https://github.com/Serraniel/nepfleet-templates/compare/v0.2.0...v0.3.0) (2026-11-14)
 
 
