@@ -38,6 +38,8 @@ services:
       NETWORKS: 1
       TASKS: 1
       EVENTS: 1
+      # /info: caddy-docker-proxy asks it every minute whether Swarm runs.
+      INFO: 1
       POST: 0
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
