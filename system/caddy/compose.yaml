@@ -15,6 +15,9 @@ services:
       CADDY_WILDCARD: ${WILDCARD}
       WILDCARD_DOMAIN: ${WILDCARD_DOMAIN}
       DNS_API_TOKEN: ${DNS_API_TOKEN}
+      # on-cloudflare, off-none, …: which records/*.caddy applies.
+      CADDY_DNS_RECORDS: ${DNS_RECORDS}-${CADDY_DNS_PROVIDER}
+      DNS_ZONE: ${DNS_ZONE}
     extra_hosts:
       # lets stacks on host networking (e.g. Home Assistant) be proxied
       - host.docker.internal:host-gateway
@@ -22,6 +25,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./dns:/etc/caddy/dns:ro
       - ./wildcard:/etc/caddy/wildcard:ro
+      - ./records:/etc/caddy/records:ro
       - data:/data
     networks: [ingress, socket]
     depends_on: [socket-proxy]
