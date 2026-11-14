@@ -3,7 +3,8 @@ services:
     image: ghcr.io/serraniel/neptide:0.1.0
     restart: unless-stopped
     read_only: true
-    user: "65532:${DOCKER_GID}"
+    # The host's docker group: set by hand, else the one NepFleet found.
+    user: "65532:${DOCKER_GID:-${NEPFLEET_DOCKER_GID:?the host's docker group ID is unknown: set DOCKER_GID}}"
     environment:
       NEPTIDE_MONITOR_ONLY: ${MONITOR_ONLY}
       NEPTIDE_NOTIFY: ${NOTIFY}

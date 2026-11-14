@@ -958,7 +958,7 @@
       "category": "updates",
       "homepage": "https://github.com/Serraniel/neptide",
       "path": "system/neptide",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "ghcr.io/serraniel/neptide",
@@ -982,9 +982,8 @@
         {
           "name": "DOCKER_GID",
           "type": "int",
-          "title": "Group id of the docker group on the host",
-          "description": "getent group docker | cut -d: -f3",
-          "required": true
+          "title": "Docker group ID (override)",
+          "description": "Leave empty: NepFleet fills in the host's docker group. Set it only if neptide can't reach Docker (getent group docker | cut -d: -f3 on the host)."
         },
         {
           "name": "MONITOR_ONLY",
