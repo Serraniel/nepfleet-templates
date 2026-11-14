@@ -313,7 +313,7 @@
       "homepage": "https://github.com/lucaslorentz/caddy-docker-proxy",
       "source": "https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy",
       "path": "system/caddy",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/serraniel/nepfleet-caddy",
@@ -362,6 +362,25 @@
           "type": "secret",
           "title": "DNS provider API token",
           "description": "Only for the TXT records Caddy writes. Cloudflare: Zone → Zone → Read and Zone → DNS → Edit, for your zone only. Hetzner: a project API token with Read & Write, in a project with only the DNS zone. deSEC: a token without token management, with a policy that allows only TXT records. Details: nepfleet docs/home-tls.md. Leave empty when the provider is none."
+        },
+        {
+          "name": "DNS_RECORDS",
+          "type": "enum",
+          "title": "Create the sites' DNS records",
+          "description": "With on, Caddy keeps an A record (and AAAA, with IPv6) for each of its sites under the DNS zone pointed at this host's public address, through the DNS provider and its token (which then needs DNS edit on the zone, as for certificates). It checks every 5 minutes, finds the address by asking public what-is-my-IP services, and sets records that point elsewhere to this host. It never touches the zone's apex, and never deletes records. Works with every DNS provider here. Single hosts only: in Swarm, leave it off (replicas would overwrite each other's records).",
+          "default": "off",
+          "options": [
+            "off",
+            "on"
+          ]
+        },
+        {
+          "name": "DNS_ZONE",
+          "type": "string",
+          "title": "DNS zone for the records",
+          "description": "The domain the DNS provider holds, e.g. example.org: sites under it (status.vps.example.org) get records. Used when DNS records are on.",
+          "default": "example.org",
+          "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
         },
         {
           "name": "WILDCARD",

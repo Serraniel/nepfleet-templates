@@ -1,0 +1,12 @@
+# Keeps an A/AAAA record for every site under DNS_ZONE pointed at this host's
+# public address (caddy-dynamicdns). It never touches the zone's apex, and
+# never deletes records.
+dynamic_dns {
+	provider cloudflare {env.DNS_API_TOKEN}
+	domains {
+		{$DNS_ZONE}
+	}
+	dynamic_domains
+	check_interval 5m
+	ttl 5m
+}
