@@ -6,11 +6,12 @@ services:
       DOCKER_HOST: tcp://socket-proxy:2375
       DOZZLE_AUTH_PROVIDER: simple
       DOZZLE_NO_ANALYTICS: "true"
-      ALERTS_API_URL: ${ALERTS_API_URL}
-      ALERTS_TOKEN: ${ALERTS_TOKEN}
+      # NepFleet's own API and this stack's token, unless overridden.
+      ALERTS_API_URL: ${ALERTS_API_URL:-${NEPFLEET_API_URL}}
+      ALERTS_TOKEN: ${ALERTS_TOKEN:-${ALERTS_NOTIFY_TOKEN}}
     volumes:
       - ./data:/data
-    networks: [ingress, socket]
+    networks: [ingress, socket, nepfleet-api]
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
@@ -43,3 +44,7 @@ networks:
     external: true
   socket:
     internal: true
+  # Reaches NepFleet's API (as nepfleet), and nothing else.
+  nepfleet-api:
+    name: ${NEPFLEET_API_NETWORK}
+    external: true
