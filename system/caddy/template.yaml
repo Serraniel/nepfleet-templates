@@ -9,7 +9,7 @@ metadata:
   homepage: https://github.com/lucaslorentz/caddy-docker-proxy
   source: https://github.com/Serraniel/nepfleet-templates/tree/main/images/caddy
 spec:
-  version: 0.3.0
+  version: 0.3.1
   compose: compose.yaml
   images:
     - name: ghcr.io/serraniel/nepfleet-caddy
@@ -31,7 +31,12 @@ spec:
     - name: DNS_API_TOKEN
       type: secret
       title: DNS provider API token
-      description: "Only for the TXT records Caddy writes. Cloudflare: Zone → Zone → Read and Zone → DNS → Edit, for your zone only. Hetzner: a project API token with Read & Write, in a project with only the DNS zone. deSEC: a token without token management, with a policy that allows only TXT records. Details: nepfleet docs/home-tls.md. Leave empty when the provider is none."
+      description: "Not needed without a DNS provider. Details per provider: nepfleet docs/home-tls.md."
+      helpFrom: CADDY_DNS_PROVIDER
+      help:
+        cloudflare: "Cloudflare → My Profile → API Tokens → Create Token. Permissions: Zone → Zone → Read and Zone → DNS → Edit. Zone Resources: Include → Specific zone → your zone. That also covers the sites' records when \"Create the sites' DNS records\" is on."
+        hetzner: "Hetzner Console → your project → Security → API tokens → Generate, with Read & Write. Put the DNS zone in a project of its own: the token reaches everything in its project."
+        desec: "deSEC → Token management → a new token without \"Can manage tokens\". For certificates alone, a policy that allows only TXT records is enough; with \"Create the sites' DNS records\" on, also allow A and AAAA."
     - name: DNS_RECORDS
       type: enum
       title: Create the sites' DNS records
