@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Serraniel/nepfleet-templates/compare/v0.2.0...v0.3.0) (2026-11-14)
+
+
+### Features
+
+* **caddy:** say what the DNS API token needs at each provider ([#171](https://github.com/Serraniel/nepfleet-templates/issues/171)) ([9b2fa28](https://github.com/Serraniel/nepfleet-templates/commit/9b2fa284f8f1342fddde869b21f061ba5031c479))
+
 ## [0.2.0](https://github.com/Serraniel/nepfleet-templates/compare/v0.1.0...v0.2.0) (2026-11-13)
 
 
