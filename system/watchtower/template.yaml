@@ -8,7 +8,7 @@ metadata:
   category: updates
   homepage: https://github.com/nicholas-fedor/watchtower
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: nickfedor/watchtower
@@ -23,10 +23,14 @@ spec:
       description: '"true" = monitor only (notify). "false" = update labelled containers in place.'
     - name: NOTIFICATION_URL
       type: secret
-      title: Notification URL
-      description: A shoutrrr URL, e.g. ntfy://ntfy.sh/my-topic
+      title: Notification URL (override)
+      description: "Leave empty: notifications go to NepFleet, which sends them to the fleet's notification channels. Set a shoutrrr URL (e.g. ntfy://ntfy.sh/my-topic) only to send somewhere else instead."
     - name: SCHEDULE
       type: string
       title: Schedule (6-field cron)
       default: "0 0 4 * * *"
       required: true
+  generate:
+    # Sends to NepFleet's alerts API, whose channels deliver (see the URL input).
+    - name: NOTIFY_TOKEN
+      kind: notify-token

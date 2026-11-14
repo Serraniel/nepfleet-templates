@@ -9,7 +9,7 @@ metadata:
   homepage: https://offen.github.io/docker-volume-backup/
   source: https://github.com/offen/docker-volume-backup
 spec:
-  version: 0.2.0
+  version: 0.3.0
   compose: compose.yaml
   images:
     - name: offen/docker-volume-backup
@@ -63,5 +63,9 @@ spec:
       pattern: ".+"
     - name: NOTIFICATION_URLS
       type: secret
-      title: Notification URLs (shoutrrr, comma separated)
-      description: Failed backups are always reported here, e.g. discord://token@webhookid
+      title: Notification URLs (override)
+      description: "Leave empty: failed backups are reported to NepFleet, which sends them to the fleet's notification channels. Set comma separated shoutrrr URLs (e.g. discord://token@webhookid) only to send somewhere else instead."
+  generate:
+    # Sends to NepFleet's alerts API, whose channels deliver (see the URL input).
+    - name: NOTIFY_TOKEN
+      kind: notify-token
