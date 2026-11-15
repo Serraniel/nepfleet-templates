@@ -75,6 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       templates: ${{ steps.list.outputs.templates }}
+      swarm: ${{ steps.list.outputs.swarm }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -85,7 +86,9 @@ jobs:
       - id: list
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base }}
-        run: echo "templates=$(python3 -I scripts/test-templates.py list --deploy --changed "$BASE")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "templates=$(python3 -I scripts/test-templates.py list --deploy --changed "$BASE")" >> "$GITHUB_OUTPUT"
+          echo "swarm=$(python3 -I scripts/test-templates.py list --deploy --swarm --changed "$BASE")" >> "$GITHUB_OUTPUT"
 
   # Each selected template is installed with test values through nepfleet apply,
   # which waits for each service's health check, then torn down.
@@ -118,6 +121,37 @@ jobs:
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Deploy ${{ matrix.template }} and wait for healthy
         run: python3 -I scripts/test-templates.py deploy "$(go env GOPATH)/bin/nepfleet" "${{ matrix.template }}"
+
+  # The swarm templates once more as swarm stacks, on a one-node swarm: the
+  # swarm form, one-shots, and pinning local volumes to a data node.
+  deploy-swarm:
+    needs: deploy-matrix
+    if: needs.deploy-matrix.outputs.swarm != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        template: ${{ fromJSON(needs.deploy-matrix.outputs.swarm) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27.4"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Serraniel/nepfleet
+          ref: main
+          path: .nepfleet-src
+          persist-credentials: false
+      - name: Install nepfleet, sops and age
+        run: |
+          go build -C .nepfleet-src -o "$(go env GOPATH)/bin/nepfleet" ./cmd/nepfleet
+          go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
+          go install filippo.io/age/cmd/...@v1.3.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Deploy ${{ matrix.template }} as a swarm stack
+        run: python3 -I scripts/test-templates.py deploy-swarm "$(go env GOPATH)/bin/nepfleet" "${{ matrix.template }}"
 
   conventional-title:
     if: github.event_name == 'pull_request'
