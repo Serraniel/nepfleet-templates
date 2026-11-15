@@ -21,3 +21,24 @@ jobs:
       pull-requests: write
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+
+  # Release PRs are opened with GITHUB_TOKEN, which starts no workflow; a
+  # dispatch does. The checks run on the PR's head commit and show on the PR.
+  release-pr-checks:
+    needs: release-please
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      pull-requests: read
+    steps:
+      - name: Run the required checks on open release PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BASE: ${{ github.sha }}
+        run: |
+          gh pr list --state open --label "autorelease: pending" --json headRefName -q '.[].headRefName' |
+            while read -r branch; do
+              gh workflow run validate.yml --ref "$branch" -f base="$BASE"
+              gh workflow run security.yml --ref "$branch"
+            done
