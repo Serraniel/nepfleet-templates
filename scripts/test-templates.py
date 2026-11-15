@@ -4,8 +4,12 @@
 
   test-templates.py swarm  <nepfleet>             docker stack config for every swarm template
   test-templates.py deploy <nepfleet> NAME...     nepfleet apply (health-gated), then tear down
-  test-templates.py list   [--deploy] [--changed BASE]
+  test-templates.py deploy-swarm <nepfleet> NAME...
+                                                 the same as a swarm stack, on a one-node
+                                                 swarm (docker swarm init when there is none)
+  test-templates.py list   [--deploy] [--swarm] [--changed BASE]
                                                  template names (for a CI matrix); with
+                                                 --swarm, only those that support it; with
                                                  --changed, only those touched since BASE
 
 Needs docker, git, sops and age-keygen on PATH. Values come from each
@@ -230,6 +234,90 @@ def deploy(nf, names):
             fleet.cleanup()
     if failed:
         raise SystemExit(f"{len(failed)} template(s) did not become healthy: {', '.join(failed)}")
+
+
+def supports_swarm(name):
+    """Whether template NAME declares supports.swarm (read from its template.yaml)."""
+    for tier in ("system", "apps"):
+        f = ROOT / tier / name / "template.yaml"
+        if f.exists():
+            for line in f.read_text().splitlines():
+                if line.strip().startswith("supports:"):
+                    return "swarm: true" in line
+    return False
+
+
+def short_services(stack):
+    """The stack's services that run fewer replicas than they want, as
+    "name running/wanted". A one-shot that finished shows 0/1 with its task
+    Complete: that is fine."""
+    out = []
+    ls = run("docker", "service", "ls", "--filter", f"label=com.docker.stack.namespace={stack}",
+             "--format", "{{.Name}} {{.Replicas}}").stdout
+    for line in ls.splitlines():
+        if not line.strip():
+            continue
+        svc, replicas = line.split(" ", 1)
+        running, wanted = replicas.split(" ")[0].split("/")
+        if running == wanted:
+            continue
+        states = run("docker", "service", "ps", svc, "--format", "{{.CurrentState}}", check=False).stdout.splitlines()
+        if states and states[0].startswith("Complete"):
+            continue
+        out.append(f"{svc} {running}/{wanted}")
+    return out
+
+
+def stack_gone(stack):
+    """Waits until docker stack rm has removed the stack's services and containers."""
+    for _ in range(90):
+        services = run("docker", "service", "ls", "-q", "--filter", f"label=com.docker.stack.namespace={stack}", check=False).stdout.strip()
+        containers = run("docker", "ps", "-aq", "--filter", f"label=com.docker.stack.namespace={stack}", check=False).stdout.strip()
+        if not services and not containers:
+            return
+        time.sleep(1)
+
+
+def deploy_swarm(nf, names):
+    """Each template as a swarm stack, through nepfleet apply, on a one-node swarm."""
+    if not os.environ.get("CI") and "--local" not in sys.argv:
+        raise SystemExit("deploy-swarm starts real services and may turn swarm mode on; run it in CI, or pass --local")
+    names = [n for n in names if n != "--local"]
+    if run("docker", "info", "--format", "{{.Swarm.LocalNodeState}}").stdout.strip() != "active":
+        run("docker", "swarm", "init", "--advertise-addr", "127.0.0.1")
+    tpls = {t["name"]: t for t in catalogue(nf)}
+    failed = []
+    for name in names:
+        fleet = Fleet(nf)
+        stack = stack_name(name)
+        try:
+            fleet.new(tpls[name], mode="swarm")
+            p = fleet.nepfleet("apply", "--yes", "--wait", "5m", stack, check=False)
+            print(p.stdout + p.stderr)
+            ok = p.returncode == 0
+            if ok:
+                short = short_services(stack)
+                if short:
+                    print("not all replicas run: " + "; ".join(short))
+                    ok = False
+                label = run("docker", "node", "ls", "--filter", f"node.label=nepfleet.data.{stack}", "-q").stdout.strip()
+                print(f"data node for {stack}: {label or '(none: no local volumes)'}")
+            print(("ok   " if ok else "FAIL ") + name + " (swarm)")
+            if not ok:
+                failed.append(name)
+                ps = run("docker", "stack", "ps", stack, "--no-trunc", "--format", "{{.Name}} {{.CurrentState}} {{.Error}}", check=False)
+                print(ps.stdout + ps.stderr)
+        finally:
+            run("docker", "stack", "rm", stack, check=False)
+            stack_gone(stack)
+            for v in run("docker", "volume", "ls", "-q", "--filter", f"label=com.docker.stack.namespace={stack}", check=False).stdout.split():
+                run("docker", "volume", "rm", v, check=False)
+            run("docker", "node", "update", "--label-rm", f"nepfleet.data.{stack}", "self", check=False)
+            run("docker", "network", "rm", NETWORK, check=False)
+            run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", ALPINE, "rm", "-rf", "/w/paths", "/w/state", check=False)
+            fleet.cleanup()
+    if failed:
+        raise SystemExit(f"{len(failed)} swarm template(s) did not deploy: {', '.join(failed)}")
 
 
 def check_sure():
@@ -504,6 +592,8 @@ def main():
         names = [p.parent.name for tier in ("system", "apps") for p in sorted((ROOT / tier).glob("*/template.yaml"))]
         if "--deploy" in args:
             names = [n for n in names if n not in skip]
+        if "--swarm" in args:
+            names = [n for n in names if supports_swarm(n)]
         if "--changed" in args:
             only = changed_templates(args[args.index("--changed") + 1])
             if only is not None:
@@ -513,6 +603,8 @@ def main():
         swarm(args[0])
     elif cmd == "deploy":
         deploy(args[0], args[1:])
+    elif cmd == "deploy-swarm":
+        deploy_swarm(args[0], args[1:])
     else:
         raise SystemExit(__doc__)
 
