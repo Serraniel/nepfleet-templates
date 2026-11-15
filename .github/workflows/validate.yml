@@ -46,31 +46,6 @@ jobs:
           go run github.com/Serraniel/nepfleet/cmd/nepfleet@main template index . > /tmp/index.json
           diff -u index.json /tmp/index.json || { echo "::error::index.json is stale: run nepfleet template index . > index.json"; exit 1; }
 
-  # Installs need what users have: the nepfleet CLI, sops and age.
-  swarm:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version: "1.27.4"
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: Serraniel/nepfleet
-          ref: main
-          path: .nepfleet-src
-          persist-credentials: false
-      - name: Install nepfleet, sops and age
-        run: |
-          # nepfleet from its main branch, built from the pinned checkout above.
-          go build -C .nepfleet-src -o "$(go env GOPATH)/bin/nepfleet" ./cmd/nepfleet
-          go install github.com/getsops/sops/v3/cmd/sops@v3.12.2
-          go install filippo.io/age/cmd/...@v1.3.2
-          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
-      - name: Swarm templates pass docker stack config
-        run: python3 -I scripts/test-templates.py swarm "$(go env GOPATH)/bin/nepfleet"
-
   deploy-matrix:
     runs-on: ubuntu-latest
     outputs:

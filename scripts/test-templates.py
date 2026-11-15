@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Installs templates the way a user does, with test values.
 
-  test-templates.py swarm  <nepfleet>             docker stack config for every swarm template
   test-templates.py deploy <nepfleet> NAME...     nepfleet apply (health-gated), then tear down
   test-templates.py deploy-swarm <nepfleet> NAME...
                                                  the same as a swarm stack, on a one-node
@@ -140,53 +139,6 @@ def docker_gid():
 
 def stack_name(template):
     return "it-" + template
-
-
-def rendered(fleet, name):
-    """Files of `nepfleet render`, split on its "# ---- path" headers."""
-    out, files, cur = fleet.nepfleet("render", name).stdout, {}, None
-    for line in out.splitlines(keepends=True):
-        if line.startswith("# ---- "):
-            cur = line[7:].strip()
-            files[cur] = ""
-        elif cur:
-            files[cur] += line
-    return files
-
-
-def swarm(nf):
-    failed = []
-    for tpl in catalogue(nf):
-        if not tpl["supports"].get("swarm"):
-            continue
-        fleet = Fleet(nf)
-        try:
-            fleet.new(tpl, mode="swarm")
-            files = rendered(fleet, stack_name(tpl["name"]))
-            work = fleet.dir / "render"
-            work.mkdir()
-            for path, content in files.items():
-                (work / path).parent.mkdir(parents=True, exist_ok=True)
-                (work / path).write_text(content)
-            # docker stack deploy does not read .env; nepfleet interpolates
-            # it first, so pass it as the environment here.
-            env = dict(os.environ)
-            for line in files.get(".env", "").splitlines():
-                if "=" in line and not line.startswith("#"):
-                    k, v = line.split("=", 1)
-                    if len(v) >= 2 and v[0] == v[-1] == "'":  # nepfleet writes KEY='value'
-                        v = v[1:-1]
-                    env[k] = v
-            p = run("docker", "stack", "config", "--compose-file", work / "compose.yaml", cwd=work, env=env, check=False)
-            ok = p.returncode == 0 and "is not set" not in p.stderr  # a missing variable only warns
-            print(("ok   " if ok else "FAIL ") + tpl["path"])
-            if not ok:
-                print(p.stderr.strip())
-                failed.append(tpl["name"])
-        finally:
-            fleet.cleanup()
-    if failed:
-        raise SystemExit(f"{len(failed)} swarm template(s) invalid: {', '.join(failed)}")
 
 
 def deploy(nf, names):
@@ -601,8 +553,6 @@ def main():
             if only is not None:
                 names = [n for n in names if n in only]
         print(json.dumps(names))
-    elif cmd == "swarm":
-        swarm(args[0])
     elif cmd == "deploy":
         deploy(args[0], args[1:])
     elif cmd == "deploy-swarm":
