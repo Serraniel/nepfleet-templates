@@ -312,7 +312,9 @@ def deploy_swarm(nf, names):
             stack_gone(stack)
             for v in run("docker", "volume", "ls", "-q", "--filter", f"label=com.docker.stack.namespace={stack}", check=False).stdout.split():
                 run("docker", "volume", "rm", v, check=False)
-            run("docker", "node", "update", "--label-rm", f"nepfleet.data.{stack}", "self", check=False)
+            node = run("docker", "info", "--format", "{{.Swarm.NodeID}}", check=False).stdout.strip()
+            if node:  # docker node update takes no "self"
+                run("docker", "node", "update", "--label-rm", f"nepfleet.data.{stack}", node, check=False)
             run("docker", "network", "rm", NETWORK, check=False)
             run("docker", "run", "--rm", "-v", f"{fleet.dir}:/w", ALPINE, "rm", "-rf", "/w/paths", "/w/state", check=False)
             fleet.cleanup()
