@@ -10,6 +10,10 @@ on:
   schedule:
     - cron: "17 3 * * *"
   workflow_dispatch:
+    inputs:
+      base:
+        description: Test only the templates changed since this commit (all when empty)
+        required: false
 
 permissions:
   contents: read
@@ -76,10 +80,11 @@ jobs:
         with:
           fetch-depth: 0
       # Pull requests and pushes test the templates they touch (all of them when
-      # the test script or this workflow changes); scheduled and manual runs, all.
+      # the test script or this workflow changes); scheduled runs and manual runs
+      # without a base, all.
       - id: list
         env:
-          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base }}
         run: echo "templates=$(python3 -I scripts/test-templates.py list --deploy --changed "$BASE")" >> "$GITHUB_OUTPUT"
 
   # Each selected template is installed with test values through nepfleet apply,
