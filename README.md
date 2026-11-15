@@ -46,12 +46,12 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
 | [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 💾 🦾 |
+| [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
 | [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 💾 🦾 |
-| [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 💾 🦾 |
+| [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 💾 🦾 |
+| [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🦾 |
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |
@@ -66,7 +66,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [registry](apps/registry) | [Container registry](https://distribution.github.io/distribution/) · [source](https://github.com/distribution/distribution) | app | 🌐 📈 🐝 💾 🦾 |
 | [sendan](apps/sendan) | [Sendan](https://github.com/Serraniel/sendan) | app | 🌐 📈 🏠 💾 🦾 |
 | [stirling-pdf](apps/stirling-pdf) | [Stirling-PDF](https://www.stirlingpdf.com) · [source](https://github.com/Stirling-Tools/Stirling-PDF) | app | 🌐 📈 🏠 💾 🦾 |
-| [sure](apps/sure) | [Sure](https://sure.am) · [source](https://github.com/we-promise/sure) | app | 🌐 📈 🏠 💾 🔑 🦾 |
+| [sure](apps/sure) | [Sure](https://sure.am) · [source](https://github.com/we-promise/sure) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [sweetcaptcha](apps/sweetcaptcha) | [SweetCaptcha](https://github.com/Serraniel/SweetCaptcha) | app | 🌐 📈 🦾 |
 | [sweetfolio](apps/sweetfolio) | [Sweetfolio](https://github.com/Serraniel/Sweetfolio) | app | 🌐 📈 🏠 🐝 🦾 |
 | [syncthing](apps/syncthing) | [Syncthing](https://syncthing.net) · [source](https://github.com/syncthing/syncthing) | app | 🌐 📈 🏠 💾 🦾 |

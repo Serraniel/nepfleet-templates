@@ -9,7 +9,7 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   web: { service: web, port: 3000 }
   images:
@@ -19,7 +19,7 @@ spec:
       track: patch
     - name: valkey/valkey
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
   inputs:
     - name: DOMAIN
       type: hostname
