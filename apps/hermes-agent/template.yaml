@@ -9,12 +9,12 @@ metadata:
   homepage: https://github.com/NousResearch/hermes-agent
   source: https://github.com/NousResearch/hermes-agent
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: nousresearch/hermes-agent
       track: minor
-  supports: { logs: true, backup: true }
+  supports: { swarm: true, logs: true, backup: true }
   inputs:
     - name: OPENROUTER_API_KEY
       type: secret

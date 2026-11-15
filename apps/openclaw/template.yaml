@@ -9,12 +9,12 @@ metadata:
   homepage: https://openclaw.ai
   source: https://github.com/openclaw/openclaw
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: ghcr.io/openclaw/openclaw
       track: minor
-  supports: { logs: true, backup: true }
+  supports: { swarm: true, logs: true, backup: true }
   generate:
     - { name: GATEWAY_TOKEN, kind: secret, length: 48, encoding: alnum }
   volumes:

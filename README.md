@@ -42,8 +42,8 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [audiobookshelf](apps/audiobookshelf) | [Audiobookshelf](https://www.audiobookshelf.org) · [source](https://github.com/advplyr/audiobookshelf) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
-| [garage](apps/garage) | [Garage](https://garagehq.deuxfleurs.fr) · [source](https://git.deuxfleurs.fr/Deuxfleurs/garage) | app | 🌐 📈 💾 🦾 |
-| [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
+| [garage](apps/garage) | [Garage](https://garagehq.deuxfleurs.fr) · [source](https://git.deuxfleurs.fr/Deuxfleurs/garage) | app | 🌐 📈 🐝 💾 🦾 |
+| [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 🐝 💾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
 | [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 🐝 💾 🦾 |
@@ -56,10 +56,10 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [ntfy](apps/ntfy) | [ntfy](https://ntfy.sh) · [source](https://github.com/binwiederhier/ntfy) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 💾 |
-| [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 💾 |
+| [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 🐝 💾 |
+| [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 🐝 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 💾 🦾 |
+| [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [pihole](apps/pihole) | [Pi-hole](https://pi-hole.net) · [source](https://github.com/pi-hole/docker-pi-hole) | app | 🌐 📈 🏠 💾 🦾 |
 | [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
@@ -67,7 +67,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [sendan](apps/sendan) | [Sendan](https://github.com/Serraniel/sendan) | app | 🌐 📈 🏠 💾 🦾 |
 | [stirling-pdf](apps/stirling-pdf) | [Stirling-PDF](https://www.stirlingpdf.com) · [source](https://github.com/Stirling-Tools/Stirling-PDF) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [sure](apps/sure) | [Sure](https://sure.am) · [source](https://github.com/we-promise/sure) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
-| [sweetcaptcha](apps/sweetcaptcha) | [SweetCaptcha](https://github.com/Serraniel/SweetCaptcha) | app | 🌐 📈 🦾 |
+| [sweetcaptcha](apps/sweetcaptcha) | [SweetCaptcha](https://github.com/Serraniel/SweetCaptcha) | app | 🌐 📈 🐝 🦾 |
 | [sweetfolio](apps/sweetfolio) | [Sweetfolio](https://github.com/Serraniel/Sweetfolio) | app | 🌐 📈 🏠 🐝 🦾 |
 | [syncthing](apps/syncthing) | [Syncthing](https://syncthing.net) · [source](https://github.com/syncthing/syncthing) | app | 🌐 📈 🏠 💾 🦾 |
 | [tdarr](apps/tdarr) | [Tdarr](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🌐 📈 🏠 💾 🦾 |
