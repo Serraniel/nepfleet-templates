@@ -9,8 +9,9 @@ metadata:
   homepage: https://matrix.org
   source: https://github.com/element-hq/synapse
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
+  botCheck: { service: synapse, port: 8008, allow: ["^/_matrix/", "^/_synapse/client/", "^/\\.well-known/matrix/"] }
   images:
     - name: matrixdotorg/synapse
       track: minor

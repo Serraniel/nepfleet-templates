@@ -9,8 +9,9 @@ metadata:
   homepage: https://n8n.io
   source: https://github.com/n8n-io/n8n
 spec:
-  version: 0.3.1
+  version: 0.3.2
   compose: compose.yaml
+  botCheck: { service: n8n, port: 5678, allow: ["^/webhook/", "^/webhook-test/", "^/webhook-waiting/", "^/api/v1/"] }
   images:
     - name: n8nio/n8n
       track: minor

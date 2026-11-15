@@ -9,9 +9,10 @@ metadata:
   homepage: https://ntfy.sh
   source: https://github.com/binwiederhier/ntfy
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   web: { service: ntfy, port: 80 }   # also reachable on a LAN port (access mode port)
+  botCheck: { supported: false }   # phone apps and scripts publish and subscribe on every path
   images:
     - name: binwiederhier/ntfy
       track: minor
