@@ -40,7 +40,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [actual](apps/actual) | [Actual Budget](https://actualbudget.org) · [source](https://github.com/actualbudget/actual) | app | 🌐 📈 🏠 💾 🦾 |
 | [adguard-home](apps/adguard-home) | [AdGuard Home](https://adguard.com/adguard-home) · [source](https://github.com/AdguardTeam/AdGuardHome) | app | 🌐 📈 🏠 💾 🦾 |
 | [audiobookshelf](apps/audiobookshelf) | [Audiobookshelf](https://www.audiobookshelf.org) · [source](https://github.com/advplyr/audiobookshelf) | app | 🌐 📈 🏠 💾 🦾 |
-| [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 💾 🦾 |
+| [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
 | [garage](apps/garage) | [Garage](https://garagehq.deuxfleurs.fr) · [source](https://git.deuxfleurs.fr/Deuxfleurs/garage) | app | 🌐 📈 💾 🦾 |
 | [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
@@ -50,17 +50,17 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
 | [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 💾 🦾 |
 | [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 💾 🦾 |
-| [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 💾 🦾 |
+| [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 💾 🦾 |
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🦾 |
-| [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 💾 🦾 |
+| [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 💾 🦾 |
 | [ntfy](apps/ntfy) | [ntfy](https://ntfy.sh) · [source](https://github.com/binwiederhier/ntfy) | app | 🌐 📈 🏠 💾 🦾 |
 | [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 💾 |
 | [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 💾 🦾 |
 | [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 💾 🦾 |
-| [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 💾 🦾 |
+| [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [pihole](apps/pihole) | [Pi-hole](https://pi-hole.net) · [source](https://github.com/pi-hole/docker-pi-hole) | app | 🌐 📈 🏠 💾 🦾 |
 | [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
 | [registry](apps/registry) | [Container registry](https://distribution.github.io/distribution/) · [source](https://github.com/distribution/distribution) | app | 🌐 📈 🐝 💾 🦾 |

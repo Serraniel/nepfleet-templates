@@ -9,7 +9,7 @@ metadata:
   homepage: https://n8n.io
   source: https://github.com/n8n-io/n8n
 spec:
-  version: 0.3.2
+  version: 0.3.3
   compose: compose.yaml
   botCheck: { service: n8n, port: 5678, allow: ["^/webhook/", "^/webhook-test/", "^/webhook-waiting/", "^/api/v1/"] }
   images:
@@ -17,7 +17,7 @@ spec:
       track: minor
     - name: postgres
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
