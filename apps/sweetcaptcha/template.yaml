@@ -9,14 +9,14 @@ metadata:
   homepage: https://github.com/Serraniel/SweetCaptcha
   source: https://github.com/Serraniel/SweetCaptcha
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: ghcr.io/serraniel/sweetcaptcha
       track: minor
     - name: valkey/valkey
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, metrics: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, metrics: true }
   inputs:
     - name: DOMAIN
       type: hostname

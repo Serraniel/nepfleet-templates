@@ -9,12 +9,12 @@ metadata:
   homepage: https://garagehq.deuxfleurs.fr
   source: https://git.deuxfleurs.fr/Deuxfleurs/garage
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: dxflrs/garage
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true, metrics: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true, backup: true, metrics: true }
   inputs:
     - name: DOMAIN
       type: hostname
