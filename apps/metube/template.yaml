@@ -8,7 +8,7 @@ metadata:
   category: media
   homepage: https://github.com/alexta69/metube
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   web: { service: metube, port: 8081 }   # also reachable on a LAN port (access mode port)
   images:
@@ -16,7 +16,7 @@ spec:
     # must stay current to keep working with the sites: follow every release.
     - name: ghcr.io/alexta69/metube
       track: major
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true }
   inputs:
     - name: DOMAIN
       type: hostname

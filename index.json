@@ -1382,7 +1382,7 @@
       "homepage": "https://actualbudget.org",
       "source": "https://github.com/actualbudget/actual",
       "path": "apps/actual",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "actualbudget/actual-server",
@@ -1390,7 +1390,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -1493,7 +1493,7 @@
       "homepage": "https://www.audiobookshelf.org",
       "source": "https://github.com/advplyr/audiobookshelf",
       "path": "apps/audiobookshelf",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "ghcr.io/advplyr/audiobookshelf",
@@ -1501,7 +1501,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2262,7 +2262,7 @@
       "category": "web",
       "homepage": "https://github.com/thedevs-network/kutt",
       "path": "apps/kutt",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "kutt/kutt",
@@ -2270,7 +2270,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2593,7 +2593,7 @@
       "category": "media",
       "homepage": "https://github.com/alexta69/metube",
       "path": "apps/metube",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/alexta69/metube",
@@ -2601,7 +2601,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2721,7 +2721,7 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "deluan/navidrome",
@@ -2729,7 +2729,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2780,7 +2780,7 @@
       "homepage": "https://ntfy.sh",
       "source": "https://github.com/binwiederhier/ntfy",
       "path": "apps/ntfy",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "images": [
         {
           "name": "binwiederhier/ntfy",
@@ -2788,7 +2788,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2977,7 +2977,7 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "images": [
         {
           "name": "opencloudeu/opencloud",
@@ -2989,7 +2989,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -3491,7 +3491,7 @@
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",
@@ -3499,7 +3499,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,

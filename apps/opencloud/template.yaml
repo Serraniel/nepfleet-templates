@@ -9,14 +9,14 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.4.0
+  version: 0.4.1
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud
       track: minor
     - name: ghcr.io/euro-office/documentserver
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   botCheck: { service: opencloud, port: 9200, allow: ["^/remote\\.php/", "^/dav/", "^/ocs/", "^/graph/", "^/status\\.php$", "^/\\.well-known/", "^/konnect/"] }
   inputs:
     - name: DOMAIN

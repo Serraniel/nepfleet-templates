@@ -9,14 +9,14 @@ metadata:
   homepage: https://www.stirlingpdf.com
   source: https://github.com/Stirling-Tools/Stirling-PDF
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: stirling-pdf, port: 8080 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
   images:
     - name: stirlingtools/stirling-pdf
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
