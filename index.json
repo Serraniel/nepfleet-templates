@@ -2104,7 +2104,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -2128,7 +2128,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2321,7 +2321,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2341,7 +2341,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -2542,7 +2542,7 @@
       "homepage": "https://mealie.io",
       "source": "https://github.com/mealie-recipes/mealie",
       "path": "apps/mealie",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "ghcr.io/mealie-recipes/mealie",
@@ -2550,7 +2550,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -3554,7 +3554,7 @@
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",
@@ -3570,7 +3570,7 @@
         }
       ],
       "supports": {
-        "swarm": false,
+        "swarm": true,
         "arm64": true,
         "ingress": true,
         "monitoring": true,

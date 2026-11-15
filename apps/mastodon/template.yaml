@@ -9,7 +9,7 @@ metadata:
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon
@@ -20,7 +20,7 @@ spec:
       track: patch
     - name: redis
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
   botCheck: { service: web, port: 3000, allow: ["^/api/", "^/oauth/", "^/\\.well-known/", "^/nodeinfo", "^/inbox$", "^/users/[^/]+/(inbox|outbox|followers|following|collections)", "^/system/", "^/health$"] }
   inputs:
     - name: DOMAIN
