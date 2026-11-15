@@ -9,14 +9,14 @@ metadata:
   homepage: https://ntfy.sh
   source: https://github.com/binwiederhier/ntfy
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: ntfy, port: 80 }   # also reachable on a LAN port (access mode port)
   botCheck: { supported: false }   # phone apps and scripts publish and subscribe on every path
   images:
     - name: binwiederhier/ntfy
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname

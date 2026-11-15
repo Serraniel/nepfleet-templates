@@ -9,14 +9,14 @@ metadata:
   homepage: https://www.navidrome.org
   source: https://github.com/navidrome/navidrome
 spec:
-  version: 0.3.0
+  version: 0.3.1
   compose: compose.yaml
   web: { service: navidrome, port: 4533 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/rest/", "^/ping"] }
   images:
     - name: deluan/navidrome
       track: patch   # pre-1.0
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
