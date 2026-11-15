@@ -1877,7 +1877,7 @@
       "homepage": "https://github.com/NousResearch/hermes-agent",
       "source": "https://github.com/NousResearch/hermes-agent",
       "path": "apps/hermes-agent",
-      "version": "0.1.1",
+      "version": "0.1.0",
       "images": [
         {
           "name": "nousresearch/hermes-agent",
@@ -1885,7 +1885,7 @@
         }
       ],
       "supports": {
-        "swarm": true,
+        "swarm": false,
         "arm64": false,
         "ingress": false,
         "monitoring": false,
