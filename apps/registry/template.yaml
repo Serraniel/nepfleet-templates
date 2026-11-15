@@ -9,8 +9,9 @@ metadata:
   homepage: https://distribution.github.io/distribution/
   source: https://github.com/distribution/distribution
 spec:
-  version: 0.3.0
+  version: 0.3.1
   compose: compose.yaml
+  botCheck: { service: registry, port: 5000, supported: false }   # an API, no web page
   images:
     - name: registry
       track: minor

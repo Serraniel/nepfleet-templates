@@ -1428,7 +1428,7 @@
       "homepage": "https://adguard.com/adguard-home",
       "source": "https://github.com/AdguardTeam/AdGuardHome",
       "path": "apps/adguard-home",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "adguard/adguardhome",
@@ -2453,7 +2453,7 @@
       "homepage": "https://matrix.org",
       "source": "https://github.com/element-hq/synapse",
       "path": "apps/matrix",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "matrixdotorg/synapse",
@@ -2654,7 +2654,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -2780,7 +2780,7 @@
       "homepage": "https://ntfy.sh",
       "source": "https://github.com/binwiederhier/ntfy",
       "path": "apps/ntfy",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "binwiederhier/ntfy",
@@ -3225,7 +3225,7 @@
       "homepage": "https://pi-hole.net",
       "source": "https://github.com/pi-hole/docker-pi-hole",
       "path": "apps/pihole",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "pihole/pihole",
@@ -3383,7 +3383,7 @@
       "homepage": "https://distribution.github.io/distribution/",
       "source": "https://github.com/distribution/distribution",
       "path": "apps/registry",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "registry",
@@ -3491,7 +3491,7 @@
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",
