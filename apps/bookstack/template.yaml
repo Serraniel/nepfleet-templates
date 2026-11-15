@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.bookstackapp.com
   source: https://github.com/BookStackApp/BookStack
 spec:
-  version: 0.4.0
+  version: 0.4.1
   compose: compose.yaml
   web: { service: bookstack, port: 80 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
@@ -18,7 +18,7 @@ spec:
       track: minor
     - name: mariadb
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
