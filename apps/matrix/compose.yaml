@@ -32,7 +32,7 @@ services:
       homepage.href: https://${ELEMENT_DOMAIN}
 
   element:
-    image: vectorim/element-web:v1.12.33
+    image: vectorim/element-web:v1.12.35
     restart: unless-stopped
     volumes:
       - ./config/element.json:/app/config.json:ro

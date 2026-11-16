@@ -1,6 +1,6 @@
 services:
   agent:
-    image: henrygd/beszel-agent:0.21.1
+    image: henrygd/beszel-agent:0.21.2
     restart: unless-stopped
     environment:
       # The agent connects out to the hub, so it listens on no port.

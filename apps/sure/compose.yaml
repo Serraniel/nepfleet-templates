@@ -99,7 +99,7 @@ services:
   db:
     # Postgres 16 as upstream uses, with pgvector for Sure's optional
     # document search, so turning it on later needs no move to another image.
-    image: pgvector/pgvector:0.8.1-pg16
+    image: pgvector/pgvector:0.8.7-pg16
     restart: unless-stopped
     environment:
       POSTGRES_USER: sure
