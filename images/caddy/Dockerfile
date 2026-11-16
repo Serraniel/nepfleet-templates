@@ -2,7 +2,7 @@
 # Caddy with Docker label support, DNS-01 providers and DNS record updates
 # (caddy-dynamicdns), used by system/caddy.
 # Base images are pinned by digest; Dependabot bumps both tag and digest together.
-FROM caddy:2.11.9-builder@sha256:3fddbec729442a56b942d4c9eaef1df80893dbf2cf5b86701bfae6aad1408eeb AS build
+FROM caddy:2.11.9-builder@sha256:345264d8c6b50f44f4a4d507d4e6b6bcae40eef2f210d70f76e717fd8cc31baf AS build
 # caddy-dynamicdns at a pinned commit, patched: its dynamic_domains looks for
 # host matchers as values, but Caddy stores them as pointers, so it never found
 # a site. Drop that patch once upstream accepts both. NepFleet's own patch: it
