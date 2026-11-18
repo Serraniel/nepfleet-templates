@@ -9,10 +9,9 @@ metadata:
   homepage: https://rclone.org
   source: https://github.com/rclone/rclone
 spec:
-  version: 0.2.1
+  version: 0.2.0
   compose: compose.yaml
   web: { service: rclone, port: 5572 }   # also reachable on a LAN port (access mode port)
-  botCheck: { allow: ["^/(rc|core|operations|sync|config|job|options|vfs|mount|backend|cache|debug|fscache|serve|pluginsdk)/"] }   # rclone rc --url: commands are POSTs at the root
   images:
     - name: rclone/rclone
       track: minor

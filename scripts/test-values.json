@@ -87,8 +87,7 @@
     "open-webui": "/api/config",
     "sure": "/api/v1/accounts",
     "owncast": "/hls/",
-    "metube": "/add",
-    "rclone": "/core/version"
+    "metube": "/add"
   },
   "_ci_only": {
     "fail2ban": "changes the host's firewall: never on a developer's machine"
