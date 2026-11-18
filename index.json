@@ -2715,7 +2715,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "images": [
         {
           "name": "n8nio/n8n",
