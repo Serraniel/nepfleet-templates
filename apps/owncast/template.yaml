@@ -9,9 +9,10 @@ metadata:
   homepage: https://owncast.online
   source: https://github.com/owncast/owncast
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: owncast, port: 8080 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/hls/", "^/embed/", "^/api/integrations/", "^/api/v1/instance$", "^/\\.well-known/", "^/nodeinfo/", "^/federation/"] }   # players, embeds, bots with tokens, the fediverse
   images:
     - name: owncast/owncast
       track: patch
