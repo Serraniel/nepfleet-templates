@@ -3309,6 +3309,67 @@
       "migrations": []
     },
     {
+      "name": "rabbitmq",
+      "title": "RabbitMQ",
+      "description": "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the generated ADMIN_PASSWORD: sops decrypt stacks/rabbitmq/values.secret.yaml). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_PUBLISH to 0.0.0.0:5672.",
+      "tier": "app",
+      "category": "development",
+      "homepage": "https://www.rabbitmq.com",
+      "source": "https://github.com/rabbitmq/rabbitmq-server",
+      "path": "apps/rabbitmq",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "rabbitmq",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": true,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": true
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "AMQP_PUBLISH",
+          "type": "string",
+          "title": "Where AMQP (5672) is published on the host",
+          "description": "127.0.0.1:5672 keeps it to this host (and the ingress network); 0.0.0.0:5672 opens it to the LAN, where clients need the admin or their own credentials.",
+          "default": "127.0.0.1:5672",
+          "pattern": "^[0-9.]+:[0-9]{1,5}$"
+        }
+      ],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD",
+          "kind": "secret",
+          "length": 24,
+          "encoding": "alnum"
+        }
+      ],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "rclone",
       "title": "rclone",
       "description": "Remote-control daemon with the web GUI for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes live in rclone.conf, which is stored encrypted in the fleet repository.",
