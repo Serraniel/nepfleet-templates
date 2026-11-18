@@ -162,8 +162,12 @@ def check(strict):
                     cur = tuple(int(x) for x in m["num"].split("."))
                     # Fewer components than the pinned tag means another scheme
                     # (e.g. Jellyfin's 2026110213 date tags next to 10.11.11).
+                    # Compared at the pinned tag's own precision: a floating
+                    # tag (postgres:18) already follows 18.7, which comes as a
+                    # rebuilt digest, not as an update to make.
                     newer = [v for t in list_tags(ref)
-                             if (v := version_of(t, m["prefix"], m["suffix"])) and len(v) >= len(cur)]
+                             if (v := version_of(t, m["prefix"], m["suffix"])) and len(v) >= len(cur)
+                             and v[:len(cur)] > cur]
                     if newer:
                         latest = max(newer)
                         entry["latest"] = m["prefix"] + ".".join(map(str, latest)) + m["suffix"]
