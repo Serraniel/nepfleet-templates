@@ -1,0 +1,28 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: openbao
+  title: OpenBao
+  description: "A secrets manager with Vault's API, for apps that read their secrets from Vault (NepFleet itself doesn't need it: its secrets are SOPS files). After the first start, initialise it yourself: docker exec -it <stack>-openbao-1 bao operator init. Its output (unseal keys and root token) is the root of everything: keep it off this host and out of the fleet repository; NepFleet never sees or stores it. OpenBao starts sealed after every restart: unseal it with bao operator unseal (or the UI). Its Uptime Kuma monitor is down while it is sealed."
+  tier: app
+  category: security
+  homepage: https://openbao.org
+  source: https://github.com/openbao/openbao
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: openbao, port: 8200 }   # the UI at /ui and the API; also reachable on a LAN port (access mode port)
+  botCheck: { allow: ["^/v1/"] }   # the API, used by apps and the bao CLI
+  images:
+    - name: openbao/openbao
+      track: minor
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+  files:
+    - { src: files/openbao.hcl, dest: openbao.hcl }
+  volumes:
+    - { name: data, backup: true }   # the Raft storage, encrypted by OpenBao itself

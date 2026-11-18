@@ -2984,6 +2984,52 @@
       "migrations": []
     },
     {
+      "name": "openbao",
+      "title": "OpenBao",
+      "description": "A secrets manager with Vault's API, for apps that read their secrets from Vault (NepFleet itself doesn't need it: its secrets are SOPS files). After the first start, initialise it yourself: docker exec -it <stack>-openbao-1 bao operator init. Its output (unseal keys and root token) is the root of everything: keep it off this host and out of the fleet repository; NepFleet never sees or stores it. OpenBao starts sealed after every restart: unseal it with bao operator unseal (or the UI). Its Uptime Kuma monitor is down while it is sealed.",
+      "tier": "app",
+      "category": "security",
+      "homepage": "https://openbao.org",
+      "source": "https://github.com/openbao/openbao",
+      "path": "apps/openbao",
+      "version": "0.1.0",
+      "images": [
+        {
+          "name": "openbao/openbao",
+          "track": "minor"
+        }
+      ],
+      "supports": {
+        "swarm": false,
+        "arm64": true,
+        "ingress": true,
+        "monitoring": true,
+        "statusPage": false,
+        "dashboard": true,
+        "logs": true,
+        "autoUpdate": true,
+        "backup": true,
+        "sso": false,
+        "metrics": false
+      },
+      "inputs": [
+        {
+          "name": "DOMAIN",
+          "type": "hostname",
+          "title": "Domain",
+          "required": true
+        }
+      ],
+      "generate": [],
+      "volumes": [
+        {
+          "name": "data",
+          "backup": true
+        }
+      ],
+      "migrations": []
+    },
+    {
       "name": "openclaw",
       "title": "OpenClaw",
       "description": "AI assistant gateway for messaging apps. It runs tools for whoever can message it, so think hard before connecting personal accounts, and consider egress mode enforce. Set it up with: docker compose exec openclaw node dist/index.js onboard. Not published on the network.",
