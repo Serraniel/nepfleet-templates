@@ -9,6 +9,9 @@
   "frps": {
     "BIND_ADDR": "127.0.0.1"
   },
+  "imgproxy": {
+    "ALLOWED_SOURCES": "https://images.example.test/"
+  },
   "neptide": {
     "DOCKER_GID": "{docker_gid}",
     "MONITOR_ONLY": "true"

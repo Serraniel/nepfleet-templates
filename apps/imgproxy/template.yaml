@@ -1,0 +1,33 @@
+apiVersion: nepfleet/v1alpha1
+kind: Template
+metadata:
+  name: imgproxy
+  title: imgproxy
+  description: "Resizes and converts images on the fly, for apps that support it. Only signed URLs work (key and salt are generated: sops decrypt stacks/imgproxy/values.secret.yaml for the app's settings), and only images from ALLOWED_SOURCES, so it is no open proxy. Apps on this host reach it at imgproxy:8080 on the ingress network; the domain serves it to browsers."
+  tier: app
+  category: media
+  homepage: https://imgproxy.net
+  source: https://github.com/imgproxy/imgproxy
+spec:
+  version: 0.1.0
+  compose: compose.yaml
+  web: { service: imgproxy, port: 8080 }   # also reachable on a LAN port (access mode port)
+  botCheck: { supported: false }   # image URLs for <img> tags: a browser can't solve a check for each
+  images:
+    - name: darthsim/imgproxy
+      track: minor
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, logs: true, autoUpdate: true }
+  inputs:
+    - name: DOMAIN
+      type: hostname
+      title: Domain
+      required: true
+    - name: ALLOWED_SOURCES
+      type: string
+      title: Where images may come from, as URL prefixes separated by commas
+      description: "For example http://garage:3900/images/ for a Garage bucket on this host, or https://media.example.org/. Anything else is refused."
+      required: true
+  generate:
+    # imgproxy takes hex: 32 bytes each.
+    - { name: KEY, kind: secret, length: 64, encoding: hex }
+    - { name: SALT, kind: secret, length: 64, encoding: hex }
