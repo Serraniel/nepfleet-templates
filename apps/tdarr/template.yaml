@@ -9,9 +9,10 @@ metadata:
   homepage: https://home.tdarr.io
   source: https://github.com/HaveAGitGat/Tdarr
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: tdarr, port: 8265 }   # also reachable on a LAN port (access mode port)
+  botCheck: { allow: [] }   # nodes reach the server on 8266, not through the web UI
   images:
     - name: ghcr.io/haveagitgat/tdarr
       track: minor

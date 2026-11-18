@@ -9,9 +9,10 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.1.2
+  version: 0.1.3
   compose: compose.yaml
   web: { service: web, port: 3000 }
+  botCheck: { allow: ["^/api/", "^/oauth/"] }   # the mobile app and API keys
   images:
     - name: ghcr.io/we-promise/sure
       track: patch # pre-1.0, with migrations in most releases
