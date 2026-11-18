@@ -1,6 +1,6 @@
 services:
   pihole:
-    image: pihole/pihole:2026.10.1
+    image: pihole/pihole:2026.11.0
     restart: unless-stopped
     # The image's own health check asks its DNS server.
     environment:
