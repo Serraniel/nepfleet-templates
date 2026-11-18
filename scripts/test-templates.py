@@ -164,6 +164,7 @@ def deploy(nf, names):
                 print(logs.stdout + logs.stderr)
             else:
                 try:
+                    check_stays_up(name)
                     check_metrics(name)
                     check_bot_check(name)
                     if name in AFTER_DEPLOY:
@@ -354,6 +355,26 @@ def check_dozzle():
     finally:
         for c in (recv, emitter):
             run("docker", "rm", "-f", c, check=False)
+
+
+def check_stays_up(name, settle=10):
+    """A container without a healthcheck counts as healthy while it runs, even
+    in a restart loop (rclone 1.76 refusing its flags did that). After a short
+    wait, none may have restarted, be restarting, or have exited with an error;
+    one-shot jobs that finished with 0 are fine."""
+    time.sleep(settle)
+    ids = run("docker", "ps", "-aq", "--filter", f"label=com.docker.compose.project={stack_name(name)}").stdout.split()
+    bad = []
+    for cid in ids:
+        out = run("docker", "inspect", "-f",
+                  "{{.Name}} {{.RestartCount}} {{.State.Status}} {{.State.ExitCode}}", cid).stdout.split()
+        cname, restarts, status, code = out[0].lstrip("/"), int(out[1]), out[2], int(out[3])
+        if restarts > 0 or status == "restarting" or (status == "exited" and code != 0):
+            logs = run("docker", "logs", "--tail", "20", cid, check=False)
+            bad.append(f"{cname}: {status}, exit code {code}, {restarts} restart(s)\n{logs.stdout}{logs.stderr}")
+    if bad:
+        raise SystemExit(f"{name}: containers don't stay up:\n" + "\n".join(bad))
+    print(f"ok   {name} stays up ({len(ids)} containers)")
 
 
 def check_metrics(name):
