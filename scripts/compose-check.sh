@@ -11,7 +11,7 @@ for dir in system/*/ apps/*/; do
   for v in $(grep -oE '\$\{[A-Z_][A-Z0-9_]*' "$dir/compose.yaml" | cut -c3- | sort -u); do
     case $v in
       *PORT) val=1234 ;;
-      BIND_ADDR) val=127.0.0.1 ;;
+      BIND_ADDR|*_BIND) val=127.0.0.1 ;;
       *PATH) val=/tmp ;;
       *) val=placeholder ;;
     esac

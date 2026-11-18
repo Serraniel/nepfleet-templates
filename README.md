@@ -62,7 +62,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [pihole](apps/pihole) | [Pi-hole](https://pi-hole.net) · [source](https://github.com/pi-hole/docker-pi-hole) | app | 🌐 📈 🏠 💾 🦾 |
-| [rabbitmq](apps/rabbitmq) | [RabbitMQ](https://www.rabbitmq.com) · [source](https://github.com/rabbitmq/rabbitmq-server) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [rabbitmq](apps/rabbitmq) | [RabbitMQ](https://www.rabbitmq.com) · [source](https://github.com/rabbitmq/rabbitmq-server) | app | 🌐 📈 🏠 💾 🦾 |
 | [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
 | [registry](apps/registry) | [Container registry](https://distribution.github.io/distribution/) · [source](https://github.com/distribution/distribution) | app | 🌐 📈 🐝 💾 🦾 |
 | [sendan](apps/sendan) | [Sendan](https://github.com/Serraniel/sendan) | app | 🌐 📈 🏠 💾 🦾 |

@@ -12,7 +12,7 @@ services:
     volumes:
       - data:/var/lib/rabbitmq
     ports:
-      - "${AMQP_PUBLISH}:5672"
+      - "${AMQP_BIND}:${AMQP_PORT}:5672"
     networks:
       ingress:
         aliases: [rabbitmq]

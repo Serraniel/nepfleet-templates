@@ -3311,7 +3311,7 @@
     {
       "name": "rabbitmq",
       "title": "RabbitMQ",
-      "description": "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the generated ADMIN_PASSWORD: sops decrypt stacks/rabbitmq/values.secret.yaml). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_PUBLISH to 0.0.0.0:5672.",
+      "description": "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the generated ADMIN_PASSWORD: sops decrypt stacks/rabbitmq/values.secret.yaml). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_BIND to 0.0.0.0. Not for Swarm yet: swarm publishes ports on every address, so the loopback default can't hold there.",
       "tier": "app",
       "category": "development",
       "homepage": "https://www.rabbitmq.com",
@@ -3325,7 +3325,7 @@
         }
       ],
       "supports": {
-        "swarm": true,
+        "swarm": false,
         "arm64": true,
         "ingress": true,
         "monitoring": true,
@@ -3345,12 +3345,20 @@
           "required": true
         },
         {
-          "name": "AMQP_PUBLISH",
+          "name": "AMQP_BIND",
           "type": "string",
-          "title": "Where AMQP (5672) is published on the host",
-          "description": "127.0.0.1:5672 keeps it to this host (and the ingress network); 0.0.0.0:5672 opens it to the LAN, where clients need the admin or their own credentials.",
-          "default": "127.0.0.1:5672",
-          "pattern": "^[0-9.]+:[0-9]{1,5}$"
+          "title": "Address AMQP is published on (127.0.0.1 = this host only; 0.0.0.0 = the LAN too)",
+          "description": "Services on the ingress network reach it at rabbitmq:5672 either way. On the LAN, clients need the admin or their own credentials.",
+          "required": true,
+          "default": "127.0.0.1",
+          "pattern": "^[0-9]{1,3}(\\.[0-9]{1,3}){3}$"
+        },
+        {
+          "name": "AMQP_PORT",
+          "type": "int",
+          "title": "Host port for AMQP",
+          "required": true,
+          "default": "5672"
         }
       ],
       "generate": [
