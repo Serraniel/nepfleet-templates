@@ -1,0 +1,42 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4.4.1-management-alpine
+    restart: unless-stopped
+    # RabbitMQ keeps its data under a node name made from the hostname: a
+    # fixed one, so a recreated container finds its queues again.
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: ${ADMIN_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - data:/var/lib/rabbitmq
+    ports:
+      - "${AMQP_BIND}:${AMQP_PORT}:5672"
+    networks:
+      ingress:
+        aliases: [rabbitmq]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # a consistent copy of its message store
+      nepfleet.metrics.port: "15692"   # the built-in Prometheus plugin
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 15672}}"
+      kuma.rabbitmq.http.name: RabbitMQ
+      kuma.rabbitmq.http.url: ${NEPFLEET_URL}
+      homepage.group: Infrastructure
+      homepage.name: RabbitMQ
+      homepage.icon: rabbitmq.svg
+      homepage.href: ${NEPFLEET_URL}
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
