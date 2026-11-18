@@ -2,26 +2,42 @@ services:
   rclone:
     image: rclone/rclone:1.76
     restart: unless-stopped
+    # rclone 1.76 serves the web GUI with `rclone gui`, as two servers: the GUI
+    # (5580) and the remote-control API (5572), which the browser calls. Caddy
+    # puts the API under /rc/ on the same domain, so both are one origin.
+    # -q: the GUI logs its login URL with the password otherwise.
     command:
-      - rcd
-      - --rc-web-gui
-      - --rc-web-gui-no-open-browser
-      - --rc-addr=:5572
-      - --rc-user=${RC_USER}
-      - --rc-pass=${RC_PASSWORD}
+      - gui
+      - -q
+      - --no-open-browser
+      - --addr=:5580
+      - --api-addr=:5572
+      - --rc-baseurl=/rc
+      - --user=${RC_USER}
+      - --pass=${RC_PASSWORD}
     volumes:
       - config:/config/rclone
       - ${DATA_PATH}:/data
     networks: [ingress]
+    healthcheck:
+      # The GUI answers, and the API does too (asking for credentials).
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:5580/ && wget -S -O /dev/null --post-data '' http://127.0.0.1:5572/rc/core/version 2>&1 | grep -q 'HTTP/1.1 401'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     labels:
       caddy: ${DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 5572}}"
+      caddy.handle_0: /rc/*
+      caddy.handle_0.reverse_proxy: "{{upstreams 5572}}"
+      caddy.handle_1.reverse_proxy: "{{upstreams 5580}}"
       kuma.rclone.http.name: rclone
       kuma.rclone.http.url: ${NEPFLEET_URL}
       homepage.group: Storage
       homepage.name: rclone
       homepage.icon: rclone.svg
-      homepage.href: ${NEPFLEET_URL}
+      # The login page needs to be told where the API is.
+      homepage.href: ${NEPFLEET_URL}/login?url=${NEPFLEET_URL}/rc/
 
 volumes:
   config:
