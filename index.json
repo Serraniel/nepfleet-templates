@@ -3620,7 +3620,7 @@
       "category": "files",
       "homepage": "https://github.com/Serraniel/sendan",
       "path": "apps/sendan",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/serraniel/sendan",
