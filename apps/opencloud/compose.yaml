@@ -1,6 +1,6 @@
 services:
   opencloud:
-    image: opencloudeu/opencloud:7.2.4
+    image: opencloudeu/opencloud:7.2.5
     restart: unless-stopped
     # init only writes a config on first start; later starts skip it.
     entrypoint: ["/bin/sh", "-c", "opencloud init || true; exec opencloud server"]
@@ -40,7 +40,7 @@ services:
   # Opens and edits Office documents in the browser. Big, so only with the office
   # profile. No extra privileges, unlike Collabora.
   euro-office:
-    image: ghcr.io/euro-office/documentserver:v9.3.7
+    image: ghcr.io/euro-office/documentserver:v9.3.8
     profiles: [office]
     restart: unless-stopped
     environment:
