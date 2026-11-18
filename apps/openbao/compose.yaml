@@ -1,0 +1,39 @@
+services:
+  openbao:
+    image: openbao/openbao:2.7.2
+    restart: unless-stopped
+    command: ["server", "-config=/etc/openbao/openbao.hcl"]
+    environment:
+      SKIP_SETCAP: "true"   # no mlock (disable_mlock): no IPC_LOCK needed
+      TZ: ${TZ}
+    volumes:
+      - ./openbao.hcl:/etc/openbao/openbao.hcl:ro
+      - data:/openbao/file
+    networks:
+      ingress:
+        aliases: [openbao]
+    # Healthy when it answers, sealed or not: a fresh or restarted OpenBao
+    # is sealed until someone unseals it. Kuma's monitor below does report
+    # it while sealed.
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:8200/v1/sys/health?sealedcode=200&uninitcode=200&standbyok=true"]
+      interval: 30s
+      start_period: 15s
+    labels:
+      docker-volume-backup.stop-during-backup: "true"   # a consistent copy of its Raft storage
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8200}}"
+      kuma.openbao.http.name: OpenBao (down while sealed)
+      kuma.openbao.http.url: ${NEPFLEET_URL}/v1/sys/health
+      homepage.group: Infrastructure
+      homepage.name: OpenBao
+      homepage.icon: openbao.svg
+      homepage.href: ${NEPFLEET_URL}/ui/
+
+volumes:
+  data:
+
+networks:
+  ingress:
+    name: ${NEPFLEET_INGRESS_NETWORK}
+    external: true
