@@ -1,6 +1,6 @@
 services:
   sendan:
-    image: ghcr.io/serraniel/sendan:0.3.5
+    image: ghcr.io/serraniel/sendan:0.4.0
     restart: unless-stopped
     read_only: true
     environment:
