@@ -91,7 +91,7 @@ services:
       kuma.immich-database.docker.parent_name: immich-stack
 
   power-tools:
-    image: ghcr.io/immich-power-tools/immich-power-tools:0.25.0
+    image: ghcr.io/immich-power-tools/immich-power-tools:v0.26.0
     profiles: [power-tools]
     restart: unless-stopped
     environment:
