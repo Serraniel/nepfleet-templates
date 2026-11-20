@@ -1,6 +1,6 @@
 services:
   loki:
-    image: grafana/loki:3.7.9
+    image: grafana/loki:3.7.10
     restart: unless-stopped
     command: ["-config.file=/etc/loki/loki.yaml"]
     volumes:
@@ -32,7 +32,7 @@ services:
 
   # Read-only API: container and network lists, logs and events. No starting, stopping or exec.
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    image: lscr.io/linuxserver/socket-proxy:3.4.8
     restart: unless-stopped
     read_only: true
     tmpfs: [/run]
