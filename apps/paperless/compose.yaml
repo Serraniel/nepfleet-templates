@@ -1,6 +1,6 @@
 services:
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:3.4
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.5
     restart: unless-stopped
     environment:
       PAPERLESS_URL: ${NEPFLEET_URL}
