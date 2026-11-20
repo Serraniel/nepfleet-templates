@@ -6,7 +6,7 @@ x-db: &db
 
 services:
   immich-server:
-    image: ghcr.io/immich-app/immich-server:v3.4.1
+    image: ghcr.io/immich-app/immich-server:v3.4.2
     restart: unless-stopped
     environment:
       <<: *db
@@ -14,6 +14,10 @@ services:
       TZ: ${TZ}
       # Prometheus metrics on 8081, a port Caddy doesn't publish.
       IMMICH_TELEMETRY_INCLUDE: all
+      # Since 3.4.2 the metrics listen on IMMICH_HOST, default "::", and then
+      # answer every request with 400 (the exporter builds an invalid URL
+      # from an unbracketed IPv6 host). The ingress networks are IPv4.
+      IMMICH_HOST: 0.0.0.0
     volumes:
       - ${UPLOAD_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
