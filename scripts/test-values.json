@@ -57,7 +57,8 @@
   },
   "sure": {
     "OIDC_ISSUER": "https://accounts.google.com",
-    "OIDC_CLIENT_ID": "ci-sure"
+    "OIDC_CLIENT_ID": "ci-sure",
+    "ADMIN_PASSWORD": "ci-sure-admin-password"
   },
   "opencloud": {
     "COMPOSE_PROFILES": "office",

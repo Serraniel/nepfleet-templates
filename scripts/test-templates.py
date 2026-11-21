@@ -17,6 +17,7 @@ them per template where a type alone is not enough.
 """
 import json
 import os
+import re
 import secrets
 import shutil
 import subprocess
@@ -298,8 +299,9 @@ def check_immich():
 
 
 def check_sure():
-    """The worker processes jobs, the sign-up page renders for the stack's
-    domain, and no usage data goes to Sure's PostHog project."""
+    """The worker processes jobs, sign-up is closed, the admin from the inputs
+    signs in (and setup does nothing on a second run), and no usage data goes
+    to Sure's PostHog project."""
     c = stack_name("sure")
     state = run("docker", "inspect", "--format", "{{.State.Status}} {{.RestartCount}}", f"{c}-worker-1").stdout.split()
     # A running Sidekiq registers itself in Redis (database 1, REDIS_URL).
@@ -313,10 +315,42 @@ def check_sure():
         logs = run("docker", "logs", "--tail", "40", f"{c}-worker-1", check=False)
         raise SystemExit(f"sure: the worker isn't processing jobs ({state}):\n{logs.stdout}{logs.stderr}")
     domain = run("docker", "exec", f"{c}-web-1", "printenv", "APP_DOMAIN").stdout.strip()
-    code = run("docker", "exec", f"{c}-web-1", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
-               "-H", f"Host: {domain}", "-H", "X-Forwarded-Proto: https", "http://localhost:3000/registration/new").stdout
-    if code != "200":
-        raise SystemExit(f"sure: the sign-up page answered {code}")
+
+    def get(path, *args):
+        """Status, Location, cookie and body of a request to web for its domain.
+        Sure's cookies are Secure, which curl won't keep over plain http, so
+        the session cookie is carried by hand."""
+        out = run("docker", "exec", f"{c}-web-1", "curl", "-s", "-D", "-", "-H", f"Host: {domain}",
+                  "-H", "X-Forwarded-Proto: https", *args, "http://localhost:3000" + path).stdout
+        # run() reads text, which turns the headers' \r\n into \n.
+        head, _, body = out.replace("\r\n", "\n").partition("\n\n")
+        lines = head.split("\n")
+        hdr, cookies = {}, []
+        for line in lines[1:]:
+            k, _, v = line.partition(":")
+            k, v = k.strip().lower(), v.strip()
+            hdr.setdefault(k, v)
+            if k == "set-cookie":
+                cookies.append(v.split(";")[0])
+        return lines[0].split(" ")[1], hdr.get("location", ""), "; ".join(cookies), body
+
+    code, loc, _, _ = get("/registration/new")
+    if code != "302" or not loc.endswith("/sessions/new"):
+        raise SystemExit(f"sure: sign-up is open (registration answered {code} {loc})")
+    _, _, cookie, body = get("/sessions/new")
+    m = re.search(r'name="authenticity_token" value="([^"]+)"', body)
+    if not m:
+        raise SystemExit("sure: no sign-in form")
+    code, loc, cookie, _ = get("/sessions", "-H", f"Cookie: {cookie}", "--data-urlencode", f"authenticity_token={m.group(1)}",
+                               "--data-urlencode", "email=admin@example.test",
+                               "--data-urlencode", f"password={OVERRIDES['sure']['ADMIN_PASSWORD']}")
+    # Signed in, Sure sends a new user to its profile questions, not to sign-in.
+    code2, loc2, _, _ = get("/", "-H", f"Cookie: {cookie}")
+    if code != "302" or code2 != "302" or not loc2.endswith("/onboarding"):
+        raise SystemExit(f"sure: the admin can't sign in (sign-in {code} {loc}, then / {code2} {loc2})")
+    again = run("docker", "start", "-a", f"{c}-setup-1", check=False)
+    if again.returncode != 0 or "no admin created" not in again.stdout:
+        raise SystemExit(f"sure: setup isn't idempotent:\n{again.stdout}{again.stderr}")
     if run("docker", "exec", f"{c}-web-1", "printenv", "POSTHOG_FEEDBACK_ENABLED").stdout.strip() != "false":
         raise SystemExit("sure: shared PostHog feedback is on")
 
