@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: tdarr
   title: Tdarr
-  description: "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts (the tdarr-node template) connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding."
+  description: "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts (the tdarr-node template) connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the API_KEY you set, and give remote nodes the same key. Pick a GPU for hardware transcoding."
   tier: app
   category: media
   homepage: https://home.tdarr.io
   source: https://github.com/HaveAGitGat/Tdarr
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: tdarr, port: 8265 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: [] }   # nodes reach the server on 8266, not through the web UI
@@ -50,10 +50,13 @@ spec:
       type: gpu
       title: Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)
       default: none
+    - name: API_KEY
+      type: secret
+      title: API key (also the admin login)
+      description: "Log in as admin with tapi_ followed by this key, and give remote nodes (tdarr-node) the same key. Kept encrypted in the fleet. At least 16 characters."
+      required: true
   hardware:
     - { input: GPU, services: [tdarr] }
-  generate:
-    - { name: API_KEY, kind: secret, length: 32, encoding: alnum }
   volumes:
     - { name: server, backup: true }
     - { name: configs, backup: true }

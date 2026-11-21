@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: rclone
   title: rclone
-  description: rclone with its web GUI, for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes live in rclone.conf, which is stored encrypted in the fleet repository. Sign in at https://DOMAIN/login?url=https://DOMAIN/rc/ (the dashboard tile links there); scripts use rclone rc --url https://DOMAIN/rc/.
+  description: rclone with its web GUI, for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes are set up in the GUI and kept in the config volume. Sign in at https://DOMAIN/login?url=https://DOMAIN/rc/ (the dashboard tile links there); scripts use rclone rc --url https://DOMAIN/rc/.
   tier: app
   category: storage
   homepage: https://rclone.org
   source: https://github.com/rclone/rclone
 spec:
-  version: 0.3.0
+  version: 0.3.1
   compose: compose.yaml
   # No spec.web: the GUI calls its API on a second port, so a LAN port alone
   # would not work. The bot check needs one plain route; this has two.
@@ -32,7 +32,10 @@ spec:
       type: path
       title: Host folder rclone may read and write
       required: true
-  generate:
-    - { name: RC_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    - name: RC_PASSWORD
+      type: secret
+      title: Web GUI password
+      description: "You sign in to the GUI (as RC_USER) and to the rc API with it. Kept encrypted in the fleet."
+      required: true
   volumes:
     - { name: config, backup: true }

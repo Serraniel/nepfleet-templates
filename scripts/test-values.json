@@ -10,7 +10,9 @@
     "BIND_ADDR": "127.0.0.1"
   },
   "imgproxy": {
-    "ALLOWED_SOURCES": "https://images.example.test/"
+    "ALLOWED_SOURCES": "https://images.example.test/",
+    "KEY": "4523a818b6e894b4a3ec9f17f73ec1131d311cc07de6c6f9cd5257f4bffcbc66",
+    "SALT": "8830957402f798fa1edd0d623c591ea1ec13a425420126859f87e7971b4dde70"
   },
   "neptide": {
     "DOCKER_GID": "{docker_gid}",
@@ -68,6 +70,10 @@
   "adguard-home": {
     "DNS_PORT": "15354",
     "BIND_ADDR": "127.0.0.1"
+  },
+  "garage": {
+    "ACCESS_KEY_ID": "c083b3457c14d3ccbfa9d35698b3241c",
+    "SECRET_ACCESS_KEY": "9186fc0c72a12d0bc6bd32f5db39f5d7edf5aab8336268f0755d6bfbff9d2d41"
   },
   "_bot_check": {
     "immich": "/api/server/ping",

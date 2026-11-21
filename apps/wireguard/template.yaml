@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: wireguard
   title: WireGuard (wg-easy)
-  description: "Your own VPN into the home network: phones and laptops connect from anywhere and reach home services as if they were there. Forward VPN_PORT (UDP) on the router to this host. The web UI creates client configs and QR codes; sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/wireguard/values.secret.yaml)."
+  description: "Your own VPN into the home network: phones and laptops connect from anywhere and reach home services as if they were there. Forward VPN_PORT (UDP) on the router to this host. The web UI creates client configs and QR codes; sign in as admin with the password you set (ADMIN_PASSWORD)."
   tier: app
   category: networking
   homepage: https://wg-easy.github.io/wg-easy/
   source: https://github.com/wg-easy/wg-easy
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   images:
     - name: ghcr.io/wg-easy/wg-easy
@@ -35,9 +35,10 @@ spec:
       default: "1.1.1.1,9.9.9.9"
       required: true
       pattern: '^[0-9a-fA-F.:]+(,[0-9a-fA-F.:]+)*$'
-  generate:
-    # Set on the first start (wg-easy's unattended setup), so the setup
-    # screen is never open.
-    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "You sign in to the web UI as admin with it; set on the first start, so the setup screen is never open. Kept encrypted in the fleet."
+      required: true
   volumes:
     - { name: data, backup: true }   # server keys, clients, settings

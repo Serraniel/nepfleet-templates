@@ -9,7 +9,7 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.4.1
+  version: 0.4.2
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud
@@ -31,8 +31,12 @@ spec:
     - name: OFFICE_DOMAIN
       type: hostname
       title: Domain for editing Office documents (Euro-Office); empty for none
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "You sign in as admin with it. Kept encrypted in the fleet. OpenCloud takes it on its first start; change it later in OpenCloud."
+      required: true
   generate:
-    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
     - { name: OFFICE_JWT_SECRET, kind: secret, length: 48, encoding: alnum }
   files:
     - { src: files/app-registry.yaml, dest: app-registry.yaml }

@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: rabbitmq
   title: RabbitMQ
-  description: "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the generated ADMIN_PASSWORD: sops decrypt stacks/rabbitmq/values.secret.yaml). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_BIND to 0.0.0.0. Not for Swarm yet: swarm publishes ports on every address, so the loopback default can't hold there."
+  description: "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the password you set, ADMIN_PASSWORD). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_BIND to 0.0.0.0. Not for Swarm yet: swarm publishes ports on every address, so the loopback default can't hold there."
   tier: app
   category: development
   homepage: https://www.rabbitmq.com
   source: https://github.com/rabbitmq/rabbitmq-server
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   web: { service: rabbitmq, port: 15672 }   # the management UI; also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }   # the management HTTP API, used by tools with credentials
@@ -34,7 +34,10 @@ spec:
       title: Host port for AMQP
       default: "5672"
       required: true
-  generate:
-    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "You sign in to the management UI as admin with it. Kept encrypted in the fleet. RabbitMQ takes it on its first start; change it later in RabbitMQ."
+      required: true
   volumes:
     - { name: data, backup: true }   # queues, messages, users
