@@ -2688,13 +2688,13 @@
     {
       "name": "mastodon",
       "title": "Mastodon",
-      "description": "Fediverse server. The domain becomes part of every account's name and can never change after the first start. Sign-ups need mail, so set SMTP. For push notifications, make keys with: docker compose exec web bundle exec rails mastodon:webpush:generate_vapid_key.",
+      "description": "Fediverse server. The domain becomes part of every account's name and can never change after the first start. The owner account comes from the inputs and sign-ups start closed; to open them, set SMTP. Push notification keys are made on the first start.",
       "tier": "app",
       "category": "social",
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2706,7 +2706,7 @@
         },
         {
           "name": "postgres",
-          "track": "patch"
+          "track": "minor"
         },
         {
           "name": "redis",
@@ -2721,7 +2721,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -2731,6 +2731,27 @@
           "name": "DOMAIN",
           "type": "hostname",
           "title": "Domain (can never change after the first start)",
+          "required": true
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Owner username",
+          "description": "The owner account, created before Mastodon first starts, so the instance never waits for someone to claim it. Letters, digits and underscores; not a name Mastodon reserves for staff, such as admin, owner or root. Sign in with its email. Taken only while the account does not exist.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Owner email",
+          "description": "Sign in with this address. Taken only when the owner account is created; change it in Mastodon later.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Owner password",
+          "description": "8 to 72 characters. Taken only when the owner account is created; change it in Mastodon later.",
           "required": true
         },
         {
@@ -2762,12 +2783,14 @@
         {
           "name": "VAPID_PRIVATE_KEY",
           "type": "secret",
-          "title": "Push notification private key"
+          "title": "Push notification private key",
+          "description": "Leave empty to use the key pair made on the first start. Changing keys stops push for browsers subscribed to the old ones."
         },
         {
           "name": "VAPID_PUBLIC_KEY",
           "type": "string",
-          "title": "Push notification public key"
+          "title": "Push notification public key",
+          "description": "Set together with the private key, or leave both empty."
         }
       ],
       "generate": [
@@ -2813,6 +2836,10 @@
         },
         {
           "name": "redis"
+        },
+        {
+          "name": "vapid",
+          "backup": true
         }
       ],
       "migrations": []
