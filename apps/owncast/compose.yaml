@@ -1,6 +1,9 @@
 services:
   owncast:
     image: owncast/owncast:0.3.0
+    # The admin password from the stack's inputs, on every start: without it,
+    # /admin keeps the well-known default.
+    command: ["-adminpassword", "${ADMIN_PASSWORD}"]
     restart: unless-stopped
     ports:
       - "${RTMP_PORT}:1935"

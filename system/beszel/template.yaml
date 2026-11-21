@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: beszel
   title: Beszel
-  description: "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent: the beszel-agent template."
+  description: "Lightweight host and container metrics, with history and alerts. This is the hub; sign in with the admin set here. Each host to watch runs an agent: the beszel-agent template."
   tier: system
   category: monitoring
   homepage: https://beszel.dev
   source: https://github.com/henrygd/beszel
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   web: { service: beszel, port: 8090 }
   images:
@@ -20,6 +20,15 @@ spec:
     - name: DOMAIN
       type: hostname
       title: Domain
+      required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin e-mail (you sign in with it)
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "Kept encrypted in the fleet. Beszel creates this admin on its first start; change the password later in Beszel."
       required: true
   volumes:
     - { name: data, backup: true }
