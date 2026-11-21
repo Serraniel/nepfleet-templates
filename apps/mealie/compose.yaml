@@ -20,6 +20,7 @@ services:
       kuma.mealie.http.url: ${NEPFLEET_URL}/api/app/about
       homepage.group: Home
       homepage.name: Mealie
+      homepage.description: Recipes and meal plans
       homepage.icon: mealie.svg
       homepage.href: ${NEPFLEET_URL}
 

@@ -19,6 +19,7 @@ services:
       kuma.authelia.http.url: ${NEPFLEET_URL}/api/health
       homepage.group: Security
       homepage.name: Authelia
+      homepage.description: Sign-in and two-factor
       homepage.icon: authelia.svg
       homepage.href: ${NEPFLEET_URL}
 

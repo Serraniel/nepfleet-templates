@@ -9,7 +9,7 @@ metadata:
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon

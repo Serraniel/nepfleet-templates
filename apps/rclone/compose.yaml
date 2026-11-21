@@ -35,6 +35,7 @@ services:
       kuma.rclone.http.url: ${NEPFLEET_URL}
       homepage.group: Storage
       homepage.name: rclone
+      homepage.description: Cloud storage sync
       homepage.icon: rclone.svg
       # The login page needs to be told where the API is.
       homepage.href: ${NEPFLEET_URL}/login?url=${NEPFLEET_URL}/rc/

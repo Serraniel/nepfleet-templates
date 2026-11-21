@@ -9,7 +9,7 @@ metadata:
   homepage: https://mealie.io
   source: https://github.com/mealie-recipes/mealie
 spec:
-  version: 0.3.1
+  version: 0.3.2
   compose: compose.yaml
   web: { service: mealie, port: 9000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }

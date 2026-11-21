@@ -17,6 +17,7 @@ services:
       kuma.owncast.http.url: ${NEPFLEET_URL}/api/status
       homepage.group: Media
       homepage.name: Owncast
+      homepage.description: Live streaming
       homepage.icon: owncast.svg
       homepage.href: ${NEPFLEET_URL}
 

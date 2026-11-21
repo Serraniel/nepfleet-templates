@@ -23,6 +23,7 @@ services:
       kuma.wokko.http.url: ${NEPFLEET_URL}/api/v1/health
       homepage.group: Home
       homepage.name: Wokko
+      homepage.description: Recipes
       homepage.icon: mdi-chef-hat
       homepage.href: ${NEPFLEET_URL}
 

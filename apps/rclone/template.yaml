@@ -9,7 +9,7 @@ metadata:
   homepage: https://rclone.org
   source: https://github.com/rclone/rclone
 spec:
-  version: 0.3.1
+  version: 0.3.2
   compose: compose.yaml
   # No spec.web: the GUI calls its API on a second port, so a LAN port alone
   # would not work. The bot check needs one plain route; this has two.

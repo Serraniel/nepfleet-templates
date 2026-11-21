@@ -41,6 +41,7 @@ services:
       kuma.n8n.http.url: ${NEPFLEET_URL}/healthz
       homepage.group: Automation
       homepage.name: n8n
+      homepage.description: Workflow automation
       homepage.icon: n8n.svg
       homepage.href: ${NEPFLEET_URL}
 

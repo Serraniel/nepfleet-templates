@@ -76,6 +76,7 @@ services:
       kuma.sure-stack.group.name: Sure
       homepage.group: Finance
       homepage.name: Sure
+      homepage.description: Personal finance
       homepage.icon: sure.svg
       homepage.href: ${NEPFLEET_URL}
 

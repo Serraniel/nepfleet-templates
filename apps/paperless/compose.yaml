@@ -35,6 +35,7 @@ services:
       kuma.paperless.http.url: ${NEPFLEET_URL}
       homepage.group: Documents
       homepage.name: Paperless
+      homepage.description: Documents with OCR
       homepage.icon: paperless-ngx.svg
       homepage.href: ${NEPFLEET_URL}
 

@@ -9,7 +9,7 @@ metadata:
   homepage: https://syncthing.net
   source: https://github.com/syncthing/syncthing
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: syncthing, port: 8384 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/rest/"] }   # REST API with an API key: tray apps, scripts

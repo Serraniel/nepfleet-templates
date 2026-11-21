@@ -36,6 +36,7 @@ services:
       nepfleet.metrics.port: "8081"
       homepage.group: Media
       homepage.name: Immich
+      homepage.description: Photos and videos
       homepage.icon: immich.svg
       homepage.href: ${NEPFLEET_URL}
       docker-volume-backup.stop-during-backup: "true"
@@ -117,6 +118,7 @@ services:
       caddy.reverse_proxy: "{{upstreams 3000}}"
       homepage.group: Media
       homepage.name: Immich Power Tools
+      homepage.description: Bulk tools for Immich
       homepage.href: https://${POWER_TOOLS_DOMAIN}
 
 volumes:

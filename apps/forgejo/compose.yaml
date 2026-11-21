@@ -50,6 +50,7 @@ services:
       kuma.forgejo.http.url: ${NEPFLEET_URL}/api/healthz
       homepage.group: Development
       homepage.name: Forgejo
+      homepage.description: Git hosting
       homepage.icon: forgejo.svg
       homepage.href: ${NEPFLEET_URL}
 

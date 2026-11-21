@@ -9,7 +9,7 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.1.3
+  version: 0.1.4
   compose: compose.yaml
   web: { service: web, port: 3000 }
   botCheck: { allow: ["^/api/", "^/oauth/"] }   # the mobile app and API keys

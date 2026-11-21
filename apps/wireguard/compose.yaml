@@ -30,6 +30,7 @@ services:
       kuma.wireguard.http.url: ${NEPFLEET_URL}
       homepage.group: Infrastructure
       homepage.name: WireGuard
+      homepage.description: VPN into the home network
       homepage.icon: wireguard.svg
       homepage.href: ${NEPFLEET_URL}
 

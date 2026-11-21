@@ -19,6 +19,7 @@ services:
       kuma.actual.http.url: ${NEPFLEET_URL}/health
       homepage.group: Finance
       homepage.name: Actual Budget
+      homepage.description: Budgeting
       homepage.icon: actual-budget.svg
       homepage.href: ${NEPFLEET_URL}
 

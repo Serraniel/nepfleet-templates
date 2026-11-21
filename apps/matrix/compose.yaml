@@ -28,6 +28,7 @@ services:
       kuma.matrix.http.url: ${NEPFLEET_URL}/health
       homepage.group: Communication
       homepage.name: Matrix
+      homepage.description: Chat server
       homepage.icon: matrix.svg
       homepage.href: https://${ELEMENT_DOMAIN}
 
