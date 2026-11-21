@@ -3952,13 +3952,13 @@
     {
       "name": "sure",
       "title": "Sure",
-      "description": "Personal finance: accounts, budgets, investments and net worth (the community fork of Maybe Finance). Create the first account right after installing, then set onboarding to closed or invite_only. Back up this stack's secrets with the fleet's: the ENCRYPTION_* keys encrypt bank provider tokens, which are unreadable without them. It sends no usage data to Sure's PostHog project. Market data lookups tell Yahoo Finance or Twelve Data which currencies and tickers you hold, and AI features, when set up, send transactions to that provider.",
+      "description": "Personal finance: accounts, budgets, investments and net worth (the community fork of Maybe Finance). The first account, a super admin, comes from the admin inputs and sign-up is closed by default. Back up this stack's secrets with the fleet's: the ENCRYPTION_* keys encrypt bank provider tokens, which are unreadable without them. It sends no usage data to Sure's PostHog project. Market data lookups tell Yahoo Finance or Twelve Data which currencies and tickers you hold, and AI features, when set up, send transactions to that provider.",
       "tier": "app",
       "category": "finance",
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.1.4",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",
@@ -3994,16 +3994,31 @@
           "required": true
         },
         {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin email",
+          "description": "The first account, a super admin, is created with it on the first start, so sign-up never needs to be open. Sign in with it; Sure then asks for your name, country and currency. Only used while Sure has no account yet: later changes do not change the account.",
+          "required": true,
+          "default": "admin@example.test"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "At least 8 characters. Only used when the first account is created; change it later in Sure's settings.",
+          "required": true
+        },
+        {
           "name": "ONBOARDING",
           "type": "enum",
           "title": "Who can create an account",
-          "description": "Open is needed for the first account. Afterwards, invite_only (an existing user invites) or closed.",
+          "description": "closed: nobody can sign up, only the admin above signs in. invite_only: people with an invite code or invitation from an existing user. open: anyone who reaches the domain.",
           "required": true,
-          "default": "open",
+          "default": "closed",
           "options": [
-            "open",
+            "closed",
             "invite_only",
-            "closed"
+            "open"
           ]
         },
         {

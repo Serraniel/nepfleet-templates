@@ -80,6 +80,21 @@ services:
       homepage.icon: sure.svg
       homepage.href: ${NEPFLEET_URL}
 
+  # Creates the first account from the inputs once web has migrated the
+  # database (setup.rb), then exits; later runs find an account and do nothing.
+  setup:
+    image: ghcr.io/we-promise/sure:0.7.6
+    restart: "no"
+    command: ["bin/rails", "runner", "/setup/setup.rb"]
+    environment:
+      <<: *sure-env
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ./setup:/setup:ro
+    depends_on:
+      web: { condition: service_healthy }
+
   # Background jobs: account syncs, imports and market data.
   worker:
     image: ghcr.io/we-promise/sure:0.7.6
@@ -91,6 +106,8 @@ services:
     depends_on:
       web: { condition: service_healthy }
       redis: { condition: service_healthy }
+      # Compose only accepts a one-shot that exits when something waits for it.
+      setup: { condition: service_completed_successfully }
     labels:
       kuma.sure-worker.docker.name: Sure worker
       kuma.sure-worker.docker.docker_container: ${NEPFLEET_STACK}-worker-1
