@@ -9,7 +9,7 @@ metadata:
   homepage: https://garagehq.deuxfleurs.fr
   source: https://git.deuxfleurs.fr/Deuxfleurs/garage
 spec:
-  version: 0.1.2
+  version: 0.1.3
   compose: compose.yaml
   images:
     - name: dxflrs/garage
@@ -36,13 +36,13 @@ spec:
     - name: ACCESS_KEY_ID
       type: secret
       title: Access key ID (without GK)
-      description: "32 hex characters, e.g. from: openssl rand -hex 16. Apps use GK followed by it as their access key ID."
+      description: "32 hex characters, e.g. from: openssl rand -hex 16. Apps use GK followed by it as their access key ID. Created on the first start: a new one later adds a second key and keeps the first."
       required: true
       pattern: "^[0-9a-f]{32}$"
     - name: SECRET_ACCESS_KEY
       type: secret
       title: Secret access key
-      description: "64 hex characters, e.g. from: openssl rand -hex 32. Apps use it as their secret key. Kept encrypted in the fleet."
+      description: "64 hex characters, e.g. from: openssl rand -hex 32. Apps use it as their secret key. Kept encrypted in the fleet. Set once: Garage refuses to start if it changes for the same key ID (rotate keys with the garage command instead)."
       required: true
       pattern: "^[0-9a-f]{64}$"
   generate:
