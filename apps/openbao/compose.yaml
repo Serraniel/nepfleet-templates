@@ -27,6 +27,7 @@ services:
       kuma.openbao.http.url: ${NEPFLEET_URL}/v1/sys/health
       homepage.group: Infrastructure
       homepage.name: OpenBao
+      homepage.description: Secrets vault
       homepage.icon: openbao.svg
       homepage.href: ${NEPFLEET_URL}/ui/
 

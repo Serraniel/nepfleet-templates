@@ -9,7 +9,7 @@ metadata:
   homepage: https://pocket-id.org
   source: https://github.com/pocket-id/pocket-id
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   web: { service: pocket-id, port: 1411 }
   images:

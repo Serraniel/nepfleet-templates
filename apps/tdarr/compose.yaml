@@ -34,6 +34,7 @@ services:
       kuma.tdarr.http.url: ${NEPFLEET_URL}
       homepage.group: Media
       homepage.name: Tdarr
+      homepage.description: Media transcoding
       homepage.icon: tdarr.svg
       homepage.href: ${NEPFLEET_URL}
 

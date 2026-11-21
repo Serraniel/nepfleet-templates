@@ -31,6 +31,7 @@ services:
       kuma.bookstack.http.url: ${NEPFLEET_URL}/status
       homepage.group: Documents
       homepage.name: BookStack
+      homepage.description: Wiki and documentation
       homepage.icon: bookstack.svg
       homepage.href: ${NEPFLEET_URL}
 

@@ -19,6 +19,7 @@ services:
       kuma.dozzle.http.url: ${NEPFLEET_URL}/healthcheck
       homepage.group: System
       homepage.name: Logs
+      homepage.description: Live container logs
       homepage.icon: dozzle.svg
       homepage.href: ${NEPFLEET_URL}
 

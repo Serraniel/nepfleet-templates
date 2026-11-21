@@ -9,7 +9,7 @@ metadata:
   homepage: https://openbao.org
   source: https://github.com/openbao/openbao
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   web: { service: openbao, port: 8200 }   # the UI at /ui and the API; also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/v1/"] }   # the API, used by apps and the bao CLI

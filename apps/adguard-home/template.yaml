@@ -9,7 +9,7 @@ metadata:
   homepage: https://adguard.com/adguard-home
   source: https://github.com/AdguardTeam/AdGuardHome
 spec:
-  version: 0.1.2
+  version: 0.1.3
   compose: compose.yaml
   web: { service: adguard-home, port: 3000 }
   botCheck: { allow: ["^/dns-query", "^/control/"] }

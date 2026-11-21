@@ -31,6 +31,7 @@ services:
       kuma.pihole.http.url: ${NEPFLEET_URL}/admin/
       homepage.group: Infrastructure
       homepage.name: Pi-hole
+      homepage.description: DNS ad blocking
       homepage.icon: pi-hole.svg
       homepage.href: ${NEPFLEET_URL}/admin/
 

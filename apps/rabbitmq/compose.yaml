@@ -30,6 +30,7 @@ services:
       kuma.rabbitmq.http.url: ${NEPFLEET_URL}
       homepage.group: Infrastructure
       homepage.name: RabbitMQ
+      homepage.description: Message broker
       homepage.icon: rabbitmq.svg
       homepage.href: ${NEPFLEET_URL}
 

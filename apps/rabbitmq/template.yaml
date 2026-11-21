@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.rabbitmq.com
   source: https://github.com/rabbitmq/rabbitmq-server
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   web: { service: rabbitmq, port: 15672 }   # the management UI; also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }   # the management HTTP API, used by tools with credentials

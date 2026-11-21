@@ -17,6 +17,7 @@ services:
       kuma.vaultwarden.http.url: ${NEPFLEET_URL}/alive
       homepage.group: Security
       homepage.name: Vaultwarden
+      homepage.description: Passwords
       homepage.icon: vaultwarden.svg
       homepage.href: ${NEPFLEET_URL}
     deploy:

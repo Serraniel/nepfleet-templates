@@ -9,7 +9,7 @@ metadata:
   homepage: https://pi-hole.net
   source: https://github.com/pi-hole/docker-pi-hole
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: pihole, port: 80 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }

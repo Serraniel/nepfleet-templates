@@ -16,6 +16,7 @@ services:
       kuma.sendan.http.url: ${NEPFLEET_URL}
       homepage.group: Files
       homepage.name: Sendan
+      homepage.description: Encrypted file sharing
       homepage.href: ${NEPFLEET_URL}
 
 volumes:

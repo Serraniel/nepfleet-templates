@@ -25,6 +25,7 @@ services:
       kuma.beszel.http.url: ${NEPFLEET_URL}/api/health
       homepage.group: System
       homepage.name: Beszel
+      homepage.description: Host and container metrics
       homepage.icon: beszel.svg
       homepage.href: ${NEPFLEET_URL}
     deploy:

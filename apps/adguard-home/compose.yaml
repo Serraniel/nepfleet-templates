@@ -16,6 +16,7 @@ services:
       kuma.adguard-home.http.url: ${NEPFLEET_URL}/
       homepage.group: Infrastructure
       homepage.name: AdGuard Home
+      homepage.description: DNS ad and tracker blocking
       homepage.icon: adguard-home.svg
       homepage.href: ${NEPFLEET_URL}
 

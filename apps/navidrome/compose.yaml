@@ -23,6 +23,7 @@ services:
       kuma.navidrome.http.url: ${NEPFLEET_URL}/ping
       homepage.group: Media
       homepage.name: Navidrome
+      homepage.description: Music streaming
       homepage.icon: navidrome.svg
       homepage.href: ${NEPFLEET_URL}
 

@@ -31,6 +31,7 @@ services:
       kuma.open-webui.http.url: ${NEPFLEET_URL}/health
       homepage.group: AI
       homepage.name: Open WebUI
+      homepage.description: Chat with language models
       homepage.icon: open-webui.svg
       homepage.href: ${NEPFLEET_URL}
 

@@ -24,6 +24,7 @@ services:
       kuma.pocket-id.http.url: ${NEPFLEET_URL}/healthz
       homepage.group: Security
       homepage.name: Pocket ID
+      homepage.description: Passkey sign-in (OIDC)
       homepage.icon: pocket-id.svg
       homepage.href: ${NEPFLEET_URL}
     deploy:

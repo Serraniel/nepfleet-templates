@@ -42,6 +42,7 @@ services:
       kuma.syncthing.http.url: ${NEPFLEET_URL}/rest/noauth/health
       homepage.group: Files
       homepage.name: Syncthing
+      homepage.description: File sync between devices
       homepage.icon: syncthing.svg
       homepage.href: ${NEPFLEET_URL}
 

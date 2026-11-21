@@ -32,6 +32,7 @@ services:
       kuma.ntfy.http.url: ${NEPFLEET_URL}/v1/health
       homepage.group: Infrastructure
       homepage.name: ntfy
+      homepage.description: Push notifications
       homepage.icon: ntfy.svg
       homepage.href: ${NEPFLEET_URL}
 

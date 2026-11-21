@@ -17,6 +17,7 @@ services:
       kuma.jellyfin.http.url: ${NEPFLEET_URL}/health
       homepage.group: Media
       homepage.name: Jellyfin
+      homepage.description: Movies, shows and music
       homepage.icon: jellyfin.svg
       homepage.href: ${NEPFLEET_URL}
 

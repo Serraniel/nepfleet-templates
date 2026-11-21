@@ -15,5 +15,6 @@ services:
       kuma.homeassistant.http.url: ${NEPFLEET_URL}
       homepage.group: Home
       homepage.name: Home Assistant
+      homepage.description: Home automation
       homepage.icon: home-assistant.svg
       homepage.href: ${NEPFLEET_URL}

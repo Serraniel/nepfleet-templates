@@ -28,6 +28,7 @@ services:
       kuma.homebox.http.url: ${NEPFLEET_URL}/api/v1/status
       homepage.group: Home
       homepage.name: Homebox
+      homepage.description: Home inventory
       homepage.icon: homebox.svg
       homepage.href: ${NEPFLEET_URL}
     deploy:

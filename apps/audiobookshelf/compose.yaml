@@ -22,6 +22,7 @@ services:
       kuma.audiobookshelf.http.url: ${NEPFLEET_URL}/healthcheck
       homepage.group: Media
       homepage.name: Audiobookshelf
+      homepage.description: Audiobooks and podcasts
       homepage.icon: audiobookshelf.svg
       homepage.href: ${NEPFLEET_URL}
 

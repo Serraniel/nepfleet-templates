@@ -59,6 +59,7 @@ services:
       kuma.mastodon.http.url: ${NEPFLEET_URL}/health
       homepage.group: Social
       homepage.name: Mastodon
+      homepage.description: Social network
       homepage.icon: mastodon.svg
       homepage.href: ${NEPFLEET_URL}
 
