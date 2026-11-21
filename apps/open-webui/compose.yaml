@@ -39,8 +39,33 @@ services:
     image: ollama/ollama:0.40.16
     profiles: [ollama]
     restart: unless-stopped
+    # Serves, and once it answers pulls the models of OLLAMA_MODELS that it
+    # doesn't have yet (in the background: apply doesn't wait for downloads).
+    # Every start checks again, so models added to the input arrive with the
+    # next apply; models already there are never fetched again.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve & pid=$$!
+        trap 'kill -TERM $$pid; wait $$pid; exit 0' TERM INT
+        until ollama list >/dev/null 2>&1; do kill -0 $$pid 2>/dev/null || { wait $$pid; exit; }; sleep 1; done
+        for m in $$(echo "$$MODELS" | tr ',' ' '); do
+          if ollama show "$$m" >/dev/null 2>&1; then continue; fi
+          echo "pulling $$m"
+          if out=$$(ollama pull "$$m" 2>&1); then echo "pulled $$m"
+          else echo "could not pull $$m: $$(echo "$$out" | tail -n 1)" >&2; fi
+        done
+        wait $$pid
+    environment:
+      MODELS: ${OLLAMA_MODELS}
     volumes:
       - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     # GPU: add `gpus: all` (NVIDIA) or the ROCm image with /dev/kfd and /dev/dri (AMD).
     labels:
       # Running and healthy (Docker monitor; no credentials needed).
@@ -53,11 +78,25 @@ services:
     image: ghcr.io/berriai/litellm:v1.83.14-stable
     profiles: [litellm]
     restart: unless-stopped
-    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    # litellm.yaml, plus each provider of litellm-providers/ whose key is set:
+    # LiteLLM would list a keyless provider/* route as a model that can't work.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        {
+          echo "include:"
+          echo "  - /config/litellm.yaml"
+          if [ -n "$$OPENAI_API_KEY" ]; then echo "  - /config/providers/openai.yaml"; fi
+          if [ -n "$$ANTHROPIC_API_KEY" ]; then echo "  - /config/providers/anthropic.yaml"; fi
+        } > /tmp/config.yaml
+        exec docker/prod_entrypoint.sh --config /tmp/config.yaml --port 4000
     environment:
       LITELLM_MASTER_KEY: sk-${LITELLM_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     volumes:
-      - ./litellm.yaml:/app/config.yaml:ro
+      - ./litellm.yaml:/config/litellm.yaml:ro
+      - ./litellm-providers:/config/providers:ro
     labels:
       # Running and healthy (Docker monitor; no credentials needed).
       kuma.open-webui-litellm.docker.name: Open WebUI LiteLLM

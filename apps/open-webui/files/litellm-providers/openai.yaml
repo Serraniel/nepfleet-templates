@@ -1,0 +1,4 @@
+# Added to litellm.yaml when OPENAI_API_KEY is set (see the litellm service).
+model_list:
+  - model_name: "openai/*"
+    litellm_params: { model: "openai/*", api_key: os.environ/OPENAI_API_KEY }
