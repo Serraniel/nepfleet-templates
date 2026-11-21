@@ -35,16 +35,45 @@ services:
       redis:
         condition: service_healthy
 
-  web:
+  # Makes the push notification keys once and the owner account from the
+  # stack's inputs, then ends (files/setup.rb). Web and sidekiq wait for it.
+  # Root only to write the keys into the vapid volume; the file goes to the
+  # mastodon user.
+  setup:
     image: ghcr.io/mastodon/mastodon:v4.7.5
-    restart: unless-stopped
-    environment: *mastodon
-    command: bundle exec puma -C config/puma.rb
+    restart: "no"
+    user: "0"
+    environment:
+      <<: *mastodon
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command: bundle exec rails runner /setup/setup.rb
     depends_on:
       migrate:
         condition: service_completed_successfully
     volumes:
+      - vapid:/vapid
+      - ./setup:/setup:ro
+
+  # Web and sidekiq take the push notification keys from the vapid volume,
+  # unless the stack's inputs give a key pair.
+  web:
+    image: ghcr.io/mastodon/mastodon:v4.7.5
+    restart: unless-stopped
+    environment: *mastodon
+    command:
+      - sh
+      - -c
+      - |
+        if [ -z "$$VAPID_PRIVATE_KEY" ]; then set -a; . /vapid/vapid.env; set +a; fi
+        exec bundle exec puma -C config/puma.rb
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
       - media:/mastodon/public/system
+      - vapid:/vapid:ro
     networks: [default, ingress]
     healthcheck:
       test: ["CMD-SHELL", "curl -s --noproxy localhost localhost:3000/health | grep -q OK"]
@@ -87,12 +116,18 @@ services:
     image: ghcr.io/mastodon/mastodon:v4.7.5
     restart: unless-stopped
     environment: *mastodon
-    command: bundle exec sidekiq
+    command:
+      - sh
+      - -c
+      - |
+        if [ -z "$$VAPID_PRIVATE_KEY" ]; then set -a; . /vapid/vapid.env; set +a; fi
+        exec bundle exec sidekiq
     depends_on:
-      migrate:
+      setup:
         condition: service_completed_successfully
     volumes:
       - media:/mastodon/public/system
+      - vapid:/vapid:ro
     healthcheck:
       test: ["CMD-SHELL", "ps aux | grep '[s]idekiq 8' || false"]
       interval: 30s
@@ -126,6 +161,7 @@ services:
 
 volumes:
   media:
+  vapid:
   db:
   redis:
 
