@@ -12,8 +12,12 @@ services:
       OC_LOG_LEVEL: warn
       IDM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}   # initial admin password, first start only
       # Office documents in the browser, with Euro-Office: only when OFFICE_DOMAIN
-      # is set (and the office profile runs its service).
+      # is set. The office profile runs the document server there; without it,
+      # one you run elsewhere at that domain.
       OC_ADD_RUN_SERVICES: ${OFFICE_DOMAIN:+collaboration}
+      # The document server fetches and saves files here. OpenCloud's proxy (port
+      # 9200, behind DOMAIN) routes /wopi/ to the collaboration service, as in
+      # upstream's opencloud-compose: no domain of its own.
       COLLABORATION_WOPI_SRC: ${NEPFLEET_URL}
       COLLABORATION_APP_NAME: Euro-Office
       COLLABORATION_APP_PRODUCT: OnlyOffice
@@ -22,10 +26,13 @@ services:
       COLLABORATION_APP_INSECURE: "false"
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "false"
       COLLABORATION_APP_PROOF_DISABLE: "true"
+      # Lets the browser show the editor, an iframe from OFFICE_DOMAIN.
+      PROXY_CSP_CONFIG_FILE_LOCATION: /etc/opencloud/csp.yaml
     volumes:
       - config:/etc/opencloud
       - data:/var/lib/opencloud
       - ./app-registry.yaml:/etc/opencloud/app-registry.yaml:ro
+      - ./csp.yaml:/etc/opencloud/csp.yaml:ro
     networks: [ingress]
     labels:
       caddy: ${DOMAIN}
@@ -44,7 +51,11 @@ services:
     image: ghcr.io/euro-office/documentserver:v9.3.8
     profiles: [office]
     restart: unless-stopped
+    # Refuses to start without OFFICE_DOMAIN, which OpenCloud needs to use it,
+    # and says so in its log.
+    entrypoint: ["/bin/sh", "-c", "[ -n \"$$OFFICE_DOMAIN\" ] || { echo 'The office profile needs OFFICE_DOMAIN: set it, or set the profile to none.' >&2; exit 1; }; exec /entrypoint.sh"]
     environment:
+      OFFICE_DOMAIN: ${OFFICE_DOMAIN}
       WOPI_ENABLED: "true"
       USE_UNAUTHORIZED_STORAGE: "false"
       JWT_SECRET: ${OFFICE_JWT_SECRET}
@@ -56,7 +67,9 @@ services:
       retries: 5
       start_period: 120s
     labels:
-      caddy: ${OFFICE_DOMAIN}
+      # Without a domain, an unused snippet: an empty caddy label would put
+      # reverse_proxy into Caddy's global options and break its whole config.
+      caddy: ${OFFICE_DOMAIN:-(${NEPFLEET_STACK}_office_domain_unset)}
       caddy.reverse_proxy: "{{upstreams 80}}"
 
 volumes:
