@@ -9,7 +9,7 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.4.3
+  version: 0.4.4
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud
@@ -17,7 +17,7 @@ spec:
     - name: ghcr.io/euro-office/documentserver
       track: minor
   supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
-  botCheck: { service: opencloud, port: 9200, allow: ["^/remote\\.php/", "^/dav/", "^/ocs/", "^/graph/", "^/status\\.php$", "^/\\.well-known/", "^/konnect/"] }
+  botCheck: { service: opencloud, port: 9200, allow: ["^/remote\\.php/", "^/dav/", "^/ocs/", "^/graph/", "^/status\\.php$", "^/\\.well-known/", "^/konnect/", "^/wopi/"] }
   inputs:
     - name: DOMAIN
       type: hostname
@@ -31,6 +31,7 @@ spec:
     - name: OFFICE_DOMAIN
       type: hostname
       title: Domain for editing Office documents (Euro-Office); empty for none
+      description: "Where the browser opens the editor. With the office profile, Euro-Office runs here (the profile refuses to start without it); with the profile at none, OpenCloud uses a WOPI document server you run elsewhere at this domain."
     - name: ADMIN_PASSWORD
       type: secret
       title: Admin password
@@ -40,6 +41,7 @@ spec:
     - { name: OFFICE_JWT_SECRET, kind: secret, length: 48, encoding: alnum }
   files:
     - { src: files/app-registry.yaml, dest: app-registry.yaml }
+    - { src: files/csp.yaml, dest: csp.yaml }
   volumes:
     - { name: config, backup: true }
     - { name: data, backup: true }
