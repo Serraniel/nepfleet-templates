@@ -421,13 +421,13 @@
     {
       "name": "dozzle",
       "title": "Dozzle",
-      "description": "Live container logs in the browser. Deploy on swarm for a fleet-wide view.",
+      "description": "Live container logs in the browser, behind a sign-in (the admin user and password set here). Deploy on swarm for a fleet-wide view.",
       "tier": "system",
       "category": "monitoring",
       "homepage": "https://dozzle.dev",
       "source": "https://github.com/amir20/dozzle",
       "path": "system/dozzle",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "images": [
         {
           "name": "amir20/dozzle",
@@ -459,6 +459,22 @@
           "required": true
         },
         {
+          "name": "DOZZLE_USERNAME",
+          "type": "string",
+          "title": "Admin user",
+          "description": "Sign in to Dozzle with it.",
+          "required": true,
+          "default": "admin",
+          "pattern": "^[a-z][a-z0-9_.-]{0,31}$"
+        },
+        {
+          "name": "DOZZLE_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "Kept encrypted in the fleet; Dozzle gets only its bcrypt hash. To change it, set a new one in the stack's secrets and apply.",
+          "required": true
+        },
+        {
           "name": "ALERTS_API_URL",
           "type": "url",
           "title": "NepFleet's API for log alerts (override)",
@@ -472,6 +488,11 @@
         }
       ],
       "generate": [
+        {
+          "name": "DOZZLE_PASSWORD_HASH",
+          "kind": "bcrypt",
+          "from": "DOZZLE_PASSWORD"
+        },
         {
           "name": "ALERTS_NOTIFY_TOKEN",
           "kind": "notify-token"

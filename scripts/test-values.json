@@ -38,7 +38,8 @@
   },
   "dozzle": {
     "ALERTS_API_URL": "http://it-dozzle-recv:8080",
-    "ALERTS_TOKEN": "nft_ci-not-a-real-token"
+    "ALERTS_TOKEN": "nft_ci-not-a-real-token",
+    "DOZZLE_PASSWORD": "ci-not-a-real-password"
   },
   "forgejo": {
     "OIDC_ISSUER": "https://accounts.google.com",
