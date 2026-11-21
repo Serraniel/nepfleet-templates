@@ -453,6 +453,45 @@ def check_forgejo():
         raise SystemExit(f"forgejo: the runner didn't declare itself to Forgejo:\n{logs.stdout}{logs.stderr}")
 
 
+def bookstack_login(container, email, password):
+    """Signs in to BookStack through its form; returns where it sent us."""
+    def curl(*args):
+        out = run("docker", "exec", container, "curl", "-s", "-i", *args).stdout
+        head, _, body = out.replace("\r\n", "\n").partition("\n\n")
+        return head.splitlines(), body
+    head, body = curl("http://localhost/login")
+    # Secure cookies (APP_URL is https): pass them by hand, curl's jar would hold them back on http.
+    cookies = "; ".join(h.split(":", 1)[1].split(";")[0].strip() for h in head if h.lower().startswith("set-cookie:"))
+    token = body.split('name="_token" value="', 1)[1].split('"', 1)[0]
+    head, _ = curl("-b", cookies, "--data-urlencode", f"_token={token}", "--data-urlencode", f"email={email}",
+                   "--data-urlencode", f"password={password}", "http://localhost/login")
+    return next((h.split(":", 1)[1].strip() for h in head if h.lower().startswith("location:")), "")
+
+
+def check_bookstack():
+    """The admin from the inputs signs in, the default admin@admin.com / password
+    no longer does, and nobody can register."""
+    c = stack_name("bookstack") + "-bookstack-1"
+    v = OVERRIDES["bookstack"]
+    # Every later start runs the one-shot again: it must find the admin done and succeed.
+    again = run("docker", "start", "-a", stack_name("bookstack") + "-setup-1", check=False)
+    if again.returncode != 0:
+        raise SystemExit(f"bookstack: the setup one-shot fails when run again:\n{again.stdout}{again.stderr}")
+    print("     setup run again: " + (again.stdout + again.stderr).strip().splitlines()[-1])
+    where = bookstack_login(c, v["ADMIN_EMAIL"], v["ADMIN_PASSWORD"])
+    if not where or where.endswith("/login"):
+        raise SystemExit(f"bookstack: the admin from the inputs can't sign in (sent to {where!r})")
+    print(f"     {v['ADMIN_EMAIL']} signs in: sent to {where}")
+    where = bookstack_login(c, "admin@admin.com", "password")
+    if not where.endswith("/login"):
+        raise SystemExit(f"bookstack: the default admin@admin.com / password still signs in (sent to {where!r})")
+    print(f"     admin@admin.com / password is refused: sent back to {where}")
+    code = run("docker", "exec", c, "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "http://localhost/register").stdout
+    if code == "200":
+        raise SystemExit("bookstack: the sign-up page is open")
+    print(f"     /register answers {code}")
+
+
 def check_opencloud():
     """With the office profile, Euro-Office answers WOPI discovery on the ingress
     network. (OpenCloud registers it by its domain, which doesn't resolve here, so
@@ -524,7 +563,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
