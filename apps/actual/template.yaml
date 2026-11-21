@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: actual
   title: Actual Budget
-  description: Local-first personal finance and envelope budgeting. Set the server password on the first visit.
+  description: Local-first personal finance and envelope budgeting. Sign in with the server password from the stack's inputs.
   tier: app
   category: finance
   homepage: https://actualbudget.org
   source: https://github.com/actualbudget/actual
 spec:
-  version: 0.2.2
+  version: 0.3.0
   compose: compose.yaml
   images:
     # Versions are YY.MM.patch: "minor" takes the monthly releases of a year.
@@ -21,5 +21,12 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: SERVER_PASSWORD
+      type: secret
+      title: Server password
+      description: The password you sign in to Actual with, set before the domain opens so nobody else can claim the server. Taken on the first start only; a server that already has a password keeps it. Change it later in Actual's settings.
+      required: true
+  files:
+    - { src: files/setup.mjs, dest: setup/setup.mjs }
   volumes:
     - { name: data, backup: true }
