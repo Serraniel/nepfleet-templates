@@ -9,7 +9,7 @@ metadata:
   homepage: https://grafana.com/oss/grafana
   source: https://github.com/grafana/grafana
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   web: { service: grafana, port: 3000 }
   images:
@@ -31,8 +31,11 @@ spec:
       title: Loki address
       description: The loki template's address on the ingress network, for logs.
       default: http://loki:3100
-  generate:
-    - { name: ADMIN_PASSWORD, kind: secret, length: 32, encoding: alnum }
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "You sign in as admin with it. Kept encrypted in the fleet. Grafana takes it on its first start; change it later in Grafana."
+      required: true
   files:
     - { src: files/datasources.yaml, dest: provisioning/datasources.yaml }
   volumes:

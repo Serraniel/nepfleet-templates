@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: syncthing
   title: Syncthing
-  description: "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT."
+  description: "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the password you set (GUI_PASSWORD). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT."
   tier: app
   category: files
   homepage: https://syncthing.net
   source: https://github.com/syncthing/syncthing
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: syncthing, port: 8384 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/rest/"] }   # REST API with an API key: tray apps, scripts
@@ -42,8 +42,10 @@ spec:
       title: Group id owning the synced files
       default: "1000"
       required: true
-  generate:
-    # The web UI login; set before Syncthing starts, so the UI is never open.
-    - { name: GUI_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - name: GUI_PASSWORD
+      type: secret
+      title: Web UI password
+      description: "You sign in as admin with it; it's set before Syncthing starts, so the UI is never open. Kept encrypted in the fleet."
+      required: true
   volumes:
     - { name: config, backup: true }

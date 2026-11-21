@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: garage
   title: Garage
-  description: "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key on first start, from the generated values in the stack's secrets. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command."
+  description: "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key (GK + ACCESS_KEY_ID, with SECRET_ACCESS_KEY: the values you set) on first start. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command."
   tier: app
   category: storage
   homepage: https://garagehq.deuxfleurs.fr
   source: https://git.deuxfleurs.fr/Deuxfleurs/garage
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: dxflrs/garage
@@ -32,11 +32,22 @@ spec:
       default: garage
       required: true
       pattern: '^[a-z0-9-]+$'
+    # Apps that store files here need the access key, so it is yours to set.
+    - name: ACCESS_KEY_ID
+      type: secret
+      title: Access key ID (without GK)
+      description: "32 hex characters, e.g. from: openssl rand -hex 16. Apps use GK followed by it as their access key ID."
+      required: true
+      pattern: "^[0-9a-f]{32}$"
+    - name: SECRET_ACCESS_KEY
+      type: secret
+      title: Secret access key
+      description: "64 hex characters, e.g. from: openssl rand -hex 32. Apps use it as their secret key. Kept encrypted in the fleet."
+      required: true
+      pattern: "^[0-9a-f]{64}$"
   generate:
     - { name: RPC_SECRET, kind: secret, length: 64, encoding: hex }
     - { name: ADMIN_TOKEN, kind: secret, length: 48, encoding: base64url }
-    - { name: ACCESS_KEY_ID, kind: secret, length: 32, encoding: hex }
-    - { name: SECRET_ACCESS_KEY, kind: secret, length: 64, encoding: hex }
   files:
     - { src: files/garage.toml, dest: garage.toml }
   volumes:

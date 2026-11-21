@@ -8,7 +8,7 @@ metadata:
   category: networking
   homepage: https://github.com/fatedier/frp
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: fatedier/frpc
@@ -23,7 +23,7 @@ spec:
     - name: FRP_TOKEN
       type: secret
       title: frps token
-      description: The FRP_TOKEN generated for the frps stack.
+      description: The token you gave the frps stack (its FRP_TOKEN).
       required: true
     - name: PUBLIC_HOST
       type: hostname

@@ -8,7 +8,7 @@ metadata:
   category: networking
   homepage: https://github.com/fatedier/frp
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: fatedier/frps
@@ -25,10 +25,10 @@ spec:
       title: Public host names served through tunnels
       description: Comma separated, e.g. "jellyfin.example.org, photos.example.org"
       required: true
-  generate:
     - name: FRP_TOKEN
-      kind: secret
-      length: 48
-      encoding: alnum
+      type: secret
+      title: Token for frpc
+      description: "frpc stacks at home sign in with it: give them the same token. Kept encrypted in the fleet. A long random string, e.g. from: openssl rand -hex 24"
+      required: true
   files:
     - { src: files/frps.toml, dest: frps.toml }

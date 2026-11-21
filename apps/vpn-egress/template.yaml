@@ -9,7 +9,7 @@ metadata:
   homepage: https://github.com/qdm12/gluetun-wiki
   source: https://github.com/qdm12/gluetun
 spec:
-  version: 0.1.0
+  version: 0.1.1
   compose: compose.yaml
   images:
     - name: qmcgaw/gluetun
@@ -36,7 +36,10 @@ spec:
       title: Host port of the HTTP proxy for LAN devices
       default: "8888"
       required: true
-  generate:
-    - { name: PROXY_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - name: PROXY_PASSWORD
+      type: secret
+      title: HTTP proxy password
+      description: "LAN devices use the proxy as user proxy with it. Kept encrypted in the fleet."
+      required: true
   volumes:
     - { name: data, backup: false }   # server lists; downloaded again

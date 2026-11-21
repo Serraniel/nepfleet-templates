@@ -580,7 +580,7 @@
       "category": "networking",
       "homepage": "https://github.com/fatedier/frp",
       "path": "system/frpc",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "fatedier/frpc",
@@ -612,7 +612,7 @@
           "name": "FRP_TOKEN",
           "type": "secret",
           "title": "frps token",
-          "description": "The FRP_TOKEN generated for the frps stack.",
+          "description": "The token you gave the frps stack (its FRP_TOKEN).",
           "required": true
         },
         {
@@ -647,7 +647,7 @@
       "category": "networking",
       "homepage": "https://github.com/fatedier/frp",
       "path": "system/frps",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "fatedier/frps",
@@ -681,16 +681,16 @@
           "title": "Public host names served through tunnels",
           "description": "Comma separated, e.g. \"jellyfin.example.org, photos.example.org\"",
           "required": true
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "FRP_TOKEN",
-          "kind": "secret",
-          "length": 48,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Token for frpc",
+          "description": "frpc stacks at home sign in with it: give them the same token. Kept encrypted in the fleet. A long random string, e.g. from: openssl rand -hex 24",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [],
       "migrations": []
     },
@@ -703,7 +703,7 @@
       "homepage": "https://grafana.com/oss/grafana",
       "source": "https://github.com/grafana/grafana",
       "path": "system/grafana",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "grafana/grafana",
@@ -743,16 +743,16 @@
           "title": "Loki address",
           "description": "The loki template's address on the ingress network, for logs.",
           "default": "http://loki:3100"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 32,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in as admin with it. Kept encrypted in the fleet. Grafana takes it on its first start; change it later in Grafana.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",
@@ -1801,13 +1801,13 @@
     {
       "name": "garage",
       "title": "Garage",
-      "description": "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key on first start, from the generated values in the stack's secrets. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command.",
+      "description": "Lightweight S3-compatible object storage, as a single node. It creates a bucket and an access key (GK + ACCESS_KEY_ID, with SECRET_ACCESS_KEY: the values you set) on first start. Apps and backups that speak S3 can store their files there. More keys and buckets: docker exec into the container and use the garage command.",
       "tier": "app",
       "category": "storage",
       "homepage": "https://garagehq.deuxfleurs.fr",
       "source": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
       "path": "apps/garage",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "dxflrs/garage",
@@ -1849,6 +1849,22 @@
           "required": true,
           "default": "garage",
           "pattern": "^[a-z0-9-]+$"
+        },
+        {
+          "name": "ACCESS_KEY_ID",
+          "type": "secret",
+          "title": "Access key ID (without GK)",
+          "description": "32 hex characters, e.g. from: openssl rand -hex 16. Apps use GK followed by it as their access key ID.",
+          "required": true,
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        {
+          "name": "SECRET_ACCESS_KEY",
+          "type": "secret",
+          "title": "Secret access key",
+          "description": "64 hex characters, e.g. from: openssl rand -hex 32. Apps use it as their secret key. Kept encrypted in the fleet.",
+          "required": true,
+          "pattern": "^[0-9a-f]{64}$"
         }
       ],
       "generate": [
@@ -1863,18 +1879,6 @@
           "kind": "secret",
           "length": 48,
           "encoding": "base64url"
-        },
-        {
-          "name": "ACCESS_KEY_ID",
-          "kind": "secret",
-          "length": 32,
-          "encoding": "hex"
-        },
-        {
-          "name": "SECRET_ACCESS_KEY",
-          "kind": "secret",
-          "length": 64,
-          "encoding": "hex"
         }
       ],
       "volumes": [
@@ -2119,13 +2123,13 @@
     {
       "name": "imgproxy",
       "title": "imgproxy",
-      "description": "Resizes and converts images on the fly, for apps that support it. Only signed URLs work (key and salt are generated: sops decrypt stacks/imgproxy/values.secret.yaml for the app's settings), and only images from ALLOWED_SOURCES, so it is no open proxy. Apps on this host reach it at imgproxy:8080 on the ingress network; the domain serves it to browsers.",
+      "description": "Resizes and converts images on the fly, for apps that support it. Only signed URLs work (with the KEY and SALT you set, which the apps get too), and only images from ALLOWED_SOURCES, so it is no open proxy. Apps on this host reach it at imgproxy:8080 on the ingress network; the domain serves it to browsers.",
       "tier": "app",
       "category": "media",
       "homepage": "https://imgproxy.net",
       "source": "https://github.com/imgproxy/imgproxy",
       "path": "apps/imgproxy",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "darthsim/imgproxy",
@@ -2158,22 +2162,25 @@
           "title": "Where images may come from, as URL prefixes separated by commas",
           "description": "For example http://garage:3900/images/ for a Garage bucket on this host, or https://media.example.org/. Anything else is refused.",
           "required": true
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "KEY",
-          "kind": "secret",
-          "length": 64,
-          "encoding": "hex"
+          "type": "secret",
+          "title": "URL signing key",
+          "description": "Hex, at least 32 characters, e.g. from: openssl rand -hex 32. Apps that sign image URLs need the same key. Kept encrypted in the fleet.",
+          "required": true,
+          "pattern": "^([0-9a-fA-F]{2}){16,}$"
         },
         {
           "name": "SALT",
-          "kind": "secret",
-          "length": 64,
-          "encoding": "hex"
+          "type": "secret",
+          "title": "URL signing salt",
+          "description": "Hex, at least 32 characters, e.g. from: openssl rand -hex 32 (another one). Apps that sign image URLs need the same salt.",
+          "required": true,
+          "pattern": "^([0-9a-fA-F]{2}){16,}$"
         }
       ],
+      "generate": [],
       "volumes": [],
       "migrations": []
     },
@@ -2856,13 +2863,13 @@
     {
       "name": "ntfy",
       "title": "ntfy",
-      "description": "Push notifications to phones and desktops over HTTP, for NepFleet and anything else (ntfy://<domain>/<topic> in shoutrrr). Access is closed by default: sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/ntfy/values.secret.yaml) and create users or tokens for publishers.",
+      "description": "Push notifications to phones and desktops over HTTP, for NepFleet and anything else (ntfy://<domain>/<topic> in shoutrrr). Access is closed by default: sign in as admin with the password you set (ADMIN_PASSWORD) and create users or tokens for publishers.",
       "tier": "app",
       "category": "notifications",
       "homepage": "https://ntfy.sh",
       "source": "https://github.com/binwiederhier/ntfy",
       "path": "apps/ntfy",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "binwiederhier/ntfy",
@@ -2894,16 +2901,16 @@
           "type": "url",
           "title": "Upstream for iOS push (e.g. https://ntfy.sh; empty = none, iPhones then poll)",
           "description": "With an upstream, ntfy.sh learns message IDs (not contents) to wake iPhones."
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in as admin with it. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",
@@ -3105,7 +3112,7 @@
       "homepage": "https://opencloud.eu",
       "source": "https://github.com/opencloud-eu/opencloud",
       "path": "apps/opencloud",
-      "version": "0.4.1",
+      "version": "0.4.2",
       "images": [
         {
           "name": "opencloudeu/opencloud",
@@ -3150,15 +3157,16 @@
           "name": "OFFICE_DOMAIN",
           "type": "hostname",
           "title": "Domain for editing Office documents (Euro-Office); empty for none"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in as admin with it. Kept encrypted in the fleet. OpenCloud takes it on its first start; change it later in OpenCloud.",
+          "required": true
         }
       ],
       "generate": [
-        {
-          "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
-        },
         {
           "name": "OFFICE_JWT_SECRET",
           "kind": "secret",
@@ -3347,13 +3355,13 @@
     {
       "name": "pihole",
       "title": "Pi-hole",
-      "description": "DNS ad and tracker blocking for the whole local network. Point your router's DNS (or each device's) at this host. If systemd-resolved already uses port 53, set BIND_ADDR to this host's LAN address. Sign in to the web UI with the generated WEB_PASSWORD (read it with: sops decrypt stacks/pihole/values.secret.yaml).",
+      "description": "DNS ad and tracker blocking for the whole local network. Point your router's DNS (or each device's) at this host. If systemd-resolved already uses port 53, set BIND_ADDR to this host's LAN address. Sign in to the web UI with the password you set (WEB_PASSWORD).",
       "tier": "app",
       "category": "networking",
       "homepage": "https://pi-hole.net",
       "source": "https://github.com/pi-hole/docker-pi-hole",
       "path": "apps/pihole",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "images": [
         {
           "name": "pihole/pihole",
@@ -3418,16 +3426,16 @@
           "title": "LAN address of the server running Caddy",
           "description": "For example 192.168.1.20. Empty answers the home domain with \"no such name\".",
           "pattern": "^([0-9]{1,3}(\\.[0-9]{1,3}){3})?$"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "WEB_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Web UI password",
+          "description": "You sign in to the web UI with it. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",
@@ -3439,13 +3447,13 @@
     {
       "name": "rabbitmq",
       "title": "RabbitMQ",
-      "description": "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the generated ADMIN_PASSWORD: sops decrypt stacks/rabbitmq/values.secret.yaml). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_BIND to 0.0.0.0. Not for Swarm yet: swarm publishes ports on every address, so the loopback default can't hold there.",
+      "description": "A message broker for apps and your own services. Its management UI is behind your domain (sign in as admin with the password you set, ADMIN_PASSWORD). Services on the ingress network reach AMQP at rabbitmq:5672; it is also published on this host's loopback, or on the LAN when you set AMQP_BIND to 0.0.0.0. Not for Swarm yet: swarm publishes ports on every address, so the loopback default can't hold there.",
       "tier": "app",
       "category": "development",
       "homepage": "https://www.rabbitmq.com",
       "source": "https://github.com/rabbitmq/rabbitmq-server",
       "path": "apps/rabbitmq",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "rabbitmq",
@@ -3487,16 +3495,16 @@
           "title": "Host port for AMQP",
           "required": true,
           "default": "5672"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in to the management UI as admin with it. Kept encrypted in the fleet. RabbitMQ takes it on its first start; change it later in RabbitMQ.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",
@@ -3508,13 +3516,13 @@
     {
       "name": "rclone",
       "title": "rclone",
-      "description": "rclone with its web GUI, for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes live in rclone.conf, which is stored encrypted in the fleet repository. Sign in at https://DOMAIN/login?url=https://DOMAIN/rc/ (the dashboard tile links there); scripts use rclone rc --url https://DOMAIN/rc/.",
+      "description": "rclone with its web GUI, for syncing to cloud storage (e.g. a Hetzner Storage Box). Remotes are set up in the GUI and kept in the config volume. Sign in at https://DOMAIN/login?url=https://DOMAIN/rc/ (the dashboard tile links there); scripts use rclone rc --url https://DOMAIN/rc/.",
       "tier": "app",
       "category": "storage",
       "homepage": "https://rclone.org",
       "source": "https://github.com/rclone/rclone",
       "path": "apps/rclone",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "rclone/rclone",
@@ -3553,16 +3561,16 @@
           "type": "path",
           "title": "Host folder rclone may read and write",
           "required": true
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "RC_PASSWORD",
-          "kind": "secret",
-          "length": 32,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Web GUI password",
+          "description": "You sign in to the GUI (as RC_USER) and to the rc API with it. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "config",
@@ -3682,13 +3690,13 @@
     {
       "name": "stirling-pdf",
       "title": "Stirling-PDF",
-      "description": "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/stirling-pdf/values.secret.yaml); you are asked to change it. Plan about 4 GB of memory.",
+      "description": "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the password you set (ADMIN_PASSWORD); you are asked to change it. Plan about 4 GB of memory.",
       "tier": "app",
       "category": "documents",
       "homepage": "https://www.stirlingpdf.com",
       "source": "https://github.com/Stirling-Tools/Stirling-PDF",
       "path": "apps/stirling-pdf",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "stirlingtools/stirling-pdf",
@@ -3720,16 +3728,16 @@
           "type": "bool",
           "title": "Require a login (recommended when the domain is public)",
           "default": "true"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Admin password",
+          "description": "The first admin signs in with it; without it, the documented admin / stirling would be the first login on a public domain. Kept encrypted in the fleet. Used on the first start only.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "configs",
@@ -4115,13 +4123,13 @@
     {
       "name": "syncthing",
       "title": "Syncthing",
-      "description": "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the generated GUI_PASSWORD (read it with: sops decrypt stacks/syncthing/values.secret.yaml). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT.",
+      "description": "Continuous file synchronisation between your devices, without a cloud. Sign in as admin with the password you set (GUI_PASSWORD). Add folders under /data, which is your host folder: it must exist and belong to PUID:PGID. Devices find each other through global discovery and relays (LAN broadcast does not cross Docker networks). With a SYNC_PORT other than 22000, set Listen Addresses to: default, tcp://<host>:SYNC_PORT, quic://<host>:SYNC_PORT.",
       "tier": "app",
       "category": "files",
       "homepage": "https://syncthing.net",
       "source": "https://github.com/syncthing/syncthing",
       "path": "apps/syncthing",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "images": [
         {
           "name": "syncthing/syncthing",
@@ -4175,16 +4183,16 @@
           "title": "Group id owning the synced files",
           "required": true,
           "default": "1000"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "GUI_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Web UI password",
+          "description": "You sign in as admin with it; it's set before Syncthing starts, so the UI is never open. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "config",
@@ -4196,13 +4204,13 @@
     {
       "name": "tdarr",
       "title": "Tdarr",
-      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts (the tdarr-node template) connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the generated API_KEY (read it with: sops decrypt stacks/tdarr/values.secret.yaml) and give remote nodes the same key. Pick a GPU for hardware transcoding.",
+      "description": "Distributed media transcoding. Runs the server with an internal node; nodes on other hosts (the tdarr-node template) connect to the server port. Authentication stays on. Log in as admin with tapi_ followed by the API_KEY you set, and give remote nodes the same key. Pick a GPU for hardware transcoding.",
       "tier": "app",
       "category": "media",
       "homepage": "https://home.tdarr.io",
       "source": "https://github.com/HaveAGitGat/Tdarr",
       "path": "apps/tdarr",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "ghcr.io/haveagitgat/tdarr",
@@ -4268,16 +4276,16 @@
           "type": "gpu",
           "title": "Hardware transcoding (VAAPI/QSV on Intel or AMD, NVENC on NVIDIA)",
           "default": "none"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "API_KEY",
-          "kind": "secret",
-          "length": 32,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "API key (also the admin login)",
+          "description": "Log in as admin with tapi_ followed by this key, and give remote nodes (tdarr-node) the same key. Kept encrypted in the fleet. At least 16 characters.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "server",
@@ -4471,7 +4479,7 @@
       "homepage": "https://github.com/qdm12/gluetun-wiki",
       "source": "https://github.com/qdm12/gluetun",
       "path": "apps/vpn-egress",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "qmcgaw/gluetun",
@@ -4529,16 +4537,16 @@
           "title": "Host port of the HTTP proxy for LAN devices",
           "required": true,
           "default": "8888"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "PROXY_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "HTTP proxy password",
+          "description": "LAN devices use the proxy as user proxy with it. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data"
@@ -4549,13 +4557,13 @@
     {
       "name": "wireguard",
       "title": "WireGuard (wg-easy)",
-      "description": "Your own VPN into the home network: phones and laptops connect from anywhere and reach home services as if they were there. Forward VPN_PORT (UDP) on the router to this host. The web UI creates client configs and QR codes; sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/wireguard/values.secret.yaml).",
+      "description": "Your own VPN into the home network: phones and laptops connect from anywhere and reach home services as if they were there. Forward VPN_PORT (UDP) on the router to this host. The web UI creates client configs and QR codes; sign in as admin with the password you set (ADMIN_PASSWORD).",
       "tier": "app",
       "category": "networking",
       "homepage": "https://wg-easy.github.io/wg-easy/",
       "source": "https://github.com/wg-easy/wg-easy",
       "path": "apps/wireguard",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/wg-easy/wg-easy",
@@ -4602,16 +4610,16 @@
           "required": true,
           "default": "1.1.1.1,9.9.9.9",
           "pattern": "^[0-9a-fA-F.:]+(,[0-9a-fA-F.:]+)*$"
-        }
-      ],
-      "generate": [
+        },
         {
           "name": "ADMIN_PASSWORD",
-          "kind": "secret",
-          "length": 24,
-          "encoding": "alnum"
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in to the web UI as admin with it; set on the first start, so the setup screen is never open. Kept encrypted in the fleet.",
+          "required": true
         }
       ],
+      "generate": [],
       "volumes": [
         {
           "name": "data",

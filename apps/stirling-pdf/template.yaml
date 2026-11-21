@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: stirling-pdf
   title: Stirling-PDF
-  description: "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the generated ADMIN_PASSWORD (read it with: sops decrypt stacks/stirling-pdf/values.secret.yaml); you are asked to change it. Plan about 4 GB of memory."
+  description: "PDF toolbox in the browser (merge, split, convert, OCR, sign); files are processed on your server. With login on, sign in as admin with the password you set (ADMIN_PASSWORD); you are asked to change it. Plan about 4 GB of memory."
   tier: app
   category: documents
   homepage: https://www.stirlingpdf.com
   source: https://github.com/Stirling-Tools/Stirling-PDF
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: stirling-pdf, port: 8080 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
@@ -26,10 +26,11 @@ spec:
       type: bool
       title: Require a login (recommended when the domain is public)
       default: "true"
-  generate:
-    # The first admin; without it, the documented admin / stirling would be
-    # the first login on a public domain. Used on the first start only.
-    - { name: ADMIN_PASSWORD, kind: secret, length: 24, encoding: alnum }
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "The first admin signs in with it; without it, the documented admin / stirling would be the first login on a public domain. Kept encrypted in the fleet. Used on the first start only."
+      required: true
   volumes:
     - { name: configs, backup: true }
     - { name: storage, backup: true }
