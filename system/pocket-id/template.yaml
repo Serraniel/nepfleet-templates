@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: pocket-id
   title: Pocket ID
-  description: "Sign in with passkeys across your apps: a small OpenID Connect provider. Passkeys need HTTPS, so use a domain. Set it up at /setup right after installing, as the first visitor becomes its admin."
+  description: "Sign in with passkeys across your apps: a small OpenID Connect provider. Passkeys need HTTPS, so use a domain. The admin is created from your inputs; sign in the first time with the one-time link in Pocket ID's log, then add a passkey."
   tier: system
   category: security
   homepage: https://pocket-id.org
   source: https://github.com/pocket-id/pocket-id
 spec:
-  version: 0.1.1
+  version: 0.2.0
   compose: compose.yaml
   web: { service: pocket-id, port: 1411 }
   images:
@@ -21,7 +21,28 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: ADMIN_USERNAME
+      type: string
+      title: Admin user
+      description: "Created as soon as Pocket ID first starts, which closes its /setup page (whose first visitor would become the admin). Pocket ID has no passwords: the first time, open the pocket-id service's log, use the one-time sign-in link printed there (valid for an hour) and add a passkey. While the admin has no passkey, every restart of the service prints a new link. Taken only when the admin is created."
+      default: admin
+      required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin email
+      description: The admin's email address. Taken only when the admin is created; change it in Pocket ID later.
+      required: true
+    - name: ADMIN_NAME
+      type: string
+      title: Admin display name
+      description: Taken only when the admin is created.
+      default: Admin
+      required: true
   generate:
     - { name: ENCRYPTION_KEY, kind: secret, length: 32, encoding: base64url }
+    # Admin rights over Pocket ID's API, for setup.sh.
+    - { name: STATIC_API_KEY, kind: secret, length: 32, encoding: base64url }
+  files:
+    - { src: files/setup.sh, dest: setup/setup.sh }
   volumes:
     - { name: data, backup: true, shared: true }

@@ -2,13 +2,23 @@ services:
   pocket-id:
     image: ghcr.io/pocket-id/pocket-id:v2.19.3
     restart: unless-stopped
+    # setup.sh runs next to Pocket ID on every start: it creates the admin
+    # from the inputs as soon as Pocket ID answers, which closes /setup, and
+    # prints a one-time sign-in link while the admin has no passkey.
+    entrypoint: ["sh", "-c", "sh /setup/setup.sh & exec sh /app/docker/entrypoint.sh /app/pocket-id"]
     environment:
       APP_URL: ${NEPFLEET_URL}
       TRUST_PROXY: "true"
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       ANALYTICS_DISABLED: "true"
+      # Admin rights over the API, for setup.sh.
+      STATIC_API_KEY: ${STATIC_API_KEY}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_NAME: ${ADMIN_NAME}
     volumes:
       - data:/app/data
+      - ./setup:/setup:ro
     networks: [ingress]
     healthcheck:
       test: ["CMD", "/app/pocket-id", "healthcheck"]
