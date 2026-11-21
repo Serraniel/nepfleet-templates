@@ -69,7 +69,7 @@
   },
   "authelia": {
     "COOKIE_DOMAIN": "example.test",
-    "ADMIN_PASSWORD_HASH": "$argon2id$v=19$m=65536,t=3,p=4$171U8pCMbeYQwI1vE/xhsQ$gIWR7eYpzRzt9UBLFmIVQH2mFTnqLbw420wlQxHHYc8"
+    "ADMIN_PASSWORD": "ci-not-a-real-password"
   },
   "adguard-home": {
     "DNS_PORT": "15354",
