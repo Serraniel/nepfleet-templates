@@ -693,8 +693,40 @@ def check_adguard_home():
         raise SystemExit("adguard-home: a wrong password signs in")
 
 
+
+def check_backrest():
+    """Set up from the start: the API refuses anonymous calls, the admin from
+    the inputs signs in, and the config has the instance and that user, so the
+    UI doesn't open its first-run setup."""
+    v = OVERRIDES["backrest"]
+    base = f"http://{stack_name('backrest')}-backrest-1:9898"
+
+    def rpc(method, body, *headers):
+        args = []
+        for h in ("Content-Type: application/json", *headers):
+            args += ["--header", h]
+        return run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-S", "-O", "-", *args,
+                   "--post-data", json.dumps(body), base + method, check=False)
+
+    p = rpc("/v1.Backrest/GetConfig", {})
+    if p.returncode == 0:
+        raise SystemExit(f"backrest: the API answers without signing in:\n{p.stdout[:300]}")
+    p = rpc("/v1.Authentication/Login", {"username": v["BACKREST_USERNAME"], "password": "wrong-password"})
+    if p.returncode == 0:
+        raise SystemExit("backrest: a wrong password signs in")
+    p = rpc("/v1.Authentication/Login", {"username": v["BACKREST_USERNAME"], "password": v["BACKREST_PASSWORD"]})
+    if p.returncode != 0:
+        raise SystemExit(f"backrest: the admin from the inputs can't sign in:\n{p.stderr}{p.stdout[:300]}")
+    token = json.loads(p.stdout)["token"]
+    p = rpc("/v1.Backrest/GetConfig", {}, f"Authorization: Bearer {token}")
+    cfg = json.loads(p.stdout) if p.returncode == 0 else {}
+    users = [u.get("name") for u in cfg.get("auth", {}).get("users", [])]
+    if not cfg.get("instance") or users != [v["BACKREST_USERNAME"]]:
+        raise SystemExit(f"backrest: the config isn't seeded (instance, users {users}):\n{p.stderr}{p.stdout[:300]}")
+
+
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"backrest": check_backrest, "adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.

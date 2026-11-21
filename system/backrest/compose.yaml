@@ -16,6 +16,8 @@ services:
       - /var/lib/docker/volumes:/userdata/volumes:ro
       - ${EXTRA_PATH}:/userdata/extra:ro
     networks: [ingress]
+    depends_on:
+      seed: { condition: service_completed_successfully }
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 9898}}"
@@ -26,6 +28,33 @@ services:
       homepage.description: Backups (restic)
       homepage.icon: backrest.svg
       homepage.href: ${NEPFLEET_URL}
+
+  # Writes the first config.json (instance name and the admin from the
+  # inputs) when the config volume has none, so Backrest never shows its
+  # first-run setup, which anyone reaching the domain could claim. A config
+  # already there stays as it is. Backrest wants the bcrypt hash
+  # base64-encoded, so it is encoded here.
+  seed:
+    image: garethgeorge/backrest:v1.14.1
+    restart: "no"
+    network_mode: none
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        if [ -f /config/config.json ]; then echo "config.json exists"; exit 0; fi
+        hash="$$(printf '%s' "$$ADMIN_PASSWORD_HASH" | base64 | tr -d '\n')"
+        umask 077
+        printf '{\n  "version": 6,\n  "instance": "%s",\n  "auth": {\n    "users": [{ "name": "%s", "passwordBcrypt": "%s" }]\n  }\n}\n' \
+          "$$INSTANCE" "$$ADMIN_USER" "$$hash" > /config/config.json.tmp
+        mv /config/config.json.tmp /config/config.json
+        echo "config.json written for $$ADMIN_USER"
+    environment:
+      INSTANCE: ${BACKREST_INSTANCE}
+      ADMIN_USER: ${BACKREST_USERNAME}
+      ADMIN_PASSWORD_HASH: ${BACKREST_PASSWORD_HASH}
+    volumes:
+      - config:/config
 
 volumes:
   data:

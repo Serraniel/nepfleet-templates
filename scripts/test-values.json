@@ -93,6 +93,10 @@
     "ACCESS_KEY_ID": "c083b3457c14d3ccbfa9d35698b3241c",
     "SECRET_ACCESS_KEY": "9186fc0c72a12d0bc6bd32f5db39f5d7edf5aab8336268f0755d6bfbff9d2d41"
   },
+  "backrest": {
+    "BACKREST_USERNAME": "ci-admin",
+    "BACKREST_PASSWORD": "ci-backrest-password"
+  },
   "_bot_check": {
     "immich": "/api/server/ping",
     "forgejo": "/api/healthz",
