@@ -25,7 +25,7 @@ x-mastodon: &mastodon
 services:
   # Sets up or upgrades the database, then ends. The web service waits for it.
   migrate:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: "no"
     environment: *mastodon
     command: bundle exec rails db:prepare
@@ -40,7 +40,7 @@ services:
   # Root only to write the keys into the vapid volume; the file goes to the
   # mastodon user.
   setup:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: "no"
     user: "0"
     environment:
@@ -59,7 +59,7 @@ services:
   # Web and sidekiq take the push notification keys from the vapid volume,
   # unless the stack's inputs give a key pair.
   web:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command:
@@ -93,7 +93,7 @@ services:
       homepage.href: ${NEPFLEET_URL}
 
   streaming:
-    image: ghcr.io/mastodon/mastodon-streaming:v4.7.5
+    image: ghcr.io/mastodon/mastodon-streaming:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command: node ./streaming/index.js
@@ -113,7 +113,7 @@ services:
       caddy.reverse_proxy: "@streaming {{upstreams 4000}}"
 
   sidekiq:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command:
