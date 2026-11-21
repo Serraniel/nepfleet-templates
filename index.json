@@ -5,13 +5,13 @@
     {
       "name": "authelia",
       "title": "Authelia",
-      "description": "Sign-in with a second factor, in front of apps with no login of their own. Needs HTTPS and a domain. To protect an app, add Caddy's forward_auth to it, as Authelia's Caddy guide shows. Messages such as the code to register a second factor land in notifications.txt in its data volume until you set up mail.",
+      "description": "Sign-in with a second factor, in front of apps with no login of their own. Needs HTTPS and a domain. Sign in with the admin from the inputs, then register a second factor: the one-time code it asks for comes by mail when a mail server is set, else it shows in the stack's logs (the notifications service). To protect an app, add Caddy's forward_auth to it, as Authelia's Caddy guide shows.",
       "tier": "system",
       "category": "security",
       "homepage": "https://www.authelia.com",
       "source": "https://github.com/authelia/authelia",
       "path": "system/authelia",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "images": [
         {
           "name": "authelia/authelia",
@@ -60,11 +60,33 @@
           "required": true
         },
         {
-          "name": "ADMIN_PASSWORD_HASH",
+          "name": "ADMIN_PASSWORD",
           "type": "secret",
-          "title": "Admin password, hashed",
-          "description": "Make one with: docker run --rm -it authelia/authelia:4.39.28 authelia crypto hash generate argon2",
+          "title": "Admin password",
+          "description": "The admin signs in with it. Authelia gets only its hash. Changing it here changes it on the next apply.",
           "required": true
+        },
+        {
+          "name": "SMTP_ADDRESS",
+          "type": "string",
+          "title": "Mail server, e.g. submission://smtp.example.org:587",
+          "description": "Optional. submission:// for STARTTLS (port 587), submissions:// for TLS (port 465). Without one, the one-time codes show in the stack's logs."
+        },
+        {
+          "name": "SMTP_USERNAME",
+          "type": "string",
+          "title": "Mail login"
+        },
+        {
+          "name": "SMTP_PASSWORD",
+          "type": "secret",
+          "title": "Mail password"
+        },
+        {
+          "name": "SMTP_SENDER",
+          "type": "string",
+          "title": "Mail from, e.g. Authelia <auth@example.org>",
+          "description": "By default noreply at the protected domain."
         }
       ],
       "generate": [
@@ -85,6 +107,11 @@
           "kind": "secret",
           "length": 64,
           "encoding": "alnum"
+        },
+        {
+          "name": "ADMIN_PASSWORD_HASH",
+          "kind": "bcrypt",
+          "from": "ADMIN_PASSWORD"
         }
       ],
       "volumes": [

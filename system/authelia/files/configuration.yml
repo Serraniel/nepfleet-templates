@@ -2,6 +2,9 @@ server:
   address: tcp://:9091
 theme: auto
 authentication_backend:
+  # The password comes from the stack's inputs: change it there, not by mail.
+  password_reset:
+    disable: true
   file:
     path: /config/users.yml
     password:
@@ -16,8 +19,19 @@ session:
 storage:
   local:
     path: /data/db.sqlite3
-# No mail server to assume: messages, such as the code to register a second factor,
-# land in this file in the data volume. Replace this with smtp in the stack's files/.
+# Registering a second factor asks for a one-time code that Authelia sends.
+# With a mail server set in the stack's inputs, it goes by mail. Without one,
+# it lands in notifications.txt in the data volume, and the stack's
+# notifications service prints it to the stack's logs.
+# Authelia fills in the template parts when it starts (X_AUTHELIA_CONFIG_FILTERS).
 notifier:
+{{- if env "SMTP_ADDRESS" }}
+  smtp:
+    address: {{ env "SMTP_ADDRESS" | toYaml }}
+    username: {{ env "SMTP_USERNAME" | toYaml }}
+    password: {{ env "SMTP_PASSWORD" | toYaml }}
+    sender: {{ env "SMTP_SENDER" | default "Authelia <noreply@${COOKIE_DOMAIN}>" | toYaml }}
+{{- else }}
   filesystem:
     filename: /data/notifications.txt
+{{- end }}
