@@ -20,12 +20,17 @@ services:
     tmpfs: [/run]
     environment:
       CONTAINERS: 1
+      # Swarm: the services' labels, and their tasks for the status dots.
       SERVICES: 1
       TASKS: 1
       POST: 0
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [socket]
+    deploy:
+      # On swarm: only a manager lists the services.
+      placement:
+        constraints: [node.role == manager]
 
 networks:
   ingress:

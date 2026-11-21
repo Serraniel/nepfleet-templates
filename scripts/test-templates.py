@@ -256,6 +256,13 @@ def deploy_swarm(nf, names):
                     ok = False
                 label = run("docker", "node", "ls", "--filter", f"node.label=nepfleet.data.{stack}", "-q").stdout.strip()
                 print(f"data node for {stack}: {label or '(none: no local volumes)'}")
+            if ok and name in AFTER_DEPLOY_SWARM:
+                try:
+                    AFTER_DEPLOY_SWARM[name]()
+                    print("ok   " + name + " works (swarm)")
+                except SystemExit as e:
+                    print(e)
+                    ok = False
             print(("ok   " if ok else "FAIL ") + name + " (swarm)")
             if not ok:
                 failed.append(name)
@@ -593,6 +600,55 @@ def check_homebox():
         raise SystemExit(f"homebox: the sign-in page offers registration: {status}")
 
 
+def check_homepage(container, server, start_probe, stop_probe):
+    """Homepage lists a labelled probe from the server it lives on ("local"
+    for a container, "swarm" for a swarm service), with its status."""
+    probe = stack_name("homepage") + "-probe"
+    stop_probe(probe)
+    try:
+        start_probe(probe, ["homepage.group=CI", f"homepage.name={probe}", "homepage.href=http://example.test"])
+
+        def get(path):
+            p = run("docker", "exec", container, "wget", "-q", "-O-", f"http://127.0.0.1:3000{path}", check=False)
+            return json.loads(p.stdout) if p.returncode == 0 and p.stdout.strip() else None
+
+        found, status = None, None
+        for _ in range(30):
+            groups = get("/api/services") or []
+            found = next((s for g in groups for s in g.get("services", []) if s.get("name") == probe), None)
+            if found:
+                status = ((get(f"/api/docker/statuses?server={server}") or {}).get("statuses") or {}).get(found.get("container"))
+                if status:
+                    break
+            time.sleep(2)
+        if not found:
+            raise SystemExit(f"homepage: the labelled {probe} is not on the dashboard: {groups}")
+        if found.get("server") != server:
+            raise SystemExit(f"homepage: {probe} came from server {found.get('server')!r}, not {server!r}")
+        if not status or "running" not in status.get("status", ""):
+            raise SystemExit(f"homepage: no running status for {probe}: {status}")
+    finally:
+        stop_probe(probe)
+
+
+def check_homepage_compose():
+    check_homepage(
+        f"{stack_name('homepage')}-homepage-1", "local",
+        lambda name, labels: run("docker", "run", "-d", "--name", name, *[a for l in labels for a in ("--label", l)],
+                                 ALPINE, "sleep", "300"),
+        lambda name: run("docker", "rm", "-f", name, check=False))
+
+
+def check_homepage_swarm():
+    stack = stack_name("homepage")
+    container = run("docker", "ps", "-q", "--filter", f"label=com.docker.swarm.service.name={stack}_homepage").stdout.split()[0]
+    check_homepage(
+        container, "swarm",
+        lambda name, labels: run("docker", "service", "create", "--detach", "--name", name,
+                                 *[a for l in labels for a in ("--label", l)], ALPINE, "sleep", "300"),
+        lambda name: run("docker", "service", "rm", name, check=False))
+
+
 def check_garage():
     """The bucket and key Garage made on first start must store and return an object."""
     c = stack_name("garage") + "-garage-1"
@@ -638,7 +694,9 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure, "homepage": check_homepage_compose}
+# The same for swarm stacks, run by deploy-swarm.
+AFTER_DEPLOY_SWARM = {"homepage": check_homepage_swarm}
 
 
 # Changing these can affect every template, so all of them are tested again.

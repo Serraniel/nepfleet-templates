@@ -783,7 +783,7 @@
       "homepage": "https://gethomepage.dev",
       "source": "https://github.com/gethomepage/homepage",
       "path": "system/homepage",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "images": [
         {
           "name": "ghcr.io/gethomepage/homepage",
