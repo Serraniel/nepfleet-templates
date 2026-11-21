@@ -1607,13 +1607,13 @@
     {
       "name": "bookstack",
       "title": "BookStack",
-      "description": "Wiki and documentation, organised in shelves, books and pages. Sign in with admin@admin.com / password on the first visit and change both right away.",
+      "description": "Wiki and documentation, organised in shelves, books and pages. Sign in with the admin e-mail and password you choose here.",
       "tier": "app",
       "category": "documents",
       "homepage": "https://www.bookstackapp.com",
       "source": "https://github.com/BookStackApp/BookStack",
       "path": "apps/bookstack",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "images": [
         {
           "name": "lscr.io/linuxserver/bookstack",
@@ -1643,6 +1643,29 @@
           "type": "hostname",
           "title": "Domain",
           "required": true
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin e-mail",
+          "description": "You sign in to BookStack with it. Taken on the first start only, where it replaces the default admin@admin.com; change it later in BookStack.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_NAME",
+          "type": "string",
+          "title": "Admin name",
+          "description": "The admin's display name. Taken on the first start only.",
+          "required": true,
+          "default": "Admin"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "Kept encrypted in the fleet; at least 8 characters. Taken on the first start only, where it replaces the default password; change it later in BookStack.",
+          "required": true,
+          "pattern": "^.{8,}$"
         }
       ],
       "generate": [

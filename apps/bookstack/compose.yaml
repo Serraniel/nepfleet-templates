@@ -18,6 +18,7 @@ services:
     networks: [ingress, default]
     depends_on:
       db: { condition: service_healthy }
+      setup: { condition: service_completed_successfully }
     healthcheck:
       test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost/status"]
       interval: 15s
@@ -34,6 +35,41 @@ services:
       homepage.description: Wiki and documentation
       homepage.icon: bookstack.svg
       homepage.href: ${NEPFLEET_URL}
+
+  # Before BookStack starts: migrates the database (a fresh one gets the
+  # default admin@admin.com / password) and gives that admin the stack's
+  # e-mail, name and password (--initial). Once the default admin is gone,
+  # create-admin --initial does nothing and exits 2, which counts as done.
+  # The image links Laravel's cache and log paths into /config; this one-shot
+  # makes them in its own throwaway layer and leaves BookStack's volume alone.
+  setup:
+    image: lscr.io/linuxserver/bookstack:26.09.3
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mkdir -p /config/www/framework/cache /config/www/framework/views /config/www/framework/sessions \
+          /config/www/framework/purifier /config/log/bookstack || exit 1
+        php /app/www/artisan migrate --force || exit 1
+        php /app/www/artisan bookstack:create-admin --initial \
+          --email "$$ADMIN_EMAIL" --name "$$ADMIN_NAME" --password "$$ADMIN_PASSWORD"
+        status=$$?
+        if [ "$$status" -eq 2 ]; then exit 0; fi
+        exit "$$status"
+    environment:
+      APP_URL: ${NEPFLEET_URL}
+      APP_KEY: ${APP_KEY}
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: bookstack
+      DB_USERNAME: bookstack
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    networks: [default]
+    depends_on:
+      db: { condition: service_healthy }
 
   db:
     image: mariadb:11.8
