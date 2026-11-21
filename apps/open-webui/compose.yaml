@@ -6,6 +6,10 @@ services:
       WEBUI_URL: ${NEPFLEET_URL}
       WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
       ENABLE_SIGNUP: ${ENABLE_SIGNUP}
+      # The admin from the stack's inputs, made on the first start: the
+      # domain never offers its first account to whoever comes first.
+      WEBUI_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      WEBUI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       # Unused backends simply stay unreachable; Open WebUI shows them as offline.
       OLLAMA_BASE_URL: http://ollama:11434
       OPENAI_API_BASE_URL: http://litellm:4000/v1

@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.navidrome.org
   source: https://github.com/navidrome/navidrome
 spec:
-  version: 0.3.1
+  version: 0.3.2
   compose: compose.yaml
   web: { service: navidrome, port: 4533 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/rest/", "^/ping"] }
@@ -30,6 +30,11 @@ spec:
       type: string
       title: Library scan interval
       default: 1h
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password (user admin)
+      description: "You sign in as admin with it. Kept encrypted in the fleet. Navidrome creates admin on its first start; change the password later in Navidrome."
       required: true
   volumes:
     - { name: data, backup: true }

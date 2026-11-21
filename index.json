@@ -157,13 +157,13 @@
     {
       "name": "beszel",
       "title": "Beszel",
-      "description": "Lightweight host and container metrics, with history and alerts. This is the hub; create its admin right after installing, as the first visitor does. Each host to watch runs an agent: the beszel-agent template.",
+      "description": "Lightweight host and container metrics, with history and alerts. This is the hub; sign in with the admin set here. Each host to watch runs an agent: the beszel-agent template.",
       "tier": "system",
       "category": "monitoring",
       "homepage": "https://beszel.dev",
       "source": "https://github.com/henrygd/beszel",
       "path": "system/beszel",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "henrygd/beszel",
@@ -188,6 +188,19 @@
           "name": "DOMAIN",
           "type": "hostname",
           "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin e-mail (you sign in with it)",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "Kept encrypted in the fleet. Beszel creates this admin on its first start; change the password later in Beszel.",
           "required": true
         }
       ],
@@ -2743,7 +2756,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -2773,9 +2786,28 @@
           "type": "hostname",
           "title": "Domain (also the base URL of webhooks)",
           "required": true
+        },
+        {
+          "name": "OWNER_EMAIL",
+          "type": "email",
+          "title": "Owner e-mail",
+          "description": "You sign in to n8n with it, as its owner.",
+          "required": true
+        },
+        {
+          "name": "OWNER_PASSWORD",
+          "type": "secret",
+          "title": "Owner password",
+          "description": "Kept encrypted in the fleet; n8n gets only its bcrypt hash, and takes it on every start, so a new one here replaces the old.",
+          "required": true
         }
       ],
       "generate": [
+        {
+          "name": "OWNER_PASSWORD_HASH",
+          "kind": "bcrypt",
+          "from": "OWNER_PASSWORD"
+        },
         {
           "name": "ENCRYPTION_KEY",
           "kind": "secret",
@@ -2810,7 +2842,7 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "images": [
         {
           "name": "deluan/navidrome",
@@ -2849,6 +2881,13 @@
           "title": "Library scan interval",
           "required": true,
           "default": "1h"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password (user admin)",
+          "description": "You sign in as admin with it. Kept encrypted in the fleet. Navidrome creates admin on its first start; change the password later in Navidrome.",
+          "required": true
         }
       ],
       "generate": [],
@@ -2925,13 +2964,13 @@
     {
       "name": "open-webui",
       "title": "Open WebUI (+ Ollama, LiteLLM)",
-      "description": "Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. The first account becomes admin.",
+      "description": "Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. Its admin is the one set here; others sign up only if you allow it.",
       "tier": "app",
       "category": "ai",
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -2983,7 +3022,20 @@
           "type": "bool",
           "title": "Allow sign-ups",
           "description": "Applies on first start only; Open WebUI stores it, so later changes go through its Admin settings.",
-          "default": "true"
+          "default": "false"
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin e-mail (you sign in with it)",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "Kept encrypted in the fleet. Open WebUI creates this admin on its first start, while it has no users, and then closes sign-up; change the password later in Open WebUI.",
+          "required": true
         }
       ],
       "generate": [
@@ -3195,7 +3247,7 @@
       "homepage": "https://owncast.online",
       "source": "https://github.com/owncast/owncast",
       "path": "apps/owncast",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "owncast/owncast",
@@ -3228,6 +3280,13 @@
           "title": "Host port for RTMP ingest",
           "required": true,
           "default": "1935"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password (user admin)",
+          "description": "You sign in to /admin as admin with it. Kept encrypted in the fleet. Set on every start, so change it here, not in Owncast (without it, Owncast's well-known default abc123 would guard /admin).",
+          "required": true
         }
       ],
       "generate": [],
@@ -3248,7 +3307,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.5.2",
+      "version": "0.5.3",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -3320,6 +3379,27 @@
           "title": "Host folder watched for new documents",
           "required": true,
           "default": "./consume"
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Admin user name (you sign in with it)",
+          "required": true,
+          "default": "admin",
+          "pattern": "^[A-Za-z0-9@.+_-]{1,150}$"
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin e-mail",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "Kept encrypted in the fleet. Paperless creates this admin when it has none; change the password later in Paperless.",
+          "required": true
         }
       ],
       "generate": [

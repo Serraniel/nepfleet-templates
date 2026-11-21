@@ -9,7 +9,7 @@ metadata:
   homepage: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
 spec:
-  version: 0.5.2
+  version: 0.5.3
   compose: compose.yaml
   web: { service: paperless, port: 8000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/ws/"] }
@@ -48,6 +48,21 @@ spec:
       type: path
       title: Host folder watched for new documents
       default: ./consume
+      required: true
+    - name: ADMIN_USER
+      type: string
+      title: Admin user name (you sign in with it)
+      default: admin
+      required: true
+      pattern: "^[A-Za-z0-9@.+_-]{1,150}$"
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin e-mail
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "Kept encrypted in the fleet. Paperless creates this admin when it has none; change the password later in Paperless."
       required: true
   generate:
     - { name: SECRET_KEY, kind: secret, length: 64, encoding: alnum }

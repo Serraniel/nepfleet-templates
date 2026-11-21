@@ -5,6 +5,10 @@ services:
     environment:
       PAPERLESS_URL: ${NEPFLEET_URL}
       PAPERLESS_SECRET_KEY: ${SECRET_KEY}
+      # The admin from the stack's inputs, made when there is none.
+      PAPERLESS_ADMIN_USER: ${ADMIN_USER}
+      PAPERLESS_ADMIN_MAIL: ${ADMIN_EMAIL}
+      PAPERLESS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
       PAPERLESS_DBPASS: ${DB_PASSWORD}

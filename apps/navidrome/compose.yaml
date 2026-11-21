@@ -7,6 +7,10 @@ services:
       ND_SCANSCHEDULE: ${SCAN_SCHEDULE}
       ND_LOGLEVEL: info
       ND_ENABLEINSIGHTSCOLLECTOR: "false"   # no anonymous usage reports
+      # Creates the user admin on the first start (Navidrome calls the option a
+      # development one; it is the only unattended way), so the domain never
+      # offers its first account to whoever comes first.
+      ND_DEVAUTOCREATEADMINPASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - data:/data
       - ${MUSIC_PATH}:/music:ro

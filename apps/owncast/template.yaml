@@ -9,7 +9,7 @@ metadata:
   homepage: https://owncast.online
   source: https://github.com/owncast/owncast
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: owncast, port: 8080 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/hls/", "^/embed/", "^/api/integrations/", "^/api/v1/instance$", "^/\\.well-known/", "^/nodeinfo/", "^/federation/"] }   # players, embeds, bots with tokens, the fediverse
@@ -26,6 +26,11 @@ spec:
       type: int
       title: Host port for RTMP ingest
       default: "1935"
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password (user admin)
+      description: "You sign in to /admin as admin with it. Kept encrypted in the fleet. Set on every start, so change it here, not in Owncast (without it, Owncast's well-known default abc123 would guard /admin)."
       required: true
   volumes:
     - { name: data, backup: true }

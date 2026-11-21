@@ -8,6 +8,11 @@ services:
       N8N_PROXY_HOPS: "1"          # behind Caddy: trust one X-Forwarded-For hop
       N8N_VERSION_NOTIFICATIONS_ENABLED: "false"   # no version check against api.n8n.io; updates come through NepFleet
       WEBHOOK_URL: ${NEPFLEET_URL}/
+      # The owner from the stack's inputs, set on every start: no setup
+      # screen for whoever opens the domain first.
+      N8N_INSTANCE_OWNER_MANAGED_BY_ENV: "true"
+      N8N_INSTANCE_OWNER_EMAIL: ${OWNER_EMAIL}
+      N8N_INSTANCE_OWNER_PASSWORD_HASH: ${OWNER_PASSWORD_HASH}
       N8N_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       GENERIC_TIMEZONE: ${TZ}
       TZ: ${TZ}

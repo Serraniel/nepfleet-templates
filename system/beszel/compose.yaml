@@ -4,6 +4,10 @@ services:
     restart: unless-stopped
     environment:
       APP_URL: ${NEPFLEET_URL}
+      # The admin from the stack's inputs, made on the first start: no
+      # account screen for whoever opens the domain first.
+      BESZEL_HUB_USER_EMAIL: ${ADMIN_EMAIL}
+      BESZEL_HUB_USER_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - data:/beszel_data
     networks: [ingress]

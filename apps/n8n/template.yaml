@@ -9,7 +9,7 @@ metadata:
   homepage: https://n8n.io
   source: https://github.com/n8n-io/n8n
 spec:
-  version: 0.3.4
+  version: 0.3.5
   compose: compose.yaml
   botCheck: { service: n8n, port: 5678, allow: ["^/webhook/", "^/webhook-test/", "^/webhook-waiting/", "^/api/v1/"] }
   images:
@@ -23,7 +23,19 @@ spec:
       type: hostname
       title: Domain (also the base URL of webhooks)
       required: true
+    - name: OWNER_EMAIL
+      type: email
+      title: Owner e-mail
+      description: You sign in to n8n with it, as its owner.
+      required: true
+    - name: OWNER_PASSWORD
+      type: secret
+      title: Owner password
+      description: "Kept encrypted in the fleet; n8n gets only its bcrypt hash, and takes it on every start, so a new one here replaces the old."
+      required: true
   generate:
+    # n8n takes the owner's password as a bcrypt hash (N8N_INSTANCE_OWNER_*).
+    - { name: OWNER_PASSWORD_HASH, kind: bcrypt, from: OWNER_PASSWORD }
     # Encrypts the credentials n8n stores; losing it makes them unreadable.
     - { name: ENCRYPTION_KEY, kind: secret, length: 48, encoding: alnum }
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
