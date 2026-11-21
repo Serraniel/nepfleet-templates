@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: mealie
   title: Mealie
-  description: "Recipe manager and meal planner that imports recipes from any URL. Sign in with changeme@example.com / MyPassword on the first visit and change the email and password right away: until then anyone can log in as admin."
+  description: Recipe manager and meal planner that imports recipes from any URL. Sign in as admin with the e-mail and password you set here.
   tier: app
   category: home
   homepage: https://mealie.io
   source: https://github.com/mealie-recipes/mealie
 spec:
-  version: 0.3.2
+  version: 0.4.0
   compose: compose.yaml
   web: { service: mealie, port: 9000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
@@ -22,9 +22,27 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin e-mail
+      description: "You sign in to Mealie with it. Mealie's default admin (changeme@example.com / MyPassword) gets it once, while that login still works (on the first start); an admin changed earlier stays as it is. Change it later in Mealie."
+      required: true
+    - name: ADMIN_NAME
+      type: string
+      title: Admin full name
+      description: Set once, like the e-mail.
+      default: Admin
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "At least 8 characters. Set once, like the e-mail, so the default password never stays; change it later in Mealie."
+      required: true
+      pattern: "^.{8,}$"
     - name: ALLOW_SIGNUP
       type: bool
       title: Let visitors create accounts
       default: "false"
+  files:
+    - { src: files/setup.py, dest: setup/setup.py }
   volumes:
     - { name: data, backup: true }

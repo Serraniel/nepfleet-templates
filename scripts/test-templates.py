@@ -354,6 +354,36 @@ def check_sure():
     if run("docker", "exec", f"{c}-web-1", "printenv", "POSTHOG_FEEDBACK_ENABLED").stdout.strip() != "false":
         raise SystemExit("sure: shared PostHog feedback is on")
 
+def check_mealie():
+    """setup.py replaced the default admin: the inputs' login gets a token,
+    the default changeme@example.com / MyPassword is refused, and visitors
+    can't sign up."""
+    c = stack_name("mealie")
+    v = OVERRIDES["mealie"]
+
+    def login(user, password):
+        return run("docker", "exec", f"{c}-mealie-1", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+                   "--data-urlencode", f"username={user}", "--data-urlencode", f"password={password}",
+                   "http://127.0.0.1:9000/api/auth/token", check=False).stdout
+
+    if (code := login(v["ADMIN_EMAIL"], v["ADMIN_PASSWORD"])) != "200":
+        raise SystemExit(f"mealie: the admin from the inputs can't sign in ({code})")
+    if (code := login("changeme@example.com", "MyPassword")) != "401":
+        raise SystemExit(f"mealie: the default admin login answered {code}, not 401")
+    about = json.loads(run("docker", "exec", f"{c}-mealie-1", "curl", "-s", "http://127.0.0.1:9000/api/app/about").stdout)
+    if about.get("allowSignup") is not False:
+        raise SystemExit(f"mealie: sign-up is open: {about}")
+    signup = json.dumps({"email": "visitor@example.test", "username": "visitor", "fullName": "Visitor",
+                         "password": "ci-visitor-pw", "passwordConfirm": "ci-visitor-pw", "group": "visitors",
+                         "household": "visitors", "advanced": False, "private": False, "seedData": False, "locale": "en-US"})
+    code = run("docker", "exec", f"{c}-mealie-1", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+               "-H", "Content-Type: application/json", "-d", signup,
+               "http://127.0.0.1:9000/api/users/register", check=False).stdout
+    if not code.startswith("4"):
+        raise SystemExit(f"mealie: a visitor's sign-up answered {code}")
+    print(f"mealie: inputs' login 200, default login 401, allowSignup false, sign-up {code}")
+
+
 def check_pihole():
     """Names under the home domain answer with the server's address, never upstream."""
     v = OVERRIDES["pihole"]
@@ -638,7 +668,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
