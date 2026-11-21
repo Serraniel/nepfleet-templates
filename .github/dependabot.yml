@@ -9,6 +9,9 @@ updates:
     schedule: { interval: daily }
     commit-message: { prefix: deps }
     groups:
+      # Immich's server and machine learning must run the same version: one PR
+      # for both, minor updates included (a dependency joins its first group).
+      immich: { patterns: ["*immich-app/immich-*"], update-types: [minor, patch] }
       templates: { patterns: ["*"], update-types: [patch] }
     ignore:
       - dependency-name: "*"

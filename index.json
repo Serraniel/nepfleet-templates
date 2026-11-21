@@ -2273,7 +2273,7 @@
       "homepage": "https://immich.app",
       "source": "https://github.com/immich-app/immich",
       "path": "apps/immich",
-      "version": "0.5.3",
+      "version": "0.6.0",
       "images": [
         {
           "name": "ghcr.io/immich-app/immich-server",
@@ -2321,6 +2321,27 @@
           "type": "path",
           "title": "Host folder for photos and videos",
           "required": true
+        },
+        {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin email",
+          "description": "Immich's admin, created on its first start so the \"create admin account\" page is never open to whoever finds the domain first. You sign in with this email. Only used while Immich has no admin; later changes go in Immich.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "The admin's password, set on Immich's first start only; change it in Immich later.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_NAME",
+          "type": "string",
+          "title": "Admin name",
+          "description": "The admin's display name, set on Immich's first start only.",
+          "default": "Admin"
         },
         {
           "name": "COMPOSE_PROFILES",
