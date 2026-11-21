@@ -2,18 +2,27 @@ services:
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:2.38.0
     restart: unless-stopped
+    # setup.js first creates the root user from ADMIN_USER and ADMIN_PASSWORD
+    # (on the first start only: it runs the server privately on localhost and
+    # calls its /init), then the server starts as usual. Doing it in the same
+    # container means the "create the root user" screen is never reachable,
+    # on Swarm too, where nothing waits for a separate one-shot service.
+    command: ["sh", "-c", "node /setup/setup.js && exec node dist-server/index.js"]
     environment:
       TZ: ${TZ}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - config:/config
       - metadata:/metadata
       - ${AUDIOBOOKS_PATH}:/audiobooks
       - ${PODCASTS_PATH}:/podcasts
+      - ./setup:/setup:ro
     networks: [ingress]
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost/healthcheck').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
       interval: 30s
-      start_period: 30s
+      start_period: 60s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # SQLite database: consistent copy
       caddy: ${DOMAIN}
