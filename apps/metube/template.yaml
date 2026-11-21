@@ -3,15 +3,18 @@ kind: Template
 metadata:
   name: metube
   title: MeTube (yt-dlp web UI)
-  description: Download videos and audio with yt-dlp from the browser. No built-in login, so keep it on the home network or behind forward auth.
+  description: Download videos and audio with yt-dlp from the browser, behind a sign-in (the user and password set here). MeTube has no login of its own, so Caddy asks for it (basic auth); on a LAN port (access mode port) there is none.
   tier: app
   category: media
   homepage: https://github.com/alexta69/metube
 spec:
-  version: 0.2.3
+  version: 0.3.0
   compose: compose.yaml
   web: { service: metube, port: 8081 }   # also reachable on a LAN port (access mode port)
-  botCheck: { allow: ["^/add$"] }   # links sent by shortcuts and scripts
+  # The sign-in already keeps bots out, and Anubis would take over Caddy's
+  # labels in map form, where Compose doesn't fill in the user in the
+  # basic_auth key: the login would break.
+  botCheck: { supported: false }
   images:
     # Date versions (2026.11.01) carry no compatibility meaning, and yt-dlp
     # must stay current to keep working with the sites: follow every release.
@@ -22,6 +25,18 @@ spec:
     - name: DOMAIN
       type: hostname
       title: Domain
+      required: true
+    - name: METUBE_USER
+      type: string
+      title: User
+      description: "Sign in to MeTube with it. Shortcuts and scripts that send links to /add sign in with it too, e.g. curl -u user:password https://<domain>/add."
+      default: admin
+      required: true
+      pattern: "^[A-Za-z0-9_.-]{1,32}$"
+    - name: METUBE_PASSWORD
+      type: secret
+      title: Password
+      description: Kept encrypted in the fleet; Caddy gets only its bcrypt hash. To change it, set a new one in the stack's secrets and apply.
       required: true
     - name: DOWNLOAD_PATH
       type: path
@@ -37,3 +52,6 @@ spec:
       title: Group id owning the downloads
       default: "1000"
       required: true
+  generate:
+    # Caddy's basic_auth takes the password as a bcrypt hash.
+    - { name: METUBE_PASSWORD_HASH, kind: bcrypt, from: METUBE_PASSWORD }

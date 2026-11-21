@@ -3026,12 +3026,12 @@
     {
       "name": "metube",
       "title": "MeTube (yt-dlp web UI)",
-      "description": "Download videos and audio with yt-dlp from the browser. No built-in login, so keep it on the home network or behind forward auth.",
+      "description": "Download videos and audio with yt-dlp from the browser, behind a sign-in (the user and password set here). MeTube has no login of its own, so Caddy asks for it (basic auth); on a LAN port (access mode port) there is none.",
       "tier": "app",
       "category": "media",
       "homepage": "https://github.com/alexta69/metube",
       "path": "apps/metube",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/alexta69/metube",
@@ -3059,6 +3059,22 @@
           "required": true
         },
         {
+          "name": "METUBE_USER",
+          "type": "string",
+          "title": "User",
+          "description": "Sign in to MeTube with it. Shortcuts and scripts that send links to /add sign in with it too, e.g. curl -u user:password https://<domain>/add.",
+          "required": true,
+          "default": "admin",
+          "pattern": "^[A-Za-z0-9_.-]{1,32}$"
+        },
+        {
+          "name": "METUBE_PASSWORD",
+          "type": "secret",
+          "title": "Password",
+          "description": "Kept encrypted in the fleet; Caddy gets only its bcrypt hash. To change it, set a new one in the stack's secrets and apply.",
+          "required": true
+        },
+        {
           "name": "DOWNLOAD_PATH",
           "type": "path",
           "title": "Host folder for downloads",
@@ -3079,7 +3095,13 @@
           "default": "1000"
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "METUBE_PASSWORD_HASH",
+          "kind": "bcrypt",
+          "from": "METUBE_PASSWORD"
+        }
+      ],
       "volumes": [],
       "migrations": []
     },

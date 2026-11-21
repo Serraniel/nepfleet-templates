@@ -9,16 +9,23 @@ services:
     volumes:
       - ${DOWNLOAD_PATH}:/downloads
     networks: [ingress]
+    # MeTube has no login of its own: Caddy asks for the stack's user and
+    # password (basic auth) on every path but /robots.txt, which the monitor
+    # checks. List form, so Compose fills in the user, which is part of a
+    # label's key.
     labels:
-      caddy: ${DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 8081}}"
-      kuma.metube.http.name: MeTube
-      kuma.metube.http.url: ${NEPFLEET_URL}
-      homepage.group: Media
-      homepage.name: MeTube
-      homepage.description: Video downloads
-      homepage.icon: metube.svg
-      homepage.href: ${NEPFLEET_URL}
+      - "caddy=${DOMAIN}"
+      - "caddy.@metube_login=not path /robots.txt"
+      - "caddy.basic_auth=@metube_login"
+      - "caddy.basic_auth.${METUBE_USER}=${METUBE_PASSWORD_HASH}"
+      - "caddy.reverse_proxy={{upstreams 8081}}"
+      - "kuma.metube.http.name=MeTube"
+      - "kuma.metube.http.url=${NEPFLEET_URL}/robots.txt"
+      - "homepage.group=Media"
+      - "homepage.name=MeTube"
+      - "homepage.description=Video downloads"
+      - "homepage.icon=metube.svg"
+      - "homepage.href=${NEPFLEET_URL}"
 
 networks:
   ingress:
