@@ -453,6 +453,59 @@ def check_forgejo():
         raise SystemExit(f"forgejo: the runner didn't declare itself to Forgejo:\n{logs.stdout}{logs.stderr}")
 
 
+HOMEASSISTANT_CHECK = r"""
+import json, os, time, urllib.error, urllib.parse, urllib.request
+base, client = "http://host.docker.internal:8123", "http://host.docker.internal:8123/"
+proxy = {"X-Forwarded-For": "203.0.113.7", "X-Forwarded-Proto": "https"}  # as Caddy sends them
+def call(path, data=None, form=False, token=None):
+    h = dict(proxy)
+    if data is not None:
+        h["Content-Type"] = "application/x-www-form-urlencoded" if form else "application/json"
+        data = (urllib.parse.urlencode(data) if form else json.dumps(data)).encode()
+    if token:
+        h["Authorization"] = "Bearer " + token
+    with urllib.request.urlopen(urllib.request.Request(base + path, data, h), timeout=30) as r:
+        return r.status, r.read()
+status, _ = call("/")
+assert status == 200, f"/ through the proxy answered {status}"
+for _ in range(30):  # healthy once the owner exists; the other steps follow at once
+    steps = json.loads(call("/api/onboarding")[1])
+    if all(s["done"] for s in steps):
+        break
+    time.sleep(2)
+assert all(s["done"] for s in steps), f"onboarding not done: {steps}"
+try:
+    call("/api/onboarding/users", {"client_id": client, "name": "x", "username": "x", "password": "x", "language": "en"})
+    raise AssertionError("the onboarding wizard still creates owners")
+except urllib.error.HTTPError as e:
+    # 403: step done; 404 after a restart, once onboarding is no longer served
+    assert e.code in (403, 404), f"onboarding user step answered {e.code}"
+flow = json.loads(call("/auth/login_flow", {"client_id": client, "handler": ["homeassistant", None], "redirect_uri": client})[1])
+res = json.loads(call(f"/auth/login_flow/{flow['flow_id']}", {"client_id": client, "username": os.environ["ADMIN_USER"], "password": os.environ["ADMIN_PASSWORD"]})[1])
+assert res.get("type") == "create_entry", f"sign-in refused: {res}"
+token = json.loads(call("/auth/token", {"grant_type": "authorization_code", "code": res["result"], "client_id": client}, form=True)[1])["access_token"]
+status, body = call("/api/", token=token)
+assert status == 200, f"/api/ with the token answered {status}"
+print("signed in as", os.environ["ADMIN_USER"], body.decode())
+"""
+
+
+def check_homeassistant():
+    """Requests through a proxy on the ingress network (as Caddy sends them)
+    are accepted, onboarding is done and closed, and the owner from the
+    stack's inputs signs in."""
+    c = f"{stack_name('homeassistant')}-homeassistant-1"
+    env = dict(line.split("=", 1) for line in run("docker", "exec", c, "env").stdout.splitlines() if "=" in line)
+    image = run("docker", "inspect", "--format", "{{.Config.Image}}", c).stdout.strip()
+    p = run("docker", "run", "--rm", "--network", NETWORK, "--add-host", "host.docker.internal:host-gateway",
+            "-e", "ADMIN_USER=" + env["ADMIN_USER"], "-e", "ADMIN_PASSWORD=" + env["ADMIN_PASSWORD"],
+            "--entrypoint", "python3", image, "-c", HOMEASSISTANT_CHECK, check=False)
+    print(p.stdout.strip())
+    if p.returncode != 0:
+        logs = run("docker", "logs", "--tail", "40", c, check=False)
+        raise SystemExit(f"homeassistant: {p.stderr.strip()[-800:]}\n{logs.stdout}{logs.stderr}")
+
+
 def check_opencloud():
     """With the office profile, Euro-Office answers WOPI discovery on the ingress
     network. (OpenCloud registers it by its domain, which doesn't resolve here, so
@@ -524,7 +577,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homeassistant": check_homeassistant,"loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.

@@ -2003,7 +2003,7 @@
       "homepage": "https://www.home-assistant.io",
       "source": "https://github.com/home-assistant/core",
       "path": "apps/homeassistant",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/home-assistant/home-assistant",
@@ -2028,6 +2028,28 @@
           "name": "DOMAIN",
           "type": "hostname",
           "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ADMIN_NAME",
+          "type": "string",
+          "title": "Owner's display name",
+          "required": true,
+          "default": "Admin"
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Owner user name (you sign in with it)",
+          "description": "Lowercase, no spaces. The owner is created on the first start, so the onboarding wizard is never open; a stack that is onboarded already keeps its users as they are. Change the password later in Home Assistant.",
+          "required": true,
+          "default": "admin"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Owner password",
+          "description": "Kept encrypted in the fleet. Taken only on the first start, to create the owner.",
           "required": true
         },
         {
