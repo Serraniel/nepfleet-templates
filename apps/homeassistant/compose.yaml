@@ -3,11 +3,27 @@ services:
     image: ghcr.io/home-assistant/home-assistant:2026.11
     restart: unless-stopped
     network_mode: host
+    # start.sh trusts Caddy's forwarded headers (http_config.py), starts
+    # onboard.py (the owner from the stack's inputs, so the first-run wizard
+    # is never open), then runs the image's own /init.
+    entrypoint: ["/bin/sh", "/setup/start.sh"]
     environment:
       TZ: ${TZ}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - ./config:/config
+      - ./setup:/setup:ro
       - /run/dbus:/run/dbus:ro   # Bluetooth
+    # Healthy once it answers and has its owner: before that, whoever reaches
+    # it first could claim it.
+    healthcheck:
+      test: ["CMD", "python3", "-P", "/setup/onboard.py", "--health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10m
+      start_interval: 5s
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: host.docker.internal:8123

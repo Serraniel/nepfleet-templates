@@ -9,7 +9,7 @@ metadata:
   homepage: https://www.home-assistant.io
   source: https://github.com/home-assistant/core
 spec:
-  version: 0.2.1
+  version: 0.3.0
   compose: compose.yaml
   images:
     # year.month versioning: every month counts as a "minor"
@@ -20,6 +20,22 @@ spec:
     - name: DOMAIN
       type: hostname
       title: Domain
+      required: true
+    - name: ADMIN_NAME
+      type: string
+      title: Owner's display name
+      default: Admin
+      required: true
+    - name: ADMIN_USER
+      type: string
+      title: Owner user name (you sign in with it)
+      description: "Lowercase, no spaces. The owner is created on the first start, so the onboarding wizard is never open; a stack that is onboarded already keeps its users as they are. Change the password later in Home Assistant."
+      default: admin
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Owner password
+      description: Kept encrypted in the fleet. Taken only on the first start, to create the owner.
       required: true
     - name: ZIGBEE_DEVICE
       type: device
@@ -32,6 +48,8 @@ spec:
     - { input: ZIGBEE_DEVICE, services: [homeassistant] }
     - { input: ZWAVE_DEVICE, services: [homeassistant] }
   files:
-    - { src: files/http.yaml, dest: config/http.yaml }
+    - { src: files/start.sh, dest: setup/start.sh }
+    - { src: files/http_config.py, dest: setup/http_config.py }
+    - { src: files/onboard.py, dest: setup/onboard.py }
   volumes:
     - { name: config, backup: true }
