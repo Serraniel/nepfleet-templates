@@ -1,3 +1,14 @@
+# Both through the stack's read-only socket proxy. Homepage asks each server
+# on its own, and one that fails finds nothing without hiding the other.
+#
+# Compose stacks: homepage.* labels are container labels.
 local:
   host: socket-proxy
   port: 2375
+# Swarm stacks: NepFleet moves homepage.* labels to the services
+# (deploy.labels), which Homepage reads only from a server with swarm: true.
+# On a host that isn't a swarm manager this one finds nothing.
+swarm:
+  host: socket-proxy
+  port: 2375
+  swarm: true
