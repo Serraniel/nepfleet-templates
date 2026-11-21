@@ -778,8 +778,44 @@ def check_backrest():
         raise SystemExit(f"backrest: the config isn't seeded (instance, users {users}):\n{p.stderr}{p.stdout[:300]}")
 
 
+
+def check_openbao():
+    """Initialised and unsealed with nobody's help, the admin from the inputs
+    signs in, and after a restart (an image update) it is unsealed again."""
+    c = stack_name("openbao") + "-openbao-1"
+    password = OVERRIDES["openbao"]["ADMIN_PASSWORD"]
+
+    def status():
+        for _ in range(30):
+            p = run("docker", "exec", c, "bao", "status", "-format=json", check=False)
+            if p.stdout.strip().startswith("{"):
+                s = json.loads(p.stdout)
+                if s["initialized"] and not s["sealed"]:
+                    return s
+            time.sleep(2)
+        raise SystemExit(f"openbao: not initialised and unsealed:\n{p.stdout}{p.stderr}")
+
+    def login(pw):
+        return run("docker", "exec", c, "bao", "login", "-method=userpass", "-format=json",
+                   "username=admin", f"password={pw}", check=False)
+
+    s = status()
+    print(f"     initialized={s['initialized']} sealed={s['sealed']} seal={s['type']}")
+    p = login(password)
+    if p.returncode != 0 or "admin" not in json.loads(p.stdout)["auth"]["policies"]:
+        raise SystemExit(f"openbao: the admin from the inputs can't sign in:\n{p.stdout}{p.stderr}")
+    print("     admin signs in with policy admin")
+    if login("wrong-password").returncode == 0:
+        raise SystemExit("openbao: a wrong password signs in")
+    run("docker", "restart", c)
+    s = status()
+    print(f"     after a restart: initialized={s['initialized']} sealed={s['sealed']}")
+    if login(password).returncode != 0:
+        raise SystemExit("openbao: the admin can't sign in after a restart")
+
+
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"homeassistant": check_homeassistant, "backrest": check_backrest, "adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"openbao": check_openbao, "homeassistant": check_homeassistant, "backrest": check_backrest, "adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
