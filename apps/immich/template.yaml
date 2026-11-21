@@ -9,12 +9,13 @@ metadata:
   homepage: https://immich.app
   source: https://github.com/immich-app/immich
 spec:
-  version: 0.5.3
+  version: 0.6.0
   compose: compose.yaml
   web: { service: immich-server, port: 2283 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/\\.well-known/"] }
   images:
-    # Server and machine learning must always run the same version.
+    # Server and machine learning must always run the same version:
+    # Dependabot bumps them in one group (.github/dependabot.yml).
     - name: ghcr.io/immich-app/immich-server
       track: minor
     - name: ghcr.io/immich-app/immich-machine-learning
@@ -35,6 +36,21 @@ spec:
       type: path
       title: Host folder for photos and videos
       required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin email
+      description: Immich's admin, created on its first start so the "create admin account" page is never open to whoever finds the domain first. You sign in with this email. Only used while Immich has no admin; later changes go in Immich.
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: The admin's password, set on Immich's first start only; change it in Immich later.
+      required: true
+    - name: ADMIN_NAME
+      type: string
+      title: Admin name
+      description: The admin's display name, set on Immich's first start only.
+      default: Admin
     - name: COMPOSE_PROFILES
       type: enum
       title: Optional parts
@@ -46,6 +62,8 @@ spec:
       default: tools.localhost
   generate:
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  files:
+    - { src: files/setup.js, dest: setup/setup.js }
   volumes:
     - { name: db, backup: true }
     - { name: model-cache, backup: false }

@@ -41,13 +41,33 @@ services:
       homepage.href: ${NEPFLEET_URL}
       docker-volume-backup.stop-during-backup: "true"
 
+  # Creates the admin from the stack's inputs on the first start, then exits;
+  # later runs find it and do nothing. Same image as the server.
+  setup:
+    image: ghcr.io/immich-app/immich-server:v3.4.2
+    restart: "no"
+    entrypoint: ["node", "/setup/setup.js"]
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_NAME: ${ADMIN_NAME}
+    volumes:
+      - ./setup:/setup:ro
+    depends_on:
+      immich-server: { condition: service_healthy }
+
+  # Must run the same version as immich-server (Dependabot bumps both
+  # together, see .github/dependabot.yml).
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v3.3.6
+    image: ghcr.io/immich-app/immich-machine-learning:v3.4.2
     restart: unless-stopped
+    depends_on:
+      # Compose only accepts a one-shot that exits when something waits for it.
+      setup: { condition: service_completed_successfully }
     environment:
       MACHINE_LEARNING_MODEL_REVISION: v2
       # No telemetry: onnxruntime sends usage data to Microsoft by default
-      # (v3.3.6 turns it off too; stated here so it stays off), and the
+      # (recent images turn it off too; stated here so it stays off), and the
       # Hugging Face hub gets fewer library details with model downloads.
       ORT_DISABLE_TELEMETRY: "1"
       HF_HUB_DISABLE_TELEMETRY: "1"
@@ -112,7 +132,9 @@ services:
     volumes:
       - power-tools:/app/data
     networks: [ingress, default]
-    depends_on: [immich-server]
+    depends_on:
+      immich-server: { condition: service_started }
+      setup: { condition: service_completed_successfully }
     labels:
       caddy: ${POWER_TOOLS_DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"

@@ -51,6 +51,10 @@
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-forgejo"
   },
+  "immich": {
+    "ADMIN_EMAIL": "admin@example.test",
+    "ADMIN_PASSWORD": "ci-immich-admin"
+  },
   "sure": {
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-sure"

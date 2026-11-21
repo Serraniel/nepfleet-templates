@@ -275,6 +275,28 @@ def deploy_swarm(nf, names):
         raise SystemExit(f"{len(failed)} swarm template(s) did not deploy: {', '.join(failed)}")
 
 
+def check_immich():
+    """The setup job created the admin from the inputs: Immich offers no admin
+    sign-up any more, skips its welcome steps, and the admin signs in."""
+    c = stack_name("immich")
+    base = "http://localhost:2283/api"
+    creds = json.dumps({"email": OVERRIDES["immich"]["ADMIN_EMAIL"], "password": OVERRIDES["immich"]["ADMIN_PASSWORD"]})
+
+    def curl(*args):
+        return run("docker", "exec", f"{c}-immich-server-1", "curl", "-s", *args, check=False).stdout
+
+    config = json.loads(curl(f"{base}/server/config") or "{}")
+    if not config.get("isInitialized") or not config.get("isOnboarded"):
+        raise SystemExit(f"immich: still offers its first-run setup: {config}")
+    login = json.loads(curl("-X", "POST", "-H", "Content-Type: application/json", "-d", creds, f"{base}/auth/login") or "{}")
+    if not login.get("accessToken") or not login.get("isAdmin") or login.get("shouldChangePassword") or not login.get("isOnboarded"):
+        raise SystemExit(f"immich: the admin from the inputs doesn't sign in ready to use: {login}")
+    signup = curl("-o", "/dev/null", "-w", "%{http_code}", "-X", "POST", "-H", "Content-Type: application/json",
+                  "-d", '{"email":"other@example.test","password":"x","name":"x"}', f"{base}/auth/admin-sign-up")
+    if signup != "400":
+        raise SystemExit(f"immich: admin sign-up answered {signup}, not 400")
+
+
 def check_sure():
     """The worker processes jobs, the sign-up page renders for the stack's
     domain, and no usage data goes to Sure's PostHog project."""
@@ -563,7 +585,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
