@@ -4,6 +4,12 @@ services:
   # on every start: changing GUI_PASSWORD changes the login. The password
   # goes in on stdin, never on a command line.
   # Runs as root (a new volume belongs to root) and hands the files to PUID.
+  # It also hands DATA_PATH to PUID:PGID: Docker creates a missing bind
+  # folder as root, and Syncthing (running as PUID) couldn't write there.
+  # Only the top folder, never recursively: the folder may already hold the
+  # user's files with owners and modes of their own, and a recursive chown on
+  # every start would rewrite them (and take long on a big tree). Syncthing
+  # only needs to create folders in the top one.
   set-login:
     image: syncthing/syncthing:2.1.7
     user: "0:0"
@@ -12,9 +18,10 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
     entrypoint: ["/bin/sh", "-c"]
-    command: ['printf %s "$$GUI_PASSWORD" | syncthing generate --home /var/syncthing/config --gui-user admin --gui-password - && sed -i "s#<crashReportingEnabled>true</crashReportingEnabled>#<crashReportingEnabled>false</crashReportingEnabled>#" /var/syncthing/config/config.xml && chown -R "$$PUID:$$PGID" /var/syncthing/config']
+    command: ['printf %s "$$GUI_PASSWORD" | syncthing generate --home /var/syncthing/config --gui-user admin --gui-password - && sed -i "s#<crashReportingEnabled>true</crashReportingEnabled>#<crashReportingEnabled>false</crashReportingEnabled>#" /var/syncthing/config/config.xml && chown -R "$$PUID:$$PGID" /var/syncthing/config && mkdir -p /data && chown "$$PUID:$$PGID" /data']
     volumes:
       - config:/var/syncthing/config
+      - ${DATA_PATH}:/data
     network_mode: none
 
   syncthing:
