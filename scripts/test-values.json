@@ -51,6 +51,11 @@
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-forgejo"
   },
+  "open-webui": {
+    "ADMIN_EMAIL": "admin@example.test",
+    "ADMIN_PASSWORD": "ci-not-a-real-password",
+    "OLLAMA_MODELS": "smollm:135m"
+  },
   "sure": {
     "OIDC_ISSUER": "https://accounts.google.com",
     "OIDC_CLIENT_ID": "ci-sure"

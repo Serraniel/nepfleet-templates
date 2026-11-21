@@ -1,0 +1,4 @@
+# Added to litellm.yaml when ANTHROPIC_API_KEY is set (see the litellm service).
+model_list:
+  - model_name: "anthropic/*"
+    litellm_params: { model: "anthropic/*", api_key: os.environ/ANTHROPIC_API_KEY }

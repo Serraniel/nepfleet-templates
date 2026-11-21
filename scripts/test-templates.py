@@ -298,6 +298,37 @@ def check_sure():
     if run("docker", "exec", f"{c}-web-1", "printenv", "POSTHOG_FEEDBACK_ENABLED").stdout.strip() != "false":
         raise SystemExit("sure: shared PostHog feedback is on")
 
+def check_open_webui():
+    """The admin from the inputs signs in, and Open WebUI offers the model that
+    Ollama downloads on its own (smollm:135m, 91 MB, in the test values)."""
+    c = stack_name("open-webui") + "-open-webui-1"
+    v = OVERRIDES["open-webui"]
+
+    def curl(*args):
+        return run("docker", "exec", c, "curl", "-s", *args, check=False).stdout
+
+    body = json.dumps({"email": v["ADMIN_EMAIL"], "password": v["ADMIN_PASSWORD"]})
+    got = curl("-H", "Content-Type: application/json", "-d", body, "http://localhost:8080/api/v1/auths/signin")
+    try:
+        token = json.loads(got)["token"]
+    except (ValueError, KeyError):
+        raise SystemExit(f"open-webui: the admin from the inputs can't sign in:\n{got[:500]}")
+    print(f"     {v['ADMIN_EMAIL']} signs in")
+    want, models = v["OLLAMA_MODELS"], []
+    for _ in range(60):  # the download runs in the background after Ollama starts
+        got = curl("-H", f"Authorization: Bearer {token}", "http://localhost:8080/api/models")
+        try:
+            models = [m["id"] for m in json.loads(got)["data"]]
+        except (ValueError, KeyError):
+            models = []
+        if want in models:
+            print(f"     /api/models offers {want}")
+            return
+        time.sleep(5)
+    logs = run("docker", "logs", "--tail", "20", stack_name("open-webui") + "-ollama-1", check=False)
+    raise SystemExit(f"open-webui: {want} never appeared in /api/models ({models}):\n{logs.stdout}{logs.stderr}")
+
+
 def check_pihole():
     """Names under the home domain answer with the server's address, never upstream."""
     v = OVERRIDES["pihole"]
@@ -563,7 +594,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure, "open-webui": check_open_webui}
 
 
 # Changing these can affect every template, so all of them are tested again.
