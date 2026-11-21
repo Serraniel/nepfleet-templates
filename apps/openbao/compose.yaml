@@ -5,6 +5,9 @@ services:
     command: ["server", "-config=/etc/openbao/openbao.hcl"]
     environment:
       SKIP_SETCAP: "true"   # no mlock (disable_mlock): no IPC_LOCK needed
+      BAO_ADDR: http://127.0.0.1:8200   # for docker exec … bao: the listener is plain HTTP
+      BAO_UNSEAL_KEY: ${UNSEAL_KEY}   # the static seal's key (openbao.hcl)
+      BAO_ADMIN_PASSWORD: ${ADMIN_PASSWORD}   # read once, by the first start's self-initialisation
       TZ: ${TZ}
     volumes:
       - ./openbao.hcl:/etc/openbao/openbao.hcl:ro
@@ -12,9 +15,10 @@ services:
     networks:
       ingress:
         aliases: [openbao]
-    # Healthy when it answers, sealed or not: a fresh or restarted OpenBao
-    # is sealed until someone unseals it. Kuma's monitor below does report
-    # it while sealed.
+    # Healthy when it answers, sealed or not: it unseals itself on start,
+    # but a stack moved from a 0.x version stays sealed until its seal
+    # migration (see the template's migration), and the upgrade must not
+    # roll back for that. Kuma's monitor below reports it while sealed.
     healthcheck:
       test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:8200/v1/sys/health?sealedcode=200&uninitcode=200&standbyok=true"]
       interval: 30s
@@ -23,7 +27,7 @@ services:
       docker-volume-backup.stop-during-backup: "true"   # a consistent copy of its Raft storage
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8200}}"
-      kuma.openbao.http.name: OpenBao (down while sealed)
+      kuma.openbao.http.name: OpenBao
       kuma.openbao.http.url: ${NEPFLEET_URL}/v1/sys/health
       homepage.group: Infrastructure
       homepage.name: OpenBao
