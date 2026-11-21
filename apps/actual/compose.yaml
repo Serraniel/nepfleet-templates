@@ -2,18 +2,23 @@ services:
   actual:
     image: actualbudget/actual-server:26.11.0
     restart: unless-stopped
+    # setup.mjs first sets the server password from SERVER_PASSWORD (on the
+    # first start only: it runs Actual privately on loopback and calls its
+    # first-run API), then the server starts as usual. Doing it in the same
+    # container means the "set a password" screen is never reachable, on
+    # Swarm too, where nothing waits for a separate one-shot service.
+    command: ["sh", "-c", "node /setup/setup.mjs && exec node app.js"]
     environment:
       TZ: ${TZ}
+      SERVER_PASSWORD: ${SERVER_PASSWORD}
     volumes:
       - data:/data
+      - ./setup:/setup:ro
     networks: [ingress]
     healthcheck:
       test: ["CMD", "node", "src/scripts/health-check.js"]
       interval: 30s
-      start_period: 20s
-    depends_on:
-      # The server password is set before the domain reaches Actual.
-      setup: { condition: service_completed_successfully }
+      start_period: 60s
     labels:
       docker-volume-backup.stop-during-backup: "true"   # SQLite files: consistent copy
       caddy: ${DOMAIN}
@@ -25,19 +30,6 @@ services:
       homepage.description: Budgeting
       homepage.icon: actual-budget.svg
       homepage.href: ${NEPFLEET_URL}
-
-  # Sets the server password from SERVER_PASSWORD on the first start
-  # (setup.mjs runs Actual on loopback and calls its first-run API), then
-  # exits; later runs find a password set and do nothing.
-  setup:
-    image: actualbudget/actual-server:26.11.0
-    restart: "no"
-    entrypoint: ["node", "/setup/setup.mjs"]
-    environment:
-      SERVER_PASSWORD: ${SERVER_PASSWORD}
-    volumes:
-      - data:/data
-      - ./setup:/setup:ro
 
 volumes:
   data:

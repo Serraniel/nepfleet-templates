@@ -2,10 +2,11 @@
 // so nobody who opens the domain first can claim the server.
 //
 // Actual has no setting for the initial password, only its first-run API.
-// This starts the server on loopback inside this one-shot container (same
-// image, same data volume), asks it whether a password is set, sets it with
-// POST /account/bootstrap if not, and stops it. When a password is already
-// set it changes nothing: the input is only taken on the first start.
+// It runs in the actual container before the real server starts: it starts
+// the server on loopback (so the domain can't reach it), asks it whether a
+// password is set, sets it with POST /account/bootstrap if not, and stops it.
+// When a password is already set it changes nothing: the input is only taken
+// on the first start.
 import { spawn } from "node:child_process";
 
 const password = process.env.SERVER_PASSWORD;
