@@ -492,6 +492,66 @@ def check_bookstack():
     print(f"     /register answers {code}")
 
 
+def check_authelia():
+    """The admin from the inputs passes the first factor, a wrong password doesn't,
+    and with no mail server the one-time code to register a second factor shows in
+    the notifications service's logs and unlocks TOTP registration."""
+    c = stack_name("authelia")
+    v = OVERRIDES["authelia"]
+    config = run("docker", "exec", f"{c}-authelia-1", "cat", "/config/configuration.yml").stdout
+    host = config.split("authelia_url:", 1)[1].split("//", 1)[1].split('"', 1)[0]
+
+    jar = {}
+
+    def api(method, path, body=None):
+        # Its session cookie is Secure: pass it by hand over plain http, and
+        # keep the newest one (Authelia renews the session as it goes).
+        args = ["docker", "exec", f"{c}-authelia-1", "wget", "-q", "-S", "-O", "-", "--content-on-error",
+                f"--method={method}", "--header", f"Host: {host}", "--header", "X-Forwarded-Proto: https",
+                "--header", "Content-Type: application/json"]
+        if jar:
+            args += ["--header", "Cookie: " + "; ".join(f"{k}={v}" for k, v in jar.items())]
+        if body is not None:
+            args += ["--body-data", json.dumps(body)]
+        p = run(*args, "http://localhost:9091" + path, check=False)
+        for h in p.stderr.splitlines():
+            if h.strip().lower().startswith("set-cookie:"):
+                k, _, val = h.split(":", 1)[1].split(";")[0].strip().partition("=")
+                jar[k] = val
+        return p.stdout or p.stderr
+
+    out = api("POST", "/api/firstfactor", {"username": "admin", "password": "wrong"})
+    if '"OK"' in out:
+        raise SystemExit(f"authelia: a wrong password passes the first factor: {out}")
+    jar.clear()
+    out = api("POST", "/api/firstfactor", {"username": "admin", "password": v["ADMIN_PASSWORD"]})
+    if '"OK"' not in out or not jar:
+        raise SystemExit(f"authelia: the admin from the inputs can't sign in: {out}")
+    print(f"     admin passes the first factor: {out.strip()}")
+    out = api("POST", "/api/user/session/elevation")
+    if '"OK"' not in out:
+        raise SystemExit(f"authelia: asking for the one-time code failed: {out}")
+    code = ""
+    for _ in range(10):
+        logs = run("docker", "logs", f"{c}-notifications-1", check=False).stdout
+        lines = [line.strip() for line in logs.splitlines()]
+        found = [b for a, b in zip(lines, lines[1:] + [""]) if a == "" and b.isalnum() and b.isupper() and len(b) >= 6]
+        if found:
+            code = found[-1]
+            break
+        time.sleep(1)
+    if not code:
+        raise SystemExit(f"authelia: no one-time code in the notifications service's logs:\n{logs}")
+    print(f"     the one-time code shows in the stack's logs ({len(code)} characters)")
+    out = api("PUT", "/api/user/session/elevation", {"otc": code})
+    if '"OK"' not in out:
+        raise SystemExit(f"authelia: the one-time code from the logs was refused: {out}")
+    out = api("PUT", "/api/secondfactor/totp/register", {"algorithm": "SHA1", "length": 6, "period": 30})
+    if '"OK"' not in out or "otpauth://" not in out:
+        raise SystemExit(f"authelia: TOTP registration didn't start after the one-time code: {out}")
+    print("     with it, TOTP registration starts (an otpauth:// secret is offered)")
+
+
 def check_opencloud():
     """With the office profile, Euro-Office answers WOPI discovery on the ingress
     network. (OpenCloud registers it by its domain, which doesn't resolve here, so
@@ -563,7 +623,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "authelia": check_authelia, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
