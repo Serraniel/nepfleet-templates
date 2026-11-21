@@ -1,0 +1,8 @@
+# Added to OpenCloud's built-in Content-Security-Policy, which it merges with
+# this: the browser may then show the Euro-Office editor (an iframe from the
+# office domain) and its icons. Without OFFICE_DOMAIN this is unused.
+directives:
+  frame-src:
+    - 'https://${OFFICE_DOMAIN}/'
+  img-src:
+    - 'https://${OFFICE_DOMAIN}/'
