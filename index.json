@@ -1463,13 +1463,13 @@
     {
       "name": "adguard-home",
       "title": "AdGuard Home",
-      "description": "DNS ad and tracker blocking for the whole local network, and local DNS records. Finish its setup right after installing, as the first visitor creates the admin. In that wizard, set the web interface to port 3000, or NepFleet can't reach it afterwards. Then point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address.",
+      "description": "DNS ad and tracker blocking for the whole local network, and local DNS records. It starts set up, with the admin from the stack's inputs, so no setup wizard is offered. Point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address.",
       "tier": "app",
       "category": "networking",
       "homepage": "https://adguard.com/adguard-home",
       "source": "https://github.com/AdguardTeam/AdGuardHome",
       "path": "apps/adguard-home",
-      "version": "0.1.3",
+      "version": "0.2.0",
       "images": [
         {
           "name": "adguard/adguardhome",
@@ -1484,7 +1484,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -1510,9 +1510,31 @@
           "title": "DNS port (53 for devices to use it)",
           "required": true,
           "default": "53"
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Admin user name",
+          "description": "Used only on the first start. Later, change it in AdGuard Home's settings file.",
+          "required": true,
+          "default": "admin",
+          "pattern": "^[A-Za-z0-9._@-]+$"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in to the web UI with it. Used only on the first start; stacks set up through the old wizard keep the admin they have.",
+          "required": true
         }
       ],
-      "generate": [],
+      "generate": [
+        {
+          "name": "ADMIN_PASSWORD_HASH",
+          "kind": "bcrypt",
+          "from": "ADMIN_PASSWORD"
+        }
+      ],
       "volumes": [
         {
           "name": "conf",

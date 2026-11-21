@@ -9,6 +9,8 @@ services:
       - work:/opt/adguardhome/work
       - conf:/opt/adguardhome/conf
     networks: [ingress]
+    depends_on:
+      seed: { condition: service_completed_successfully }
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
@@ -19,6 +21,20 @@ services:
       homepage.description: DNS ad and tracker blocking
       homepage.icon: adguard-home.svg
       homepage.href: ${NEPFLEET_URL}
+
+  # Puts the first configuration (web UI on 3000, the admin from the inputs)
+  # into the conf volume when it has none, so the setup wizard never opens on
+  # the public domain. A config already there, edited in the UI or made by the
+  # wizard on older installs, stays as it is.
+  seed:
+    image: adguard/adguardhome:v0.107.80
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["test -f /opt/adguardhome/conf/AdGuardHome.yaml || cp /seed/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml"]
+    volumes:
+      - conf:/opt/adguardhome/conf
+      - ./seed:/seed:ro
+    network_mode: none
 
 volumes:
   work:
