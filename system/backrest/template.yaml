@@ -3,12 +3,12 @@ kind: Template
 metadata:
   name: backrest
   title: Backrest (restic)
-  description: Deduplicated, encrypted restic backups with a web UI and schedules, e.g. offsite to a Storage Box over SFTP or any rclone remote. Docker volumes are mounted read-only under /userdata/volumes. Create the admin account on first start.
+  description: Deduplicated, encrypted restic backups with a web UI and schedules, e.g. offsite to a Storage Box over SFTP or any rclone remote. Docker volumes are mounted read-only under /userdata/volumes. It starts with the admin from the stack's inputs, so no first-run setup is offered. Add a repository and a backup plan in the UI.
   tier: system
   category: backup
   homepage: https://github.com/garethgeorge/backrest
 spec:
-  version: 0.2.1
+  version: 0.3.0
   compose: compose.yaml
   images:
     - name: garethgeorge/backrest
@@ -24,6 +24,27 @@ spec:
       title: Additional host folder to back up (read-only)
       default: /srv
       required: true
+    - name: BACKREST_USERNAME
+      type: string
+      title: Admin user name
+      description: Used only on the first start, when Backrest has no config yet. Later, change users in Backrest's settings.
+      default: admin
+      required: true
+      pattern: '^[A-Za-z0-9_.-]{1,50}$'
+    - name: BACKREST_PASSWORD
+      type: secret
+      title: Admin password
+      description: You sign in to the web UI with it. Used only on the first start; stacks already set up in the UI keep the admin they have.
+      required: true
+    - name: BACKREST_INSTANCE
+      type: string
+      title: Instance name
+      description: Names this Backrest in its snapshots; give each host that writes to the same repository its own. Used only on the first start, and can't be changed later.
+      default: nepfleet
+      required: true
+      pattern: '^[A-Za-z0-9_.-]{1,50}$'
+  generate:
+    - { name: BACKREST_PASSWORD_HASH, kind: bcrypt, from: BACKREST_PASSWORD }
   volumes:
     - { name: data, backup: true }
     - { name: config, backup: true }
