@@ -59,7 +59,8 @@ def main():
     with open(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w", encoding="utf-8") as f:
         json.dump(raw, f, indent=2)
     os.replace(tmp, PATH)
-    log("trusts X-Forwarded-For from " + ", ".join(proxies))
+    # The subnets as given (the same as validated above), not the schema's output.
+    log("trusts X-Forwarded-For from " + ", ".join(sys.argv[1:]))
 
 
 if __name__ == "__main__":
