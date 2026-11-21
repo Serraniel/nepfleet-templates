@@ -12,6 +12,10 @@ services:
     volumes:
       - ./data:/data
     networks: [ingress, socket, nepfleet-api]
+    # Dozzle exits ("could not connect to any Docker Engine") when the proxy
+    # doesn't answer yet at its start.
+    depends_on:
+      socket-proxy: { condition: service_healthy }
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
@@ -38,6 +42,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [socket]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:2375/_ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 networks:
   ingress:
