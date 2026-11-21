@@ -1,6 +1,6 @@
 services:
   wokko:
-    image: ghcr.io/serraniel/wokko:0.3.0
+    image: ghcr.io/serraniel/wokko:0.5.0
     restart: unless-stopped
     # The image's own health check runs /wokko healthcheck.
     environment:
