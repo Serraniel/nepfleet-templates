@@ -1,5 +1,72 @@
 # Changelog
 
+## [0.4.0](https://github.com/Serraniel/nepfleet-templates/compare/v0.3.1...v0.4.0) (2026-11-21)
+
+
+### Security
+
+* **deps:** bump binwiederhier/ntfy from v2.37.2 to v2.38.0 in /apps/ntfy ([#223](https://github.com/Serraniel/nepfleet-templates/issues/223)) ([a0a7196](https://github.com/Serraniel/nepfleet-templates/commit/a0a71961ac10ff4ae450b1ed9d2fe2983c5f2fba))
+* **sendan:** update to 0.4.0 ([#214](https://github.com/Serraniel/nepfleet-templates/issues/214)) ([faae0de](https://github.com/Serraniel/nepfleet-templates/commit/faae0dea2261936575fdc65b537c3dcb4945faed))
+
+
+### Features
+
+* bot check paths for matrix, n8n, stirling-pdf, pihole and adguard-home ([#192](https://github.com/Serraniel/nepfleet-templates/issues/192)) ([221b831](https://github.com/Serraniel/nepfleet-templates/commit/221b83162cd3f87c0376111eb7b1f5ea523106f4))
+* bot check paths for the remaining web apps ([#216](https://github.com/Serraniel/nepfleet-templates/issues/216)) ([5188f23](https://github.com/Serraniel/nepfleet-templates/commit/5188f231d471ffa2a96d658b9af69eafb2072a17))
+* **caddy:** keep the sites' DNS records pointed at the host ([#182](https://github.com/Serraniel/nepfleet-templates/issues/182)) ([518c82e](https://github.com/Serraniel/nepfleet-templates/commit/518c82ecbca69df704fe2d261a71f4a3548933c5))
+* **caddy:** token help for the selected DNS provider only ([#188](https://github.com/Serraniel/nepfleet-templates/issues/188)) ([5ca054f](https://github.com/Serraniel/nepfleet-templates/commit/5ca054fac836694cd7feb66aa91bc1f600ee381f))
+* dashboard tiles say what each app is ([#231](https://github.com/Serraniel/nepfleet-templates/issues/231)) ([2c8f379](https://github.com/Serraniel/nepfleet-templates/commit/2c8f37920d3cd835573a216d16d2d10d07668709))
+* **dozzle:** alerts go to NepFleet's own API with the stack's token ([#185](https://github.com/Serraniel/nepfleet-templates/issues/185)) ([34daeb8](https://github.com/Serraniel/nepfleet-templates/commit/34daeb8055059bf333a399e616cc6677326ee056))
+* neptide, Watchtower and volume backups notify through NepFleet ([#186](https://github.com/Serraniel/nepfleet-templates/issues/186)) ([b56fbce](https://github.com/Serraniel/nepfleet-templates/commit/b56fbcecd4efecbb1ed41211634b50ab898dfe05))
+* **neptide:** the docker group ID comes from the host ([#183](https://github.com/Serraniel/nepfleet-templates/issues/183)) ([9f0b39e](https://github.com/Serraniel/nepfleet-templates/commit/9f0b39e90916aea8aecd0343c2dbe747834156eb))
+* swarm support for eight more apps ([#196](https://github.com/Serraniel/nepfleet-templates/issues/196)) ([f476caa](https://github.com/Serraniel/nepfleet-templates/commit/f476caa8c1e984c8afb542396ceeb5fd6af10827))
+* swarm support for immich, mastodon, sure and mealie ([#195](https://github.com/Serraniel/nepfleet-templates/issues/195)) ([f6ef179](https://github.com/Serraniel/nepfleet-templates/commit/f6ef179ba758535a63fc35105a001e1ece4ca6f4))
+* swarm support for n8n, bookstack, matrix and paperless ([#194](https://github.com/Serraniel/nepfleet-templates/issues/194)) ([7cd061f](https://github.com/Serraniel/nepfleet-templates/commit/7cd061f5c932fb3c078cf8bf3d7b6f4ccd7ac08e))
+* swarm support for open-webui, sweetcaptcha, owncast, garage and openclaw ([#198](https://github.com/Serraniel/nepfleet-templates/issues/198)) ([70d2b32](https://github.com/Serraniel/nepfleet-templates/commit/70d2b320ed32fcf2da8899a408f3b06ba725ff3c))
+* template for imgproxy ([#211](https://github.com/Serraniel/nepfleet-templates/issues/211)) ([c7856a7](https://github.com/Serraniel/nepfleet-templates/commit/c7856a78d257e5ed6f6718a8aa014816fd8c9866))
+* template for OpenBao ([#212](https://github.com/Serraniel/nepfleet-templates/issues/212)) ([f762c76](https://github.com/Serraniel/nepfleet-templates/commit/f762c767365b6520ca737a4ecfaa6243b4d18496))
+* template for RabbitMQ ([#210](https://github.com/Serraniel/nepfleet-templates/issues/210)) ([d632e06](https://github.com/Serraniel/nepfleet-templates/commit/d632e06db1d82fcad18adb5e52bd2924ff0c960c))
+* **uptime-kuma:** monitors alert through NepFleet's channels ([#187](https://github.com/Serraniel/nepfleet-templates/issues/187)) ([542ce6c](https://github.com/Serraniel/nepfleet-templates/commit/542ce6c1660c367e5c11b775d47b3d91fe996c33))
+* **uptime-kuma:** set up Kuma on its first start, so AutoKuma connects ([#184](https://github.com/Serraniel/nepfleet-templates/issues/184)) ([6c006b1](https://github.com/Serraniel/nepfleet-templates/commit/6c006b1bc2530073ae0339a00589386aec3d01ad))
+
+
+### Bug Fixes
+
+* **actual:** the server password from the stack's inputs ([#238](https://github.com/Serraniel/nepfleet-templates/issues/238)) ([58cb5fc](https://github.com/Serraniel/nepfleet-templates/commit/58cb5fc37741f7c99d7a9294fee6a51b35c0eda8))
+* **adguard-home:** set up from the stack's inputs, no wizard ([#242](https://github.com/Serraniel/nepfleet-templates/issues/242)) ([be0d4d7](https://github.com/Serraniel/nepfleet-templates/commit/be0d4d7ffde496f5db333a6bb9b99b9b90f9def8))
+* apps create their admin from the stack's inputs ([#229](https://github.com/Serraniel/nepfleet-templates/issues/229)) ([a16da0d](https://github.com/Serraniel/nepfleet-templates/commit/a16da0d24ed04affbb754785e349714324d7e3a2))
+* **audiobookshelf:** the root user from the stack's inputs ([#240](https://github.com/Serraniel/nepfleet-templates/issues/240)) ([2e13b26](https://github.com/Serraniel/nepfleet-templates/commit/2e13b26b5a44874a609252831a8c82fd73df2667))
+* **bookstack:** an admin from the stack's inputs ([#233](https://github.com/Serraniel/nepfleet-templates/issues/233)) ([81360b4](https://github.com/Serraniel/nepfleet-templates/commit/81360b468ec0a2b3e9cc2640fe6646f13f5b9443))
+* **caddy:** allow /info on its socket proxy, for the Swarm check ([#179](https://github.com/Serraniel/nepfleet-templates/issues/179)) ([558ff32](https://github.com/Serraniel/nepfleet-templates/commit/558ff3249e1bcfe4caa299fc095457aa83c05f5f))
+* **ci:** a floating tag isn't behind the releases it follows ([#213](https://github.com/Serraniel/nepfleet-templates/issues/213)) ([9a7e6fa](https://github.com/Serraniel/nepfleet-templates/commit/9a7e6fac23a4338bdaffb9522e5c53af01de0103))
+* **dozzle:** an admin user to sign in with ([#226](https://github.com/Serraniel/nepfleet-templates/issues/226)) ([d18b315](https://github.com/Serraniel/nepfleet-templates/commit/d18b315506e3a83061c9bd978997736821d1a352))
+* **forgejo:** an admin from the stack's inputs ([#232](https://github.com/Serraniel/nepfleet-templates/issues/232)) ([74c34d6](https://github.com/Serraniel/nepfleet-templates/commit/74c34d6a81f8cbffbae35d59646be7550c76c6bd))
+* **homebox:** the admin from the stack's inputs, registration closed ([#237](https://github.com/Serraniel/nepfleet-templates/issues/237)) ([f6bb982](https://github.com/Serraniel/nepfleet-templates/commit/f6bb982bcdff34843f0064f29c856bafdbb5c207))
+* **homepage:** no sample groups and bookmarks ([#230](https://github.com/Serraniel/nepfleet-templates/issues/230)) ([dc5d5f0](https://github.com/Serraniel/nepfleet-templates/commit/dc5d5f04d1a9da35d952a1883980ede78cd93d28))
+* **immich:** an admin from the stack's inputs, ML on the server's version ([#234](https://github.com/Serraniel/nepfleet-templates/issues/234)) ([87e675e](https://github.com/Serraniel/nepfleet-templates/commit/87e675e9f5e4b1960c6ac72b288f5d5ef4afbf7a))
+* **jellyfin:** an admin from the stack's inputs, no open startup wizard ([#236](https://github.com/Serraniel/nepfleet-templates/issues/236)) ([07acfe7](https://github.com/Serraniel/nepfleet-templates/commit/07acfe7a3726c21fc8ae983472c4cf35d3d7de5a))
+* **kutt:** an admin from the stack's inputs ([#241](https://github.com/Serraniel/nepfleet-templates/issues/241)) ([9f4bfbf](https://github.com/Serraniel/nepfleet-templates/commit/9f4bfbf174be2a4f6657e0e808604ce04a8da082))
+* **mealie:** an admin from the stack's inputs ([#239](https://github.com/Serraniel/nepfleet-templates/issues/239)) ([0471baf](https://github.com/Serraniel/nepfleet-templates/commit/0471baff8d8997b8b256051cb55f9ec23bf4d8f9))
+* passwords and keys you need are inputs, not generated ([#228](https://github.com/Serraniel/nepfleet-templates/issues/228)) ([458af2c](https://github.com/Serraniel/nepfleet-templates/commit/458af2c7a532731841b00cb3a1266240e9fbdbc2))
+* **rclone:** run the web GUI with rclone gui, as 1.76 requires ([#217](https://github.com/Serraniel/nepfleet-templates/issues/217)) ([5ee0aec](https://github.com/Serraniel/nepfleet-templates/commit/5ee0aeca05fc1fd45e47aeeaf85bf6451846191b))
+* **sure:** the first account from the stack's inputs, sign-up closed ([#235](https://github.com/Serraniel/nepfleet-templates/issues/235)) ([df0322d](https://github.com/Serraniel/nepfleet-templates/commit/df0322d4c4bfb6f2fb1330114d0aa2ea7d98fc35))
+
+
+### Dependencies
+
+* Bump advplyr/audiobookshelf from 2.37.2 to 2.38.0 in /apps/audiobookshelf ([#221](https://github.com/Serraniel/nepfleet-templates/issues/221)) ([1467af9](https://github.com/Serraniel/nepfleet-templates/commit/1467af983c1a455e860f12b8ca1e572ef96a7b95))
+* Bump caddy from `345264d` to `345264d` in /images/caddy ([#219](https://github.com/Serraniel/nepfleet-templates/issues/219)) ([4a48215](https://github.com/Serraniel/nepfleet-templates/commit/4a48215dc1f5c3a019c21a09ac74881e5f83e765))
+* Bump caddy from `3fddbec` to `345264d` in /images/caddy ([#199](https://github.com/Serraniel/nepfleet-templates/issues/199)) ([62dd411](https://github.com/Serraniel/nepfleet-templates/commit/62dd41181e1d28b63651786928f8d9d4682d90d3))
+* Bump gotenberg/gotenberg from 9.3.0 to 9.4.1 in /apps/paperless ([#203](https://github.com/Serraniel/nepfleet-templates/issues/203)) ([f21ac1c](https://github.com/Serraniel/nepfleet-templates/commit/f21ac1cb61e66dc1cfe91c21744cf3378f82fe2e))
+* Bump immich-power-tools/immich-power-tools from 0.25.0 to v0.26.0 in /apps/immich ([#222](https://github.com/Serraniel/nepfleet-templates/issues/222)) ([f4d22ac](https://github.com/Serraniel/nepfleet-templates/commit/f4d22acb5541badaca9392aacef3c80f2d633954))
+* Bump matrixdotorg/synapse from v1.164.2 to v1.165.0 in /apps/matrix ([#201](https://github.com/Serraniel/nepfleet-templates/issues/201)) ([9171ef9](https://github.com/Serraniel/nepfleet-templates/commit/9171ef994432e13725335ff3b1d211e560f964e3))
+* Bump mealie-recipes/mealie from v3.30.0 to v3.31.0 in /apps/mealie ([#202](https://github.com/Serraniel/nepfleet-templates/issues/202)) ([4ef5ff4](https://github.com/Serraniel/nepfleet-templates/commit/4ef5ff4d298c1ca3cfafe6f7ffe5e3b0a0efaf53))
+* Bump paperless-ngx/paperless-ngx from 3.4 to 3.5 in /apps/paperless ([#224](https://github.com/Serraniel/nepfleet-templates/issues/224)) ([2a349de](https://github.com/Serraniel/nepfleet-templates/commit/2a349de24b1b6386877646133b3ea59038e794b7))
+* Bump pihole/pihole from 2026.10.1 to 2026.11.0 in /apps/pihole ([#204](https://github.com/Serraniel/nepfleet-templates/issues/204)) ([bbbd3dc](https://github.com/Serraniel/nepfleet-templates/commit/bbbd3dccff384e5873ab377af47edf787b4eba68))
+* Bump the templates group across 4 directories with 5 updates ([#225](https://github.com/Serraniel/nepfleet-templates/issues/225)) ([c807dee](https://github.com/Serraniel/nepfleet-templates/commit/c807dee699baf9c43952cbb896676ef3607b78e3))
+* Bump the templates group across 9 directories with 10 updates ([#209](https://github.com/Serraniel/nepfleet-templates/issues/209)) ([b2d3607](https://github.com/Serraniel/nepfleet-templates/commit/b2d360713560483c3915104208207b63a6f0fc8f))
+* **n8n:** update to 2.49.1, the last step before 3.x ([#215](https://github.com/Serraniel/nepfleet-templates/issues/215)) ([1ce7708](https://github.com/Serraniel/nepfleet-templates/commit/1ce7708423c8ed7d90fab2210fa0c429d0ff7632))
+
 ## [0.3.1](https://github.com/Serraniel/nepfleet-templates/compare/v0.3.0...v0.3.1) (2026-11-14)
 
 
