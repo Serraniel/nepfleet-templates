@@ -2424,7 +2424,7 @@
       "category": "web",
       "homepage": "https://github.com/thedevs-network/kutt",
       "path": "apps/kutt",
-      "version": "0.3.2",
+      "version": "0.4.0",
       "images": [
         {
           "name": "kutt/kutt",
@@ -2452,9 +2452,24 @@
           "required": true
         },
         {
+          "name": "ADMIN_EMAIL",
+          "type": "email",
+          "title": "Admin email",
+          "description": "Kutt's admin, created on its first start so its \"create admin\" page is never open to whoever finds the domain first. Sign in with it. Taken only on the first start; change it in Kutt's settings later.",
+          "required": true
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "8 to 64 characters (Kutt's sign-in allows no other length). Taken only on the first start; change it in Kutt's settings later.",
+          "required": true
+        },
+        {
           "name": "DISALLOW_REGISTRATION",
           "type": "bool",
           "title": "Disable public registration",
+          "description": "Kutt's sign-up also needs mail, which this template does not set up.",
           "default": "true"
         }
       ],

@@ -2,14 +2,21 @@ services:
   kutt:
     image: kutt/kutt:v3.2.6
     restart: unless-stopped
+    # Kutt's own start (migrations, then the server), with setup.js between:
+    # it creates the admin from the inputs before Kutt serves its "create
+    # admin" page to the first visitor. Later starts find a user and go on.
+    command: ["sh", "-c", "npm run migrate && node /setup/setup.js && exec npm start"]
     environment:
       DEFAULT_DOMAIN: ${DOMAIN}
       JWT_SECRET: ${JWT_SECRET}
       DB_FILENAME: /var/lib/kutt/data.sqlite
       DISALLOW_REGISTRATION: ${DISALLOW_REGISTRATION}
       TRUST_PROXY: "true"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - data:/var/lib/kutt
+      - ./setup:/setup:ro
     networks: [ingress]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
