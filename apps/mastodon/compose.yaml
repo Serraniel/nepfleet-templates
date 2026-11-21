@@ -25,7 +25,7 @@ x-mastodon: &mastodon
 services:
   # Sets up or upgrades the database, then ends. The web service waits for it.
   migrate:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: "no"
     environment: *mastodon
     command: bundle exec rails db:prepare
@@ -36,7 +36,7 @@ services:
         condition: service_healthy
 
   web:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command: bundle exec puma -C config/puma.rb
@@ -64,7 +64,7 @@ services:
       homepage.href: ${NEPFLEET_URL}
 
   streaming:
-    image: ghcr.io/mastodon/mastodon-streaming:v4.7.5
+    image: ghcr.io/mastodon/mastodon-streaming:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command: node ./streaming/index.js
@@ -84,7 +84,7 @@ services:
       caddy.reverse_proxy: "@streaming {{upstreams 4000}}"
 
   sidekiq:
-    image: ghcr.io/mastodon/mastodon:v4.7.5
+    image: ghcr.io/mastodon/mastodon:v4.7.6
     restart: unless-stopped
     environment: *mastodon
     command: bundle exec sidekiq
