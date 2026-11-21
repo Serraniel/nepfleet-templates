@@ -1,4 +1,46 @@
 services:
+  # Finishes Jellyfin's startup wizard before Jellyfin is reachable, so
+  # nobody on the domain can claim the first admin: starts Jellyfin
+  # without a network (loopback only), creates the admin from the inputs
+  # through the wizard's API, and stops it again. A later start finds the
+  # wizard done in system.xml and does nothing. The password goes in on
+  # stdin, never on a command line.
+  setup:
+    image: jellyfin/jellyfin:10.11.11
+    restart: "no"
+    environment:
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        if grep -qs '<IsStartupWizardCompleted>true<' "$$JELLYFIN_CONFIG_DIR/system.xml"; then
+          echo "startup wizard already done"; exit 0
+        fi
+        /jellyfin/jellyfin & pid=$$!
+        b=http://localhost:8096
+        i=0
+        until [ "$$(curl -s $$b/health)" = Healthy ]; do
+          i=$$((i+1)); [ $$i -lt 300 ] || { echo "Jellyfin did not start"; exit 1; }
+          sleep 2
+        done
+        esc() { printf %s "$$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
+        post() { curl -fsS -X POST -H 'Content-Type: application/json' --data-binary @- "$$b/Startup/$$1"; }
+        printf %s '{"UICulture":"en-US","MetadataCountryCode":"US","PreferredMetadataLanguage":"en"}' | post Configuration
+        curl -fsS -o /dev/null "$$b/Startup/User"
+        printf '{"Name":"%s","Password":"%s"}' "$$(esc "$$ADMIN_USER")" "$$(esc "$$ADMIN_PASSWORD")" | post User
+        printf %s '{"EnableRemoteAccess":true,"EnableAutomaticPortMapping":false}' | post RemoteAccess
+        curl -fsS -X POST "$$b/Startup/Complete"
+        curl -fsS "$$b/System/Info/Public" | grep -q '"StartupWizardCompleted":true'
+        kill $$pid; wait $$pid || true
+        grep -q '<IsStartupWizardCompleted>true<' "$$JELLYFIN_CONFIG_DIR/system.xml"
+        echo "startup wizard done, admin user: $$ADMIN_USER"
+    volumes:
+      - config:/config
+      - cache:/cache
+    network_mode: none
+
   jellyfin:
     image: jellyfin/jellyfin:10.11.11
     restart: unless-stopped
@@ -9,6 +51,8 @@ services:
       - cache:/cache
       - ${MEDIA_PATH}:/media:ro
     networks: [ingress]
+    depends_on:
+      setup: { condition: service_completed_successfully }
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
       caddy: ${DOMAIN}

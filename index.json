@@ -2326,7 +2326,7 @@
       "homepage": "https://jellyfin.org",
       "source": "https://github.com/jellyfin/jellyfin",
       "path": "apps/jellyfin",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "images": [
         {
           "name": "jellyfin/jellyfin",
@@ -2351,6 +2351,22 @@
           "name": "DOMAIN",
           "type": "hostname",
           "title": "Domain",
+          "required": true
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Admin user",
+          "description": "Created before Jellyfin is first reachable, so its startup wizard is never open on the domain. Taken only on the first start; later changes go in Jellyfin's own settings.",
+          "required": true,
+          "default": "admin",
+          "pattern": "^[A-Za-z0-9._@-]+$"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Admin password",
+          "description": "You sign in with it. Taken only on the first start (stacks whose wizard is already done keep their users); change it later in Jellyfin.",
           "required": true
         },
         {
