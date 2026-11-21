@@ -85,7 +85,9 @@
   },
   "adguard-home": {
     "DNS_PORT": "15354",
-    "BIND_ADDR": "127.0.0.1"
+    "BIND_ADDR": "127.0.0.1",
+    "ADMIN_USER": "ci-admin",
+    "ADMIN_PASSWORD": "ci-adguard-password"
   },
   "garage": {
     "ACCESS_KEY_ID": "c083b3457c14d3ccbfa9d35698b3241c",

@@ -667,8 +667,34 @@ def check_prometheus():
         raise SystemExit(f"prometheus: not scraping this host: {out[:800]}")
 
 
+def check_adguard_home():
+    """Set up from the start: no wizard is offered, and the admin from the
+    inputs signs in."""
+    v = OVERRIDES["adguard-home"]
+    base = f"http://{stack_name('adguard-home')}-adguard-home-1:3000"
+
+    def wget(path, *args):
+        return run("docker", "run", "--rm", "--network", NETWORK, ALPINE, "wget", "-S", "-O", "-", *args,
+                   base + path, check=False)
+
+    p = wget("/", "--max-redirect=0")
+    if "/install.html" in p.stderr:
+        raise SystemExit(f"adguard-home: / still leads to the setup wizard:\n{p.stderr}")
+    p = wget("/control/install/get_addresses")
+    if p.returncode == 0:
+        raise SystemExit(f"adguard-home: the setup API still answers:\n{p.stdout[:300]}")
+    login = json.dumps({"name": v["ADMIN_USER"], "password": v["ADMIN_PASSWORD"]})
+    p = wget("/control/login", "--header", "Content-Type: application/json", "--post-data", login)
+    if "HTTP/1.1 200" not in p.stderr or "agh_session=" not in p.stderr:
+        raise SystemExit(f"adguard-home: the admin from the inputs can't sign in:\n{p.stderr}{p.stdout[:300]}")
+    p = wget("/control/login", "--header", "Content-Type: application/json",
+             "--post-data", json.dumps({"name": v["ADMIN_USER"], "password": "wrong-password"}))
+    if "HTTP/1.1 200" in p.stderr:
+        raise SystemExit("adguard-home: a wrong password signs in")
+
+
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.
