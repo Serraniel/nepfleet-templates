@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: matrix
   title: Matrix
-  description: "Chat with Synapse and the Element web client. Registration is off: create the first user with register_new_matrix_user in the synapse container, using REGISTRATION_SECRET from the stack's secrets. The domain becomes part of every user's name and can't change later."
+  description: "Chat with Synapse and the Element web client. Public registration is off: you sign in with the admin from the stack's inputs, who adds further users. The domain becomes part of every user's name and can't change later."
   tier: app
   category: communication
   homepage: https://matrix.org
   source: https://github.com/element-hq/synapse
 spec:
-  version: 0.1.4
+  version: 0.2.0
   compose: compose.yaml
   botCheck: { service: synapse, port: 8008, allow: ["^/_matrix/", "^/_synapse/client/", "^/\\.well-known/matrix/"] }
   images:
@@ -18,8 +18,8 @@ spec:
     - name: vectorim/element-web
       track: minor
     - name: postgres
-      track: patch
-  supports: { swarm: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true, arm64: true }
+      track: minor
+  supports: { swarm: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, arm64: true }
   inputs:
     - name: DOMAIN
       type: hostname
@@ -28,6 +28,18 @@ spec:
     - name: ELEMENT_DOMAIN
       type: hostname
       title: Domain of the Element web client, e.g. chat.example.org
+      required: true
+    - name: ADMIN_USER
+      type: string
+      title: Admin user name (you sign in with it)
+      description: "Becomes @name:your-matrix-domain. Registered on first start, or on the next apply of an existing stack; renaming it later here registers another admin."
+      default: admin
+      required: true
+      pattern: '^[a-z0-9._=/-]{1,64}$'
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "Kept encrypted in the fleet. The admin is registered with it when that user doesn't exist yet; change the password later in Element."
       required: true
   generate:
     - { name: DB_PASSWORD, kind: secret, length: 32, encoding: alnum }
