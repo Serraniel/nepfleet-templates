@@ -8,7 +8,7 @@ metadata:
   category: web
   homepage: https://github.com/thedevs-network/kutt
 spec:
-  version: 0.3.2
+  version: 0.4.0
   compose: compose.yaml
   web: { service: kutt, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
@@ -21,10 +21,23 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin email
+      description: Kutt's admin, created on its first start so its "create admin" page is never open to whoever finds the domain first. Sign in with it. Taken only on the first start; change it in Kutt's settings later.
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: 8 to 64 characters (Kutt's sign-in allows no other length). Taken only on the first start; change it in Kutt's settings later.
+      required: true
     - name: DISALLOW_REGISTRATION
       type: bool
       title: Disable public registration
+      description: Kutt's sign-up also needs mail, which this template does not set up.
       default: "true"
+  files:
+    - { src: files/setup.js, dest: setup/setup.js }
   generate:
     - { name: JWT_SECRET, kind: secret, length: 48, encoding: base64url }
   volumes:
