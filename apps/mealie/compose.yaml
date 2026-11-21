@@ -2,15 +2,31 @@ services:
   mealie:
     image: ghcr.io/mealie-recipes/mealie:v3.31.0
     restart: unless-stopped
-    # The image's own health check (healthcheck.sh) is used.
+    # Mealie creates its admin as changeme@example.com / MyPassword and has no
+    # setting for it. setup.py runs next to Mealie, waits until it answers and,
+    # while that login still works, changes the admin to ADMIN_EMAIL,
+    # ADMIN_NAME and ADMIN_PASSWORD; later it finds the login refused and does
+    # nothing. Mealie is healthy only once that is done (the image's own check,
+    # plus the file setup.py leaves).
+    entrypoint: ["/bin/sh", "-c", "/opt/mealie/bin/python /setup/setup.py & exec /app/run.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "/app/healthcheck.sh && test -f /tmp/admin-set"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
     environment:
       BASE_URL: ${NEPFLEET_URL}
       ALLOW_SIGNUP: ${ALLOW_SIGNUP}
       TZ: ${TZ}
       PUID: "1000"
       PGID: "1000"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - data:/app/data
+      - ./setup:/setup:ro
     networks: [ingress]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # SQLite database: consistent copy
