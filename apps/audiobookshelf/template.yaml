@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: audiobookshelf
   title: Audiobookshelf
-  description: Audiobook and podcast server with apps for phones, progress sync and podcast downloads. Create the root user on the first visit.
+  description: Audiobook and podcast server with apps for phones, progress sync and podcast downloads. The root user comes from the stack's inputs.
   tier: app
   category: media
   homepage: https://www.audiobookshelf.org
   source: https://github.com/advplyr/audiobookshelf
 spec:
-  version: 0.3.2
+  version: 0.4.0
   compose: compose.yaml
   web: { service: audiobookshelf, port: 80 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/login", "^/logout", "^/auth/", "^/socket\\.io/", "^/hls/", "^/feed/", "^/public/", "^/status", "^/ping", "^/healthcheck"] }
@@ -32,6 +32,19 @@ spec:
       title: Host folder for podcasts (downloads go here)
       default: ./podcasts
       required: true
+    - name: ADMIN_USER
+      type: string
+      title: Root user name
+      description: Audiobookshelf's root (admin) user, created on the first start only. Changing it later does not rename the user; do that in the app.
+      default: root
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Root user password
+      description: Password of the root user, set on the first start only. Changing it later does not change the password; do that in the app.
+      required: true
+  files:
+    - { src: files/setup.js, dest: setup/setup.js }
   volumes:
     - { name: config, backup: true }
     # Covers (uploaded or matched online), author images, the app's own

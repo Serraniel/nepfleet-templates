@@ -1528,13 +1528,13 @@
     {
       "name": "audiobookshelf",
       "title": "Audiobookshelf",
-      "description": "Audiobook and podcast server with apps for phones, progress sync and podcast downloads. Create the root user on the first visit.",
+      "description": "Audiobook and podcast server with apps for phones, progress sync and podcast downloads. The root user comes from the stack's inputs.",
       "tier": "app",
       "category": "media",
       "homepage": "https://www.audiobookshelf.org",
       "source": "https://github.com/advplyr/audiobookshelf",
       "path": "apps/audiobookshelf",
-      "version": "0.3.2",
+      "version": "0.4.0",
       "images": [
         {
           "name": "ghcr.io/advplyr/audiobookshelf",
@@ -1574,6 +1574,21 @@
           "title": "Host folder for podcasts (downloads go here)",
           "required": true,
           "default": "./podcasts"
+        },
+        {
+          "name": "ADMIN_USER",
+          "type": "string",
+          "title": "Root user name",
+          "description": "Audiobookshelf's root (admin) user, created on the first start only. Changing it later does not rename the user; do that in the app.",
+          "required": true,
+          "default": "root"
+        },
+        {
+          "name": "ADMIN_PASSWORD",
+          "type": "secret",
+          "title": "Root user password",
+          "description": "Password of the root user, set on the first start only. Changing it later does not change the password; do that in the app.",
+          "required": true
         }
       ],
       "generate": [],
