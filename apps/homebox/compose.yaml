@@ -2,7 +2,41 @@ services:
   homebox:
     image: ghcr.io/sysadminsmedia/homebox:0.27.1
     restart: unless-stopped
+    # On the first start (no database yet), a Homebox on localhost only, with
+    # registration open, registers the admin from the inputs and stops; then
+    # the real one starts, with registration as set. Later starts skip this.
+    # The marker makes an interrupted first start try again.
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        if [ ! -e /data/homebox.db ] || [ -e /data/.nepfleet-admin-pending ]; then
+          touch /data/.nepfleet-admin-pending
+          HBOX_WEB_HOST=127.0.0.1 HBOX_WEB_PORT=7746 HBOX_OPTIONS_ALLOW_REGISTRATION=true /app/api /data/config.yml &
+          pid=$$!
+          i=0
+          until wget -q -O /dev/null http://127.0.0.1:7746/api/v1/status; do
+            i=$$((i + 1)); [ "$$i" -lt 120 ] || { echo "first start: Homebox did not come up"; exit 1; }
+            sleep 1
+          done
+          esc() { printf %s "$$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
+          email="$$(esc "$$ADMIN_EMAIL")"; password="$$(esc "$$ADMIN_PASSWORD")"; name="$$(esc "$$ADMIN_NAME")"
+          post() { printf %s "$$2" > /tmp/body; wget -q -O /dev/null --header "Content-Type: application/json" --post-file /tmp/body "http://127.0.0.1:7746/api/v1/users/$$1"; }
+          login='{"username":"'"$$email"'","password":"'"$$password"'"}'
+          if ! post login "$$login"; then
+            post register '{"name":"'"$$name"'","email":"'"$$email"'","password":"'"$$password"'"}'
+            post login "$$login"
+          fi
+          rm -f /tmp/body
+          kill "$$pid"; wait "$$pid" || true
+          rm -f /data/.nepfleet-admin-pending
+          echo "first start: admin $$ADMIN_EMAIL registered"
+        fi
+        exec /app/api /data/config.yml
     environment:
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       HBOX_OPTIONS_ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
       HBOX_LOG_LEVEL: info
       HBOX_OPTIONS_GITHUB_RELEASE_CHECK: "false"   # no release check against GitHub
