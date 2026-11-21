@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: open-webui
   title: Open WebUI (+ Ollama, LiteLLM)
-  description: Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI); models are configured in litellm.yaml. Its admin is the one set here; others sign up only if you allow it.
+  description: Chat UI for language models. Profiles add Ollama (local models) and/or LiteLLM, an OpenAI-compatible gateway to cloud providers and other runtimes (vLLM, llama.cpp, LocalAI). Chat works right away; Ollama downloads the models you name, and LiteLLM offers the models of each provider whose API key you set. Its admin is the one set here; others sign up only if you allow it.
   tier: app
   category: ai
   homepage: https://openwebui.com
   source: https://github.com/open-webui/open-webui
 spec:
-  version: 0.3.4
+  version: 0.4.0
   compose: compose.yaml
   web: { service: open-webui, port: 8080 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/ollama/", "^/openai/"] }   # API-key clients
@@ -31,6 +31,20 @@ spec:
       title: Model backends
       options: ["ollama", "litellm", "ollama,litellm", "none"]
       default: "ollama"
+    - name: OLLAMA_MODELS
+      type: string
+      title: Ollama models to download, separated by commas
+      description: "With the ollama profile. Ollama downloads the missing ones in the background after each start, so chat works without pulling a model by hand; removing one here doesn't delete it. The default, llama3.2:1b (1.3 GB), runs on a CPU. Names as on ollama.com/library, such as qwen2.5:0.5b (0.4 GB) or llama3.1:8b (4.9 GB)."
+      default: "llama3.2:1b"
+      pattern: '^([A-Za-z0-9._:/-]+(, ?[A-Za-z0-9._:/-]+)*)?$'   # empty: none
+    - name: OPENAI_API_KEY
+      type: secret
+      title: OpenAI API key (optional)
+      description: "With the litellm profile: LiteLLM offers the models the key can use, as openai/<model> (next to its openai/* route entry). Empty: no OpenAI entries. Kept encrypted in the fleet."
+    - name: ANTHROPIC_API_KEY
+      type: secret
+      title: Anthropic API key (optional)
+      description: "With the litellm profile: LiteLLM offers the models the key can use, as anthropic/<model> (next to its anthropic/* route entry). Empty: no Anthropic entries. Kept encrypted in the fleet."
     - name: ENABLE_SIGNUP
       type: bool
       title: Allow sign-ups
@@ -50,6 +64,8 @@ spec:
     - { name: LITELLM_KEY, kind: secret, length: 40, encoding: alnum }
   files:
     - { src: files/litellm.yaml, dest: litellm.yaml }
+    - { src: files/litellm-providers/openai.yaml, dest: litellm-providers/openai.yaml }
+    - { src: files/litellm-providers/anthropic.yaml, dest: litellm-providers/anthropic.yaml }
   volumes:
     - { name: webui, backup: true }
     - { name: ollama, backup: false }
