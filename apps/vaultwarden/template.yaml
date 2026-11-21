@@ -8,7 +8,7 @@ metadata:
   category: security
   homepage: https://github.com/dani-garcia/vaultwarden
 spec:
-  version: 0.3.1
+  version: 0.4.0
   compose: compose.yaml
   images:
     - name: vaultwarden/server
@@ -20,13 +20,26 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: OWNER_EMAIL
+      type: email
+      title: Your e-mail (you sign in with it)
+      description: "Your account is created with it on the first start, or on the next apply of an existing stack (nothing changes when it exists). Changing it here later does nothing; change it in Vaultwarden."
+      required: true
+    - name: OWNER_PASSWORD
+      type: secret
+      title: Your master password (at least 12 characters)
+      description: "Kept encrypted in the fleet, and used once: to create your account. It unlocks your vault and can't be recovered, so don't lose it; change it later in Vaultwarden. Invite others from an organization in your vault: an invited e-mail can then create its account."
+      required: true
+      pattern: "^.{12,}$"
     - name: SIGNUPS_ALLOWED
       type: bool
-      title: Allow sign-ups
+      title: Allow anyone to sign up
       default: "false"
     - name: ADMIN_TOKEN
       type: secret
-      title: Admin token (Argon2 PHC string)
-      description: Leave empty to disable /admin. Generate with `docker run --rm -it vaultwarden/server /vaultwarden hash`.
+      title: Admin page token (Argon2 PHC string)
+      description: Leave empty to disable /admin, which you don't need to use the vault or invite people. Generate with `docker run --rm -it vaultwarden/server /vaultwarden hash`; a plain token works too, but Vaultwarden warns about it.
+  files:
+    - { src: files/owner.sh, dest: owner.sh }
   volumes:
     - { name: data, backup: true, shared: true }
