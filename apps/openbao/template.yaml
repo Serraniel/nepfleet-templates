@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: openbao
   title: OpenBao
-  description: "A secrets manager with Vault's API, for apps that read their secrets from Vault (NepFleet itself doesn't need it: its secrets are SOPS files). After the first start, initialise it yourself: docker exec -it <stack>-openbao-1 bao operator init. Its output (unseal keys and root token) is the root of everything: keep it off this host and out of the fleet repository; NepFleet never sees or stores it. OpenBao starts sealed after every restart: unseal it with bao operator unseal (or the UI). Its Uptime Kuma monitor is down while it is sealed."
+  description: "A secrets manager with Vault's API, for apps that read their secrets from Vault (NepFleet itself doesn't need it: its secrets are SOPS files). It initialises itself on the first start and creates an admin from the stack's inputs (userpass auth, a policy with full access); the root token it used is revoked and never shown. It unseals itself on every start with a key NepFleet generated (static seal), so restarts and image updates need nobody. That key sits encrypted in the fleet repository and in the stack's environment on the host: whoever has root on the host or the fleet's SOPS key can read the vault, as with every other stack's data."
   tier: app
   category: security
   homepage: https://openbao.org
   source: https://github.com/openbao/openbao
 spec:
-  version: 0.1.1
+  version: 1.0.0
   compose: compose.yaml
   web: { service: openbao, port: 8200 }   # the UI at /ui and the API; also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/v1/"] }   # the API, used by apps and the bao CLI
@@ -22,7 +22,32 @@ spec:
       type: hostname
       title: Domain
       required: true
+    - name: ADMIN_USER
+      type: string
+      title: Admin user
+      description: You sign in with it (method Username in the UI, or bao login -method=userpass). Taken on the first start only; stacks set up before version 1.0 keep their own logins.
+      default: admin
+      required: true
+      pattern: "^[a-z0-9][a-z0-9_.-]{0,63}$"
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "Kept encrypted in the fleet; at least 12 characters. Taken on the first start only; change it later in OpenBao (auth/userpass/users/<user>/password). Stacks set up before version 1.0 don't use it."
+      required: true
+      pattern: "^.{12,}$"
+  generate:
+    # The static seal's key: 32 bytes for AES-256-GCM, in hex.
+    - { name: UNSEAL_KEY, kind: secret, length: 64, encoding: hex }
   files:
     - { src: files/openbao.hcl, dest: openbao.hcl }
   volumes:
     - { name: data, backup: true }   # the Raft storage, encrypted by OpenBao itself
+  migrations:
+    - from: ">=0.1.0 <1.0.0"
+      to: 1.0.0
+      description: "OpenBao now unseals itself with a generated key (static seal). A stack initialised by hand has to move its seal once: after this upgrade it is sealed, run docker exec -it <stack>-openbao-1 bao operator unseal -migrate as often as your threshold, with your unseal keys. From then on it unseals itself; your old unseal keys become recovery keys and your logins stay as they are."
+      backup: recommended
+      rollback: revert
+      steps:
+        - name: switch to the static seal
+          deploy: true
