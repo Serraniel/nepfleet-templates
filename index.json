@@ -777,13 +777,13 @@
     {
       "name": "homepage",
       "title": "Homepage",
-      "description": "A dashboard for your services. Entries come from homepage.* labels; title, theme, language, search and the resource widgets are set as values (NepFleet owns settings.yaml and widgets.yaml; bookmarks.yaml and the rest stay yours).",
+      "description": "A dashboard for your services. Entries come from homepage.* labels; title, theme, language, search and the resource widgets are set as values (NepFleet owns settings.yaml, widgets.yaml, and services.yaml and bookmarks.yaml, which it keeps empty so Homepage shows none of its samples).",
       "tier": "system",
       "category": "dashboard",
       "homepage": "https://gethomepage.dev",
       "source": "https://github.com/gethomepage/homepage",
       "path": "system/homepage",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "images": [
         {
           "name": "ghcr.io/gethomepage/homepage",
