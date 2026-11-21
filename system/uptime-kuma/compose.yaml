@@ -2,8 +2,16 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:2
     restart: unless-stopped
+    # prestart.js first: SQLite on the first start (no database page), and
+    # on later starts the admin gets KUMA_USERNAME and KUMA_PASSWORD. It never
+    # keeps Kuma from starting.
+    entrypoint: ["/usr/bin/dumb-init", "--", "sh", "-c", "node /setup/prestart.js; exec node server/server.js"]
+    environment:
+      KUMA_USERNAME: ${KUMA_USERNAME}
+      KUMA_PASSWORD: ${KUMA_PASSWORD}
     volumes:
       - data:/app/data
+      - ./setup:/setup:ro
     # socket: Docker monitors (workers, databases) ask the read-only proxy
     # whether a container runs and is healthy.
     # nepfleet-api: alerts go to NepFleet (the notification below).
@@ -18,8 +26,9 @@ services:
       homepage.icon: uptime-kuma.svg
       homepage.href: ${NEPFLEET_URL}
 
-  # Creates the admin on the first start (setup.js), then exits; later runs
-  # find it and do nothing.
+  # Creates the admin on the first start (setup.js); on every run it signs in
+  # with KUMA_USERNAME and KUMA_PASSWORD, so AutoKuma starts only when it
+  # can sign in too.
   setup:
     image: louislam/uptime-kuma:2
     restart: "no"
@@ -32,7 +41,10 @@ services:
       - ./setup:/setup:ro
     networks: [default]
     depends_on:
-      uptime-kuma: { condition: service_healthy }
+      # Not service_healthy: Kuma's first health check comes a minute in,
+      # and until the admin exists its setup screen is open. setup.js waits
+      # for Kuma to answer itself.
+      uptime-kuma: { condition: service_started }
 
   autokuma:
     image: ghcr.io/bigboot/autokuma:2
@@ -45,6 +57,9 @@ services:
       AUTOKUMA__DOCKER__LABEL_PREFIX: kuma
       # Every monitor alerts through NepFleet, whose channels deliver.
       AUTOKUMA__DEFAULT_SETTINGS: '*.notification_name_list: ["nepfleet"]'
+    volumes:
+      # Which monitors it made, so a restart doesn't make them again.
+      - autokuma:/data
     networks: [default, socket]
     depends_on:
       uptime-kuma: { condition: service_started }
@@ -80,6 +95,7 @@ services:
 
 volumes:
   data:
+  autokuma:
 
 networks:
   default:

@@ -8,7 +8,7 @@ metadata:
   category: monitoring
   homepage: https://github.com/louislam/uptime-kuma
 spec:
-  version: 0.5.1
+  version: 0.6.0
   compose: compose.yaml
   images:
     - name: louislam/uptime-kuma
@@ -26,12 +26,14 @@ spec:
     - name: KUMA_USERNAME
       type: string
       title: Admin user
-      description: Created on Kuma's first start, so its setup screen is never open; sign in with it, and AutoKuma does too.
+      description: Created on Kuma's first start, so its setup screen is never open; sign in with it, and AutoKuma does too. Kuma's admin gets this name on every start, also an admin made by hand in Kuma.
       default: admin
       required: true
     - name: KUMA_PASSWORD
       type: secret
       title: Admin password
+      description: At least 6 characters, from at least two of lowercase, uppercase, digits and symbols (Kuma refuses weaker ones). Kuma's admin gets it on every start, so a change here, or one made in Kuma, ends up as this password and AutoKuma can still sign in.
+      pattern: "^.{6,}$"
       required: true
   generate:
     # Kuma's alerts go to NepFleet's alerts API with this token.
@@ -39,6 +41,10 @@ spec:
       kind: notify-token
   files:
     - { src: files/setup.js, dest: setup/setup.js }
+    - { src: files/prestart.js, dest: setup/prestart.js }
   volumes:
     - name: data
+      backup: true
+    # Which Kuma monitors AutoKuma made; without it every restart makes them again.
+    - name: autokuma
       backup: true
