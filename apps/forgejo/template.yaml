@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.7.2
+  version: 0.8.0
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/[^/]+/[^/]+\\.git/", "^/[^/]+/[^/]+/(info/lfs|git-upload-pack|git-receive-pack)", "^/\\.well-known/"] }
@@ -32,6 +32,22 @@ spec:
       type: int
       title: Host port for git over SSH
       default: "2222"
+      required: true
+    - name: ADMIN_USER
+      type: string
+      title: Admin user name (you sign in with it)
+      description: "Not admin, which Forgejo reserves. Created on first start, or on the next apply of an existing stack; renaming it later here creates another admin."
+      default: forgeadmin
+      required: true
+      pattern: '^[A-Za-z0-9]([A-Za-z0-9._-]{0,38}[A-Za-z0-9])?$'
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin e-mail
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password (at least 8 characters)
+      description: "Kept encrypted in the fleet. The admin is created with it when that account doesn't exist yet; change the password later in Forgejo."
       required: true
     - name: RUNNER_LABELS
       type: string

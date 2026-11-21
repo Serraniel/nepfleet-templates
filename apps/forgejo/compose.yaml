@@ -68,6 +68,31 @@ services:
     depends_on:
       forgejo: { condition: service_healthy }
 
+  # Creates the admin from the stack's inputs once: nothing when that account
+  # exists (its password is then changed in Forgejo). Exits.
+  admin:
+    image: codeberg.org/forgejo/forgejo:17
+    restart: "no"
+    user: "1000:1000"
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        if forgejo admin user list | awk -v n="$$ADMIN_USER" 'NR > 1 && tolower($$2) == tolower(n) { found = 1 } END { exit !found }'; then
+          echo "admin $$ADMIN_USER exists"; exit 0
+        fi
+        forgejo admin user create --admin --username "$$ADMIN_USER" --email "$$ADMIN_EMAIL" \
+          --password "$$ADMIN_PASSWORD" --must-change-password=false
+    environment:
+      <<: *forgejo-env
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - data:/data
+    depends_on:
+      forgejo: { condition: service_healthy }
+
   # Adds the identity provider as a sign-in option, or updates it. Exits.
   identity-provider:
     image: codeberg.org/forgejo/forgejo:17
@@ -122,6 +147,7 @@ services:
       register-runner: { condition: service_completed_successfully }
       # Not needed by the runner: compose only accepts a one-shot that exits when
       # something waits for it.
+      admin: { condition: service_completed_successfully }
       identity-provider: { condition: service_completed_successfully }
       dind: { condition: service_started }
     labels:
