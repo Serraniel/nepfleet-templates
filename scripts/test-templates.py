@@ -574,6 +574,25 @@ def check_sweetcaptcha():
             raise SystemExit(f"sweetcaptcha: {path} didn't answer as expected:\n{p.stdout[:300]}{p.stderr}")
 
 
+def check_homebox():
+    """The admin from the inputs signs in, and registration is closed to others."""
+    c = f"{stack_name('homebox')}-homebox-1"
+    env = {k: run("docker", "exec", c, "printenv", k).stdout.rstrip("\n") for k in ("ADMIN_EMAIL", "ADMIN_PASSWORD")}
+
+    def post(path, body):
+        return run("docker", "exec", c, "wget", "-q", "-O-", "--header", "Content-Type: application/json",
+                   "--post-data", json.dumps(body), f"http://127.0.0.1:7745/api/v1/users/{path}", check=False)
+
+    p = post("login", {"username": env["ADMIN_EMAIL"], "password": env["ADMIN_PASSWORD"]})
+    if p.returncode != 0 or "token" not in p.stdout:
+        raise SystemExit(f"homebox: the admin can't sign in:\n{p.stdout}{p.stderr}")
+    if post("register", {"name": "x", "email": "other@example.test", "password": "other-password"}).returncode == 0:
+        raise SystemExit("homebox: anyone can register")
+    status = json.loads(run("docker", "exec", c, "wget", "-q", "-O-", "http://127.0.0.1:7745/api/v1/status").stdout)
+    if status.get("allowRegistration") is not False:
+        raise SystemExit(f"homebox: the sign-in page offers registration: {status}")
+
+
 def check_garage():
     """The bucket and key Garage made on first start must store and return an object."""
     c = stack_name("garage") + "-garage-1"
@@ -619,7 +638,7 @@ def check_prometheus():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
 
 
 # Changing these can affect every template, so all of them are tested again.

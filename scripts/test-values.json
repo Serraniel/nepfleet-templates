@@ -9,6 +9,9 @@
   "frps": {
     "BIND_ADDR": "127.0.0.1"
   },
+  "homebox": {
+    "ADMIN_PASSWORD": "ci-\"quoted\" back\\slash $dollar"
+  },
   "imgproxy": {
     "ALLOWED_SOURCES": "https://images.example.test/",
     "KEY": "4523a818b6e894b4a3ec9f17f73ec1131d311cc07de6c6f9cd5257f4bffcbc66",

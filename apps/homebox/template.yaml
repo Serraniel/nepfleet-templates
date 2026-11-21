@@ -9,24 +9,39 @@ metadata:
   homepage: https://homebox.software
   source: https://github.com/sysadminsmedia/homebox
 spec:
-  version: 0.3.2
+  version: 0.4.0
   compose: compose.yaml
   web: { service: homebox, port: 7745 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }   # API clients and companion apps
   images:
     - name: ghcr.io/sysadminsmedia/homebox
-      track: patch   # pre-1.0
+      track: minor   # 0.x minors are its regular releases; migrations run on start
   supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
       title: Domain
       required: true
+    - name: ADMIN_NAME
+      type: string
+      title: Admin name
+      default: Admin
+      required: true
+    - name: ADMIN_EMAIL
+      type: email
+      title: Admin e-mail
+      description: You sign in to Homebox with it. Homebox registers this account on its first start only; later changes here don't reach it (change it in Homebox).
+      required: true
+    - name: ADMIN_PASSWORD
+      type: secret
+      title: Admin password
+      description: "At least 6 characters. Taken on the first start only, when Homebox registers the admin; change it in Homebox afterwards."
+      required: true
     - name: ALLOW_REGISTRATION
       type: bool
       title: Allow registration
-      description: Needed to create the first account; turn off afterwards.
-      default: "true"
+      description: Lets anyone who reaches Homebox create an account. The admin is created without it; invite others from Homebox instead.
+      default: "false"
     - name: LABEL_PRINT_COMMAND
       type: string
       title: Command that prints a label on the server
