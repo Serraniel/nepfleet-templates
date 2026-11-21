@@ -2,12 +2,18 @@ services:
   vaultwarden:
     image: vaultwarden/server:1.37.5
     restart: unless-stopped
+    # Creates the owner's account on the first start (owner.sh), then runs
+    # Vaultwarden as its image does.
+    command: ["/bin/bash", "/nepfleet/owner.sh"]
     environment:
       DOMAIN: ${NEPFLEET_URL}
       SIGNUPS_ALLOWED: ${SIGNUPS_ALLOWED}
       ADMIN_TOKEN: ${ADMIN_TOKEN}
+      OWNER_EMAIL: ${OWNER_EMAIL}
+      OWNER_PASSWORD: ${OWNER_PASSWORD}
     volumes:
       - data:/data
+      - ./owner.sh:/nepfleet/owner.sh:ro
     networks: [ingress]
     labels:
       docker-volume-backup.stop-during-backup: "true"   # consistent database copy
