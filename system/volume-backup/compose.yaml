@@ -36,7 +36,7 @@ services:
   # (swarm detection), start and stop. No POST: it would allow creating
   # (privileged) containers, which is root on the host.
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:3.4.7
+    image: lscr.io/linuxserver/socket-proxy:3.4.8
     restart: unless-stopped
     read_only: true
     tmpfs: [/run]
