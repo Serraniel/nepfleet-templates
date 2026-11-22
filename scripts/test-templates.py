@@ -349,7 +349,7 @@ def check_sure():
     if not m:
         raise SystemExit("sure: no sign-in form")
     code, loc, cookie, _ = get("/sessions", "-H", f"Cookie: {cookie}", "--data-urlencode", f"authenticity_token={m.group(1)}",
-                               "--data-urlencode", "email=admin@example.test",
+                               "--data-urlencode", f"email={OVERRIDES['sure']['ADMIN_EMAIL']}",
                                "--data-urlencode", f"password={OVERRIDES['sure']['ADMIN_PASSWORD']}")
     # Signed in, Sure sends a new user to its profile questions, not to sign-in.
     code2, loc2, _, _ = get("/", "-H", f"Cookie: {cookie}")

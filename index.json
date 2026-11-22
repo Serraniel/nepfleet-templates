@@ -4256,7 +4256,7 @@
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",
@@ -4296,8 +4296,7 @@
           "type": "email",
           "title": "Admin email",
           "description": "The first account, a super admin, is created with it on the first start, so sign-up never needs to be open. Sign in with it; Sure then asks for your name, country and currency. Only used while Sure has no account yet: later changes do not change the account.",
-          "required": true,
-          "default": "admin@example.test"
+          "required": true
         },
         {
           "name": "ADMIN_PASSWORD",

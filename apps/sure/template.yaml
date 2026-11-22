@@ -9,7 +9,7 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   web: { service: web, port: 3000 }
   botCheck: { allow: ["^/api/", "^/oauth/"] }   # the mobile app and API keys
@@ -30,7 +30,6 @@ spec:
       type: email
       title: Admin email
       description: "The first account, a super admin, is created with it on the first start, so sign-up never needs to be open. Sign in with it; Sure then asks for your name, country and currency. Only used while Sure has no account yet: later changes do not change the account."
-      default: admin@example.test
       required: true
     - name: ADMIN_PASSWORD
       type: secret
