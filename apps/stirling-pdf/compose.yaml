@@ -1,6 +1,6 @@
 services:
   stirling-pdf:
-    image: stirlingtools/stirling-pdf:3.3.0
+    image: stirlingtools/stirling-pdf:3.4.0
     restart: unless-stopped
     # The image's own health check (/api/v1/info/status) is used.
     environment:
