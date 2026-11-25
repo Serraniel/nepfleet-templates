@@ -3,18 +3,20 @@ kind: Template
 metadata:
   name: beszel-agent
   title: Beszel agent
-  description: "Sends this host's and its containers' metrics to a Beszel hub. In the hub, Add System with the WebSocket option gives the key and token. It connects out to the hub and opens no port, and reads Docker through a read-only proxy. Network traffic is the container's own, not the host's."
+  description: "Sends this host's and its containers' metrics to a Beszel hub. With a beszel stack in the fleet, it pairs by itself: in stack.yaml, TOKEN with from <hub stack> and secret AGENT_TOKEN, and PAIR_PASSWORD with from <hub stack> and secret PAIR_PASSWORD. The host then shows up in Beszel under its hostname. With another hub, Add System with the WebSocket option gives KEY and TOKEN. It connects out to the hub and opens no port, and reads Docker through a read-only proxy. Network traffic is the container's own, not the host's."
   tier: system
   category: monitoring
   homepage: https://beszel.dev
   source: https://github.com/henrygd/beszel
 spec:
-  version: 0.1.0
+  version: 0.2.0
   compose: compose.yaml
   images:
     - name: henrygd/beszel-agent
       track: minor
     - name: lscr.io/linuxserver/socket-proxy
+      track: minor
+    - name: curlimages/curl
       track: minor
   supports: { arm64: true, monitoring: true, logs: true, autoUpdate: true }
   inputs:
@@ -22,14 +24,21 @@ spec:
       type: url
       title: The hub's address
       required: true
+    - name: TOKEN
+      type: secret
+      title: The hub's agent token
+      description: "From the hub stack: from <hub stack>, secret AGENT_TOKEN. Or the token from Add System."
+      required: true
+    - name: PAIR_PASSWORD
+      type: secret
+      title: The hub's pairing password
+      description: "From the hub stack: from <hub stack>, secret PAIR_PASSWORD. The agent reads the hub's public key with it, so KEY can stay empty."
     - name: KEY
       type: string
       title: The hub's public key (from Add System)
-      required: true
+      description: Only for a hub without PAIR_PASSWORD. When set, it's used instead of the key read from the hub.
       pattern: '^ssh-ed25519 [A-Za-z0-9+/=]+$'
-    - name: TOKEN
-      type: secret
-      title: The token from Add System
-      required: true
+  files:
+    - { src: files/pair.sh, dest: pair/pair.sh }
   volumes:
     - { name: data, backup: false }

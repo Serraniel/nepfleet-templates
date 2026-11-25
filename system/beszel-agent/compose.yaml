@@ -2,16 +2,23 @@ services:
   agent:
     image: henrygd/beszel-agent:0.21.2
     restart: unless-stopped
+    # The host's name, not the container's: a hub adds the agent as a new
+    # system under it. Without CAP_SYS_ADMIN it can't change it.
+    uts: host
     environment:
       # The agent connects out to the hub, so it listens on no port.
       HUB_URL: ${HUB_URL}
+      # KEY when set, else the key the pair service read from the hub.
       KEY: ${KEY}
+      KEY_FILE: /var/lib/beszel-agent/hub-key.pub
       TOKEN: ${TOKEN}
       DISABLE_SSH: "true"
       DOCKER_HOST: tcp://socket-proxy:2375
     volumes:
       - data:/var/lib/beszel-agent
     networks: [default, socket]
+    depends_on:
+      pair: { condition: service_completed_successfully }
     healthcheck:
       test: ["CMD", "/agent", "health"]
       interval: 60s
@@ -22,6 +29,22 @@ services:
       kuma.beszel-agent.docker.name: Beszel agent
       kuma.beszel-agent.docker.docker_container: ${NEPFLEET_STACK}-agent-1
       kuma.beszel-agent.docker.docker_host_name: nepfleet-docker
+
+  # Reads the hub's public key (files/pair.sh). The agent's image has no shell.
+  pair:
+    image: curlimages/curl:8.23.0
+    restart: "no"
+    user: "0:0"   # writes into the agent's volume, which belongs to root
+    entrypoint: ["/bin/sh", "/pair/pair.sh"]
+    environment:
+      HUB_URL: ${HUB_URL}
+      KEY: ${KEY}
+      KEY_FILE: /var/lib/beszel-agent/hub-key.pub
+      PAIR_PASSWORD: ${PAIR_PASSWORD}
+    volumes:
+      - ./pair:/pair:ro
+      - data:/var/lib/beszel-agent
+    networks: [default]
 
   # Read-only API: container lists and stats. No starting, stopping or exec.
   socket-proxy:

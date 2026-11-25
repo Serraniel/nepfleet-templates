@@ -3,17 +3,19 @@ kind: Template
 metadata:
   name: beszel
   title: Beszel
-  description: "Lightweight host and container metrics, with history and alerts. This is the hub; sign in with the admin set here. Each host to watch runs an agent: the beszel-agent template."
+  description: "Lightweight host and container metrics, with history and alerts. This is the hub; sign in with the admin set here. Each host to watch runs an agent: the beszel-agent template, which pairs with this hub by itself when it takes AGENT_TOKEN and PAIR_PASSWORD from this stack. Beszel then lists the read-only user agents@beszel.invalid, which agents use to read the hub's public key."
   tier: system
   category: monitoring
   homepage: https://beszel.dev
   source: https://github.com/henrygd/beszel
 spec:
-  version: 0.1.4
+  version: 0.2.0
   compose: compose.yaml
   web: { service: beszel, port: 8090 }
   images:
     - name: henrygd/beszel
+      track: minor
+    - name: curlimages/curl
       track: minor
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
@@ -30,5 +32,13 @@ spec:
       title: Admin password
       description: "Kept encrypted in the fleet. Beszel creates this admin on its first start; change the password later in Beszel."
       required: true
+  generate:
+    # Agents take both from this stack ({from: <this stack>, secret: …}):
+    # the universal token they connect with, and the password of the
+    # read-only user they read the hub's public key with.
+    - { name: AGENT_TOKEN, kind: secret, length: 32, encoding: alnum }
+    - { name: PAIR_PASSWORD, kind: secret, length: 32, encoding: alnum }
+  files:
+    - { src: files/pair.sh, dest: pair/pair.sh }
   volumes:
     - { name: data, backup: true }

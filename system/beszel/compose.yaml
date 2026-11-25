@@ -10,7 +10,9 @@ services:
       BESZEL_HUB_USER_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - data:/beszel_data
-    networks: [ingress]
+    # default: the pair service reaches it by name there, not on the shared
+    # ingress network.
+    networks: [default, ingress]
     healthcheck:
       test: ["CMD", "/beszel", "health", "--url", "http://localhost:8090"]
       interval: 30s
@@ -31,6 +33,23 @@ services:
     deploy:
       replicas: 1   # SQLite: never more than one
       update_config: { order: stop-first }
+
+  # Sets up what agents pair with (files/pair.sh): the universal token and a
+  # read-only user for the hub's public key. Beszel's image has no shell.
+  pair:
+    image: curlimages/curl:8.23.0
+    restart: "no"
+    entrypoint: ["/bin/sh", "/pair/pair.sh"]
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      AGENT_TOKEN: ${AGENT_TOKEN}
+      PAIR_PASSWORD: ${PAIR_PASSWORD}
+    volumes:
+      - ./pair:/pair:ro
+    networks: [default]
+    depends_on:
+      beszel: { condition: service_healthy }
 
 volumes:
   data:

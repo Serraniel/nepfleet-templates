@@ -432,6 +432,48 @@ def check_pihole():
     if got != [v["HOME_ADDRESS"]]:
         raise SystemExit(f"pihole: jellyfin.{v['HOME_DOMAIN']} answered {got}, not {v['HOME_ADDRESS']}")
 
+def check_beszel():
+    """An agent pairs with the hub by itself: the read-only user reads the
+    hub's key, and the agent token adds the agent as a new system."""
+    c = stack_name("beszel")
+    env = dict(line.split("=", 1) for line in run(
+        "docker", "inspect", "--format", "{{range .Config.Env}}{{println .}}{{end}}", f"{c}-pair-1"
+    ).stdout.splitlines() if "=" in line)
+    curl_image = run("docker", "inspect", "--format", "{{.Config.Image}}", f"{c}-pair-1").stdout.strip()
+    hub_image = run("docker", "inspect", "--format", "{{.Config.Image}}", f"{c}-beszel-1").stdout.strip()
+    hub = f"http://{c}-beszel-1:8090"
+
+    def curl(*args):
+        return run("docker", "run", "--rm", "--network", NETWORK, curl_image, "-fsS", *args, check=False).stdout
+
+    def login(identity, password):
+        out = curl("--data-urlencode", "identity=" + identity, "--data-urlencode", "password=" + password,
+                   hub + "/api/collections/users/auth-with-password")
+        return json.loads(out or "{}").get("token")
+
+    pair = login("agents@beszel.invalid", env["PAIR_PASSWORD"])
+    if not pair:
+        raise SystemExit("beszel: the read-only pairing user can't sign in")
+    key = json.loads(curl("-H", "Authorization: " + pair, hub + "/api/beszel/info") or "{}").get("key", "")
+    if not key.startswith("ssh-ed25519 "):
+        raise SystemExit(f"beszel: the pairing user doesn't get the hub's key: {key!r}")
+    admin = login(env["ADMIN_EMAIL"], env["ADMIN_PASSWORD"])
+    agent = f"{c}-ci-agent"
+    try:
+        run("docker", "run", "-d", "--name", agent, "--network", NETWORK,
+            "-e", "HUB_URL=" + hub, "-e", "KEY=" + key, "-e", "TOKEN=" + env["AGENT_TOKEN"], "-e", "DISABLE_SSH=true",
+            hub_image.replace("/beszel:", "/beszel-agent:"))
+        for _ in range(30):
+            systems = json.loads(curl("-H", "Authorization: " + admin, hub + "/api/collections/systems/records") or "{}")
+            if systems.get("totalItems"):
+                return
+            time.sleep(2)
+        logs = run("docker", "logs", "--tail", "20", agent, check=False)
+        raise SystemExit(f"beszel: an agent with the agent token wasn't added\n{logs.stdout}{logs.stderr}")
+    finally:
+        run("docker", "rm", "-fv", agent, check=False)
+
+
 def check_fail2ban():
     """A ban must really reach the host's firewall: looking active isn't enough."""
     address = "203.0.113.9"  # TEST-NET-3, nobody's
@@ -964,7 +1006,7 @@ def check_openbao():
 
 
 # Checks beyond "healthy", for templates where that proves little.
-AFTER_DEPLOY = {"homepage": check_homepage_compose, "open-webui": check_open_webui, "authelia": check_authelia, "openbao": check_openbao, "homeassistant": check_homeassistant, "backrest": check_backrest, "adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure}
+AFTER_DEPLOY = {"homepage": check_homepage_compose, "open-webui": check_open_webui, "authelia": check_authelia, "openbao": check_openbao, "homeassistant": check_homeassistant, "backrest": check_backrest, "adguard-home": check_adguard_home, "bookstack": check_bookstack, "immich": check_immich, "sweetcaptcha": check_sweetcaptcha, "opencloud": check_opencloud, "forgejo": check_forgejo, "homebox": check_homebox, "loki": check_loki, "mealie": check_mealie, "garage": check_garage, "fail2ban": check_fail2ban, "dozzle": check_dozzle, "prometheus": check_prometheus, "pihole": check_pihole, "sure": check_sure, "beszel": check_beszel}
 # The same for swarm stacks, run by deploy-swarm.
 AFTER_DEPLOY_SWARM = {"homepage": check_homepage_swarm}
 
