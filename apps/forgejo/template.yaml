@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.8.1
+  version: 0.9.0
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/[^/]+/[^/]+\\.git/", "^/[^/]+/[^/]+/(info/lfs|git-upload-pack|git-receive-pack)", "^/\\.well-known/"] }
@@ -22,7 +22,8 @@ spec:
       track: minor
     - name: postgres
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: "/user/oauth2/${OIDC_NAME}/callback" }
   inputs:
     - name: DOMAIN
       type: hostname
@@ -93,7 +94,7 @@ spec:
     - name: OIDC_ISSUER
       type: url
       title: Identity provider (OpenID Connect issuer), for signing in
-      description: "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. It must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
+      description: "Leave empty to sign in as the stack's signOn setting says: through the fleet's provider, a custom one, or none. Setting it here, with the client ID and secret below, overrides that. For a provider set here, register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. The provider must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off."
     - name: OIDC_NAME
       type: string
       title: Its name on the sign-in page
@@ -103,9 +104,11 @@ spec:
     - name: OIDC_CLIENT_ID
       type: string
       title: Identity provider client ID
+      description: Empty uses the stack's sign-on.
     - name: OIDC_CLIENT_SECRET
       type: secret
       title: Identity provider client secret
+      description: Empty uses the stack's sign-on.
   files:
     - { src: files/runner.yaml, dest: runner.yaml }
   generate:
