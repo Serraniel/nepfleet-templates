@@ -1,6 +1,42 @@
 # It runs tools on behalf of whoever can message it, so it gets less than other
 # templates: no Docker socket, no published ports, a read-only root and no capabilities.
+x-openclaw-env: &openclaw-env
+  HOME: /home/node
+  OPENCLAW_HOME: /home/node
+  OPENCLAW_STATE_DIR: /home/node/.openclaw
+  OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+  OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+  OPENCLAW_GATEWAY_PORT: "18789"
+  OPENCLAW_GATEWAY_TOKEN: ${GATEWAY_TOKEN}
+  # The configuration refers to these by name: set here, read when used.
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+  GEMINI_API_KEY: ${GEMINI_API_KEY}
+  TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+  TZ: ${TZ}
+
 services:
+  # What `openclaw onboard` asked for by hand (files/setup.js): onboarding
+  # without prompts on the first start, and Telegram from the stack's inputs.
+  setup:
+    image: ghcr.io/openclaw/openclaw:2026.11.6
+    restart: "no"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/node/.cache:uid=1000,gid=1000,mode=0700
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    entrypoint: ["node", "/setup/setup.js"]
+    environment:
+      <<: *openclaw-env
+      TELEGRAM_ALLOWED_USERS: ${TELEGRAM_ALLOWED_USERS}
+    volumes:
+      - data:/home/node/.openclaw
+      - ./setup:/setup:ro
+
   openclaw:
     image: ghcr.io/openclaw/openclaw:2026.11.6
     restart: unless-stopped
@@ -12,19 +48,14 @@ services:
     cap_drop: [ALL]
     security_opt:
       - no-new-privileges:true
-    environment:
-      HOME: /home/node
-      OPENCLAW_HOME: /home/node
-      OPENCLAW_STATE_DIR: /home/node/.openclaw
-      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
-      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
-      OPENCLAW_GATEWAY_PORT: "18789"
-      OPENCLAW_GATEWAY_TOKEN: ${GATEWAY_TOKEN}
-      TZ: ${TZ}
-    # Until onboarding has written its configuration, it starts and waits.
+    environment: *openclaw-env
+    # --allow-unconfigured: stacks made before setup existed may have no
+    # configuration yet.
     command: ["node", "dist/index.js", "gateway", "--allow-unconfigured", "--bind", "loopback", "--port", "18789"]
     volumes:
       - data:/home/node/.openclaw
+    depends_on:
+      setup: { condition: service_completed_successfully }
     healthcheck:
       test: ["CMD", "node", "dist/docker-healthcheck.js"]
       interval: 30s

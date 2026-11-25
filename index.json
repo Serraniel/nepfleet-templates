@@ -3532,13 +3532,13 @@
     {
       "name": "openclaw",
       "title": "OpenClaw",
-      "description": "AI assistant gateway for messaging apps. It runs tools for whoever can message it, so think hard before connecting personal accounts, and consider egress mode enforce. Set it up with: docker compose exec openclaw node dist/index.js onboard. Not published on the network.",
+      "description": "AI assistant gateway for messaging apps. It runs tools for whoever can message it, so think hard before connecting personal accounts, and consider egress mode enforce. Set up from the inputs here when it starts: onboarding, the model provider whose API key is given, and Telegram. Other providers and channels: docker compose exec openclaw node dist/index.js configure. Not published on the network.",
       "tier": "app",
       "category": "ai",
       "homepage": "https://openclaw.ai",
       "source": "https://github.com/openclaw/openclaw",
       "path": "apps/openclaw",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "images": [
         {
           "name": "ghcr.io/openclaw/openclaw",
@@ -3558,7 +3558,36 @@
         "sso": false,
         "metrics": false
       },
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "type": "secret",
+          "title": "Anthropic API key",
+          "description": "The model provider is the first of Anthropic, OpenRouter and Gemini with a key, set up once while OpenClaw has none. Change it later with configure."
+        },
+        {
+          "name": "OPENROUTER_API_KEY",
+          "type": "secret",
+          "title": "OpenRouter API key"
+        },
+        {
+          "name": "GEMINI_API_KEY",
+          "type": "secret",
+          "title": "Gemini API key"
+        },
+        {
+          "name": "TELEGRAM_BOT_TOKEN",
+          "type": "secret",
+          "title": "Telegram bot token"
+        },
+        {
+          "name": "TELEGRAM_ALLOWED_USERS",
+          "type": "string",
+          "title": "Telegram user IDs who may use it, separated by commas",
+          "description": "Empty: OpenClaw answers strangers with a pairing code, approved with docker compose exec openclaw node dist/index.js pairing approve telegram <code>.",
+          "pattern": "^ *[0-9]+( *, *[0-9]+)* *$"
+        }
+      ],
       "generate": [
         {
           "name": "GATEWAY_TOKEN",
