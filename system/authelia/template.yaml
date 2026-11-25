@@ -9,12 +9,12 @@ metadata:
   homepage: https://www.authelia.com
   source: https://github.com/authelia/authelia
 spec:
-  version: 0.2.0
+  version: 0.2.1
   compose: compose.yaml
   images:
     - name: authelia/authelia
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname
