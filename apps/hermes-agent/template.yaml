@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: hermes-agent
   title: Hermes Agent
-  description: "Nous Research's AI agent, reached through messaging apps. It acts on what people send it, so set who may talk to it. Its browser dashboard isn't included, as it stores API keys and has no login of its own."
+  description: "Nous Research's AI agent, reached through messaging apps. It acts on what people send it, so only the user IDs listed here may talk to it. With no list, nobody may: Hermes then answers a direct message with a pairing code, and someone with access to the host lets that person in with docker compose exec -u hermes hermes hermes pairing approve <platform> <code>. Its browser dashboard isn't included, as it stores API keys and has no login of its own."
   tier: app
   category: ai
   homepage: https://github.com/NousResearch/hermes-agent
   source: https://github.com/NousResearch/hermes-agent
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: nousresearch/hermes-agent
@@ -26,11 +26,16 @@ spec:
     - name: TELEGRAM_ALLOWED_USERS
       type: string
       title: Telegram user IDs who may use it, separated by commas
+      description: "Numeric IDs. Empty: nobody (only people let in with a pairing code). There is no value for everyone here."
+      # No "*": Hermes reads it as everyone, and the agent runs tools.
+      pattern: '^ *[A-Za-z0-9_.@-]+( *, *[A-Za-z0-9_.@-]+)* *$'
     - name: DISCORD_BOT_TOKEN
       type: secret
       title: Discord bot token
     - name: DISCORD_ALLOWED_USERS
       type: string
       title: Discord user IDs who may use it, separated by commas
+      description: "Numeric IDs or user names. Empty: nobody (only people let in with a pairing code). There is no value for everyone here."
+      pattern: '^ *[A-Za-z0-9_.@-]+( *, *[A-Za-z0-9_.@-]+)* *$'
   volumes:
     - { name: data, backup: true }   # configuration, memory, sessions
