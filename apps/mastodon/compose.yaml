@@ -22,6 +22,10 @@ x-mastodon: &mastodon
   SMTP_LOGIN: ${SMTP_LOGIN:-${NEPFLEET_SMTP_USER}}
   SMTP_PASSWORD: ${SMTP_PASSWORD:-${NEPFLEET_SMTP_PASSWORD}}
   SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS:-${NEPFLEET_SMTP_FROM}}
+  # TLS from the start (465) or STARTTLS. Mastodon reads "false" as never and
+  # any other unknown value, such as "true", as auto.
+  SMTP_TLS: ${SMTP_TLS:-${NEPFLEET_SMTP_IMPLICIT_TLS:-false}}
+  SMTP_ENABLE_STARTTLS: ${SMTP_ENABLE_STARTTLS:-${NEPFLEET_SMTP_STARTTLS:-auto}}
 
 services:
   # Sets up or upgrades the database, then ends. The web service waits for it.

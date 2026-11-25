@@ -37,7 +37,8 @@ x-sure-env: &sure-env
   SMTP_PORT: ${SMTP_PORT:-${NEPFLEET_SMTP_PORT:-587}}
   SMTP_USERNAME: ${SMTP_USERNAME:-${NEPFLEET_SMTP_USER}}
   SMTP_PASSWORD: ${SMTP_PASSWORD:-${NEPFLEET_SMTP_PASSWORD}}
-  SMTP_TLS_ENABLED: "true"
+  # Sure's SMTP_TLS_ENABLED is TLS from the start (465), not STARTTLS.
+  SMTP_TLS_ENABLED: ${SMTP_TLS_ENABLED:-${NEPFLEET_SMTP_IMPLICIT_TLS:-false}}
   EMAIL_SENDER: ${EMAIL_SENDER:-${NEPFLEET_SMTP_FROM}}
   # Exchange rates and prices: each lookup tells the provider the currency or
   # ticker asked for.

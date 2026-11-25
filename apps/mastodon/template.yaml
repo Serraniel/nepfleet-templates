@@ -9,7 +9,7 @@ metadata:
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.3.1
+  version: 0.3.2
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon
@@ -45,7 +45,7 @@ spec:
     - name: SMTP_SERVER
       type: string
       title: Mail server
-      description: Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one. Mastodon uses STARTTLS when the server offers it; a server that only takes TLS from the start (port 465) doesn't work.
+      description: Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one.
     - name: SMTP_PORT
       type: int
       title: Mail server port
@@ -62,6 +62,15 @@ spec:
       type: email
       title: Mail from address
       description: Empty uses the fleet's sender address.
+    - name: SMTP_TLS
+      type: bool
+      title: Mail server takes TLS from the start (port 465)
+      description: Empty follows the fleet's mail settings, else off.
+    - name: SMTP_ENABLE_STARTTLS
+      type: enum
+      title: STARTTLS
+      description: "Empty follows the fleet's mail settings: auto with STARTTLS, never with TLS from the start or none; without fleet mail, auto (when the server offers it)."
+      options: [auto, always, never]
     - name: VAPID_PRIVATE_KEY
       type: secret
       title: Push notification private key

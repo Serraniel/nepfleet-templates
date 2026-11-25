@@ -2748,7 +2748,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2812,7 +2812,7 @@
           "name": "SMTP_SERVER",
           "type": "string",
           "title": "Mail server",
-          "description": "Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one. Mastodon uses STARTTLS when the server offers it; a server that only takes TLS from the start (port 465) doesn't work."
+          "description": "Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one."
         },
         {
           "name": "SMTP_PORT",
@@ -2837,6 +2837,23 @@
           "type": "email",
           "title": "Mail from address",
           "description": "Empty uses the fleet's sender address."
+        },
+        {
+          "name": "SMTP_TLS",
+          "type": "bool",
+          "title": "Mail server takes TLS from the start (port 465)",
+          "description": "Empty follows the fleet's mail settings, else off."
+        },
+        {
+          "name": "SMTP_ENABLE_STARTTLS",
+          "type": "enum",
+          "title": "STARTTLS",
+          "description": "Empty follows the fleet's mail settings: auto with STARTTLS, never with TLS from the start or none; without fleet mail, auto (when the server offers it).",
+          "options": [
+            "auto",
+            "always",
+            "never"
+          ]
         },
         {
           "name": "VAPID_PRIVATE_KEY",
@@ -4345,7 +4362,7 @@
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",
@@ -4452,7 +4469,7 @@
           "name": "SMTP_ADDRESS",
           "type": "hostname",
           "title": "Mail server, for invites and password resets",
-          "description": "Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one. Sure uses STARTTLS; a server that only takes TLS from the start (port 465) doesn't work."
+          "description": "Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one."
         },
         {
           "name": "SMTP_PORT",
@@ -4477,6 +4494,12 @@
           "type": "email",
           "title": "Mail from address",
           "description": "Empty uses the fleet's sender address."
+        },
+        {
+          "name": "SMTP_TLS_ENABLED",
+          "type": "bool",
+          "title": "Mail server takes TLS from the start (port 465)",
+          "description": "Empty follows the fleet's mail settings, else off (STARTTLS when the server offers it)."
         },
         {
           "name": "MARKET_DATA",
