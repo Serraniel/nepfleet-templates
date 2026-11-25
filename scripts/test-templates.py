@@ -27,7 +27,9 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-NETWORK = "nepfleet_templates_it"  # never a real install's ingress network
+# Never a real install's ingress network. Each run gets its own, because a run
+# removes its network when it ends and would cut off another run's stacks.
+NETWORK = "nepfleet_templates_it_" + secrets.token_hex(4)
 ALPINE = "alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"
 RCLONE = "rclone/rclone:1.76.0@sha256:7cbeec24a44f206067597c0368be4de90ae19a64d5113c7d1938bd737a81e466"
 OVERRIDES = json.loads((ROOT / "scripts" / "test-values.json").read_text())
