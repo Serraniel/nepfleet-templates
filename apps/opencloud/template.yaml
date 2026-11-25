@@ -9,7 +9,7 @@ metadata:
   homepage: https://opencloud.eu
   source: https://github.com/opencloud-eu/opencloud
 spec:
-  version: 0.4.4
+  version: 1.0.0
   compose: compose.yaml
   images:
     - name: opencloudeu/opencloud
@@ -45,3 +45,20 @@ spec:
   volumes:
     - { name: config, backup: true }
     - { name: data, backup: true }
+  migrations:
+    # OpenCloud 8 moved search to a new, versioned index: until it is rebuilt,
+    # files from before the upgrade are not found. The rebuild needs the new
+    # server running, so it runs after the deploy, retrying until the search
+    # service answers. It doesn't fail the migration: a rollback would start 7.2
+    # on data 9.1 has already used, which upstream supports only from a backup.
+    - from: ">=0.1.0 <1.0.0"
+      to: 1.0.0
+      description: "OpenCloud 7.2 → 9.1. Search moves to a new index, which this migration rebuilds after the upgrade; on many files that takes a while and search stays incomplete until it is done. If old files are still not found afterwards, run docker exec <stack>-opencloud-1 opencloud search index --all-spaces --force-rescan. Once search works, the old index at /var/lib/opencloud/search/bleve and the old preview cache at /var/lib/opencloud/thumbnails/files can be deleted. Guest links (new in 9) stay off."
+      backup: recommended
+      rollback: revert
+      steps:
+        - name: switch to OpenCloud 9.1
+          deploy: true
+        - name: rebuild the search index
+          service: opencloud
+          run: [sh, -c, "for i in $(seq 60); do opencloud search index --all-spaces --force-rescan && exit 0; sleep 5; done; echo 'search index not rebuilt: run opencloud search index --all-spaces --force-rescan' >&2"]
