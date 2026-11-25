@@ -1,5 +1,5 @@
-# The first configuration, written by AdGuard Home's own setup (v0.107.80,
-# schema 34) with the admin from the stack's inputs. The seed service copies
+# The first configuration, as AdGuard Home's own setup writes it (v1.0.0,
+# schema 35, Cloudflare DNS as upstream) with the admin from the stack's inputs. The seed service copies
 # it into the conf volume only when that has none, so the wizard never runs;
 # after that AdGuard Home owns the file and keeps changes made in its UI.
 # DNS listens on 53 inside the container; the stack's BIND_ADDR and DNS_PORT
@@ -36,13 +36,13 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - https://dns10.quad9.net/dns-query
+    - https://cloudflare-dns.com/dns-query
   upstream_dns_file: ""
   bootstrap_dns:
-    - 9.9.9.10
-    - 149.112.112.10
-    - 2620:fe::10
-    - 2620:fe::fe:10
+    - 1.1.1.1
+    - 1.0.0.1
+    - 2606:4700:4700::1111
+    - 2606:4700:4700::1001
   fallback_dns: []
   upstream_mode: load_balance
   fastest_timeout: 1s
@@ -198,4 +198,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 34
+schema_version: 35

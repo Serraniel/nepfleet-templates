@@ -1,6 +1,6 @@
 services:
   adguard-home:
-    image: adguard/adguardhome:v0.107.80
+    image: adguard/adguardhome:v1.0.0
     restart: unless-stopped
     ports:
       - "${BIND_ADDR}:${DNS_PORT}:53/udp"
@@ -27,7 +27,7 @@ services:
   # the public domain. A config already there, edited in the UI or made by the
   # wizard on older installs, stays as it is.
   seed:
-    image: adguard/adguardhome:v0.107.80
+    image: adguard/adguardhome:v1.0.0
     restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command: ["test -f /opt/adguardhome/conf/AdGuardHome.yaml || cp /seed/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml"]

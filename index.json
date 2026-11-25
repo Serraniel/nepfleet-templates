@@ -1562,7 +1562,7 @@
       "homepage": "https://adguard.com/adguard-home",
       "source": "https://github.com/AdguardTeam/AdGuardHome",
       "path": "apps/adguard-home",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "adguard/adguardhome",
