@@ -45,7 +45,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [garage](apps/garage) | [Garage](https://garagehq.deuxfleurs.fr) · [source](https://git.deuxfleurs.fr/Deuxfleurs/garage) | app | 🌐 📈 🐝 💾 🦾 |
 | [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
-| [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [homebox](apps/homebox) | [Homebox](https://homebox.software) · [source](https://github.com/sysadminsmedia/homebox) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [imgproxy](apps/imgproxy) | [imgproxy](https://imgproxy.net) · [source](https://github.com/imgproxy/imgproxy) | app | 🌐 📈 🐝 🦾 |
 | [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
@@ -75,7 +75,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [syncthing](apps/syncthing) | [Syncthing](https://syncthing.net) · [source](https://github.com/syncthing/syncthing) | app | 🌐 📈 🏠 💾 🦾 |
 | [tdarr](apps/tdarr) | [Tdarr](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🌐 📈 🏠 💾 🦾 |
 | [tdarr-node](apps/tdarr-node) | [Tdarr node](https://home.tdarr.io) · [source](https://github.com/HaveAGitGat/Tdarr) | app | 🦾 |
-| [vaultwarden](apps/vaultwarden) | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [vaultwarden](apps/vaultwarden) | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [vpn-egress](apps/vpn-egress) | [VPN egress (gluetun)](https://github.com/qdm12/gluetun-wiki) · [source](https://github.com/qdm12/gluetun) | app | 🦾 |
 | [wireguard](apps/wireguard) | [WireGuard (wg-easy)](https://wg-easy.github.io/wg-easy/) · [source](https://github.com/wg-easy/wg-easy) | app | 🌐 📈 🏠 💾 🦾 |
 | [wokko](apps/wokko) | [Wokko](https://github.com/Serraniel/Wokko) | app | 🌐 📈 🏠 💾 🦾 |

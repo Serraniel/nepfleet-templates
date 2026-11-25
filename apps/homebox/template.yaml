@@ -9,14 +9,15 @@ metadata:
   homepage: https://homebox.software
   source: https://github.com/sysadminsmedia/homebox
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   web: { service: homebox, port: 7745 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }   # API clients and companion apps
   images:
     - name: ghcr.io/sysadminsmedia/homebox
       track: minor   # 0.x minors are its regular releases; migrations run on start
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /api/v1/users/login/oidc/callback }
   inputs:
     - name: DOMAIN
       type: hostname

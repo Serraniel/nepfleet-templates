@@ -43,6 +43,17 @@ services:
       HBOX_WEB_MAX_UPLOAD_SIZE: "50"
       HBOX_OPTIONS_TRUST_PROXY: "true"   # behind Caddy
       HBOX_AUTH_API_KEY_PEPPER: ${API_KEY_PEPPER}
+      # Sign-in through the stack's sign-on, when it has one. An account with
+      # the same email, such as the admin, is linked; others get an account
+      # (with an inventory of their own) on their first sign-in. Homebox asks
+      # the provider once, at start: started without it, sign-on stays off
+      # until the next restart.
+      HBOX_OIDC_ENABLED: ${NEPFLEET_OIDC_ENABLED}
+      HBOX_OIDC_ISSUER_URL: ${NEPFLEET_OIDC_ISSUER}
+      HBOX_OIDC_CLIENT_ID: ${NEPFLEET_OIDC_CLIENT_ID}
+      HBOX_OIDC_CLIENT_SECRET: ${NEPFLEET_OIDC_CLIENT_SECRET}
+      HBOX_OIDC_VERIFY_EMAIL: "true"   # linking by email needs a verified one
+      HBOX_OIDC_BUTTON_TEXT: Sign in with SSO
       HBOX_LABEL_MAKER_WIDTH: ${LABEL_WIDTH}
       HBOX_LABEL_MAKER_HEIGHT: ${LABEL_HEIGHT}
       HBOX_LABEL_MAKER_PADDING: ${LABEL_PADDING}

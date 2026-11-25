@@ -2290,7 +2290,7 @@
       "homepage": "https://homebox.software",
       "source": "https://github.com/sysadminsmedia/homebox",
       "path": "apps/homebox",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "ghcr.io/sysadminsmedia/homebox",
@@ -2307,7 +2307,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -2404,6 +2404,9 @@
           "name": "labels"
         }
       ],
+      "oidc": {
+        "redirect": "/api/v1/users/login/oidc/callback"
+      },
       "migrations": []
     },
     {
@@ -5023,7 +5026,7 @@
       "category": "security",
       "homepage": "https://github.com/dani-garcia/vaultwarden",
       "path": "apps/vaultwarden",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "vaultwarden/server",
@@ -5040,7 +5043,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -5086,6 +5089,9 @@
           "shared": true
         }
       ],
+      "oidc": {
+        "redirect": "/identity/connect/oidc-signin"
+      },
       "migrations": []
     },
     {
