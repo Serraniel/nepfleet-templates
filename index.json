@@ -3206,11 +3206,11 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.3.4",
+      "version": "0.3.3",
       "images": [
         {
           "name": "deluan/navidrome",
-          "track": "minor"
+          "track": "patch"
         }
       ],
       "supports": {
