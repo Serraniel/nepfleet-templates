@@ -24,6 +24,15 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_NAME: ${ADMIN_NAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Sign-in through the stack's sign-on, when it has one. Accounts are
+      # matched by email, so the admin above signs in either way; others get
+      # an account on their first sign-in. The provider must report the
+      # email as verified.
+      OIDC_AUTH_ENABLED: ${NEPFLEET_OIDC_ENABLED}
+      OIDC_CONFIGURATION_URL: ${NEPFLEET_OIDC_ISSUER}/.well-known/openid-configuration
+      OIDC_CLIENT_ID: ${NEPFLEET_OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${NEPFLEET_OIDC_CLIENT_SECRET}
+      OIDC_PROVIDER_NAME: SSO
     volumes:
       - data:/app/data
       - ./setup:/setup:ro
