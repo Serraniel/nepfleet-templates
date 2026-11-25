@@ -2756,7 +2756,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.3.2",
+      "version": "0.4.0",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2785,7 +2785,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -2925,18 +2925,21 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/auth/auth/openid_connect/callback"
+      },
       "migrations": []
     },
     {
       "name": "matrix",
       "title": "Matrix",
-      "description": "Chat with Synapse and the Element web client. Public registration is off: you sign in with the admin from the stack's inputs, who adds further users. The domain becomes part of every user's name and can't change later.",
+      "description": "Chat with Synapse and the Element web client. Public registration is off: you sign in with the admin from the stack's inputs, who adds further users. With sign-on, people from the identity provider get an account on their first sign-in. The domain becomes part of every user's name and can't change later.",
       "tier": "app",
       "category": "communication",
       "homepage": "https://matrix.org",
       "source": "https://github.com/element-hq/synapse",
       "path": "apps/matrix",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "matrixdotorg/synapse",
@@ -2961,7 +2964,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3030,6 +3033,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/_synapse/client/oidc/callback"
+      },
       "migrations": []
     },
     {
@@ -3844,7 +3850,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.5.4",
+      "version": "0.6.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -3877,7 +3883,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3967,6 +3973,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/accounts/oidc/sso/login/callback/"
+      },
       "migrations": []
     },
     {

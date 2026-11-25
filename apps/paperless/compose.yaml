@@ -18,6 +18,12 @@ services:
       PAPERLESS_TIKA_ENABLED: ${OFFICE_DOCUMENTS}
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      # Sign-in through the stack's sign-on, when it has one: the provider
+      # app is only loaded with a client ID. People get an account on their
+      # first sign-in, without permissions until an admin grants them; a
+      # local account, such as the admin's, links it in its profile.
+      PAPERLESS_APPS: ${NEPFLEET_OIDC_CLIENT_ID:+allauth.socialaccount.providers.openid_connect}
+      PAPERLESS_SOCIALACCOUNT_PROVIDERS: '{"openid_connect": {"APPS": [{"provider_id": "sso", "name": "SSO", "client_id": "${NEPFLEET_OIDC_CLIENT_ID}", "secret": "${NEPFLEET_OIDC_CLIENT_SECRET}", "settings": {"server_url": "${NEPFLEET_OIDC_ISSUER}"}}]}}'
     volumes:
       - data:/usr/src/paperless/data
       - media:/usr/src/paperless/media

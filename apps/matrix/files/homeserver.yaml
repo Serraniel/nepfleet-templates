@@ -27,3 +27,18 @@ macaroon_secret_key: "${MACAROON_SECRET}"
 form_secret: "${FORM_SECRET}"
 trusted_key_servers:
   - server_name: matrix.org
+# Sign-in through the stack's sign-on, when it has one, next to passwords.
+# The single-provider form, because it takes enabled: when off, Synapse
+# ignores the rest. People get @<username> on their first sign-in. An existing user
+# with that name, such as the admin, is not taken over: that sign-in fails.
+oidc_config:
+  enabled: ${NEPFLEET_OIDC_ENABLED}
+  idp_name: SSO
+  issuer: "${NEPFLEET_OIDC_ISSUER}"
+  client_id: "${NEPFLEET_OIDC_CLIENT_ID}"
+  client_secret: "${NEPFLEET_OIDC_CLIENT_SECRET}"
+  scopes: [openid, profile, email]
+  user_mapping_provider:
+    config:
+      localpart_template: "{{ user.preferred_username }}"
+      display_name_template: "{{ user.name }}"

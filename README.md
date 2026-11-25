@@ -50,8 +50,8 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [immich](apps/immich) | [Immich (+ Power Tools)](https://immich.app) · [source](https://github.com/immich-app/immich) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [jellyfin](apps/jellyfin) | [Jellyfin](https://jellyfin.org) · [source](https://github.com/jellyfin/jellyfin) | app | 🌐 📈 🏠 💾 🦾 |
 | [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
+| [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🐝 🦾 |
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 🐝 💾 🦾 |
@@ -62,7 +62,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 🐝 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [owncast](apps/owncast) | [Owncast](https://owncast.online) · [source](https://github.com/owncast/owncast) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [paperless](apps/paperless) | [Paperless-ngx](https://docs.paperless-ngx.com) · [source](https://github.com/paperless-ngx/paperless-ngx) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [pihole](apps/pihole) | [Pi-hole](https://pi-hole.net) · [source](https://github.com/pi-hole/docker-pi-hole) | app | 🌐 📈 🏠 💾 🦾 |
 | [rabbitmq](apps/rabbitmq) | [RabbitMQ](https://www.rabbitmq.com) · [source](https://github.com/rabbitmq/rabbitmq-server) | app | 🌐 📈 🏠 💾 🦾 |
 | [rclone](apps/rclone) | [rclone](https://rclone.org) · [source](https://github.com/rclone/rclone) | app | 🌐 📈 🏠 🦾 |
