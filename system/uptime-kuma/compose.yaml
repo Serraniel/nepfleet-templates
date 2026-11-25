@@ -1,6 +1,6 @@
 services:
   uptime-kuma:
-    image: louislam/uptime-kuma:2
+    image: louislam/uptime-kuma:2.5.12
     restart: unless-stopped
     # prestart.js first: SQLite on the first start (no database page), and
     # on later starts the admin gets KUMA_USERNAME and KUMA_PASSWORD. It never
@@ -30,7 +30,7 @@ services:
   # with KUMA_USERNAME and KUMA_PASSWORD, so AutoKuma starts only when it
   # can sign in too.
   setup:
-    image: louislam/uptime-kuma:2
+    image: louislam/uptime-kuma:2.5.12
     restart: "no"
     entrypoint: ["node", "/setup/setup.js"]
     environment:
@@ -47,7 +47,7 @@ services:
       uptime-kuma: { condition: service_started }
 
   autokuma:
-    image: ghcr.io/bigboot/autokuma:2
+    image: ghcr.io/bigboot/autokuma:2.0.0
     restart: unless-stopped
     environment:
       AUTOKUMA__KUMA__URL: http://uptime-kuma:3001

@@ -1,6 +1,6 @@
 services:
   watchtower:
-    image: nickfedor/watchtower:1
+    image: nickfedor/watchtower:1.24.2
     restart: unless-stopped
     environment:
       WATCHTOWER_MONITOR_ONLY: ${WATCHTOWER_MODE}

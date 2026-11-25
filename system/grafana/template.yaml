@@ -9,13 +9,13 @@ metadata:
   homepage: https://grafana.com/oss/grafana
   source: https://github.com/grafana/grafana
 spec:
-  version: 0.2.2
+  version: 0.2.3
   compose: compose.yaml
   web: { service: grafana, port: 3000 }
   images:
     - name: grafana/grafana
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true, metrics: true }
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, metrics: true }
   inputs:
     - name: DOMAIN
       type: hostname

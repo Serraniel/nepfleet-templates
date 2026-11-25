@@ -8,12 +8,12 @@ metadata:
   category: networking
   homepage: https://github.com/fatedier/frp
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: fatedier/frpc
       track: minor
-  supports: { arm64: true, logs: true }
+  supports: { arm64: true, logs: true, autoUpdate: true }
   inputs:
     - name: SERVER_ADDR
       type: string

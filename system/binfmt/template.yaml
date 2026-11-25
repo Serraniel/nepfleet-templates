@@ -8,12 +8,12 @@ metadata:
   category: host
   homepage: https://github.com/tonistiigi/binfmt
 spec:
-  version: 0.1.1
+  version: 0.1.2
   compose: compose.yaml
   images:
     - name: tonistiigi/binfmt
       track: minor
-  supports: { swarm: false, arm64: true }
+  supports: { swarm: false, arm64: true, autoUpdate: true }
   inputs:
     - name: ARCHES
       type: string

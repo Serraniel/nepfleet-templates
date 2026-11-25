@@ -9,13 +9,13 @@ metadata:
   homepage: https://beszel.dev
   source: https://github.com/henrygd/beszel
 spec:
-  version: 0.1.3
+  version: 0.1.4
   compose: compose.yaml
   web: { service: beszel, port: 8090 }
   images:
     - name: henrygd/beszel
       track: minor
-  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, backup: true }
+  supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
       type: hostname

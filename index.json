@@ -11,7 +11,7 @@
       "homepage": "https://www.authelia.com",
       "source": "https://github.com/authelia/authelia",
       "path": "system/authelia",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "authelia/authelia",
@@ -26,7 +26,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -221,7 +221,7 @@
       "homepage": "https://beszel.dev",
       "source": "https://github.com/henrygd/beszel",
       "path": "system/beszel",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "images": [
         {
           "name": "henrygd/beszel",
@@ -236,7 +236,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -341,7 +341,7 @@
       "category": "host",
       "homepage": "https://github.com/tonistiigi/binfmt",
       "path": "system/binfmt",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "tonistiigi/binfmt",
@@ -356,7 +356,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": false,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": false,
         "sso": false,
         "metrics": false
@@ -498,7 +498,7 @@
       "homepage": "https://dozzle.dev",
       "source": "https://github.com/amir20/dozzle",
       "path": "system/dozzle",
-      "version": "0.5.3",
+      "version": "0.5.4",
       "images": [
         {
           "name": "amir20/dozzle",
@@ -651,7 +651,7 @@
       "category": "networking",
       "homepage": "https://github.com/fatedier/frp",
       "path": "system/frpc",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "fatedier/frpc",
@@ -666,7 +666,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": false,
         "sso": false,
         "metrics": false
@@ -718,7 +718,7 @@
       "category": "networking",
       "homepage": "https://github.com/fatedier/frp",
       "path": "system/frps",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "fatedier/frps",
@@ -733,7 +733,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": false,
         "sso": false,
         "metrics": false
@@ -774,7 +774,7 @@
       "homepage": "https://grafana.com/oss/grafana",
       "source": "https://github.com/grafana/grafana",
       "path": "system/grafana",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "images": [
         {
           "name": "grafana/grafana",
@@ -789,7 +789,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": true
@@ -841,7 +841,7 @@
       "homepage": "https://gethomepage.dev",
       "source": "https://github.com/gethomepage/homepage",
       "path": "system/homepage",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "images": [
         {
           "name": "ghcr.io/gethomepage/homepage",
@@ -1119,7 +1119,7 @@
       "homepage": "https://pocket-id.org",
       "source": "https://github.com/pocket-id/pocket-id",
       "path": "system/pocket-id",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "ghcr.io/pocket-id/pocket-id",
@@ -1134,7 +1134,7 @@
         "statusPage": false,
         "dashboard": true,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -1202,7 +1202,7 @@
       "homepage": "https://prometheus.io",
       "source": "https://github.com/prometheus/prometheus",
       "path": "system/prometheus",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "prom/prometheus",
@@ -1225,7 +1225,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": false,
         "sso": false,
         "metrics": false
@@ -1254,7 +1254,7 @@
       "category": "monitoring",
       "homepage": "https://github.com/louislam/uptime-kuma",
       "path": "system/uptime-kuma",
-      "version": "0.6.0",
+      "version": "0.6.1",
       "images": [
         {
           "name": "louislam/uptime-kuma",
@@ -1445,7 +1445,7 @@
       "category": "updates",
       "homepage": "https://github.com/nicholas-fedor/watchtower",
       "path": "system/watchtower",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "images": [
         {
           "name": "nickfedor/watchtower",
@@ -2097,7 +2097,7 @@
       "homepage": "https://github.com/NousResearch/hermes-agent",
       "source": "https://github.com/NousResearch/hermes-agent",
       "path": "apps/hermes-agent",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "images": [
         {
           "name": "nousresearch/hermes-agent",
@@ -2112,7 +2112,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -3206,11 +3206,11 @@
       "homepage": "https://www.navidrome.org",
       "source": "https://github.com/navidrome/navidrome",
       "path": "apps/navidrome",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "images": [
         {
           "name": "deluan/navidrome",
-          "track": "patch"
+          "track": "minor"
         }
       ],
       "supports": {
@@ -3534,7 +3534,7 @@
       "homepage": "https://openclaw.ai",
       "source": "https://github.com/openclaw/openclaw",
       "path": "apps/openclaw",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "images": [
         {
           "name": "ghcr.io/openclaw/openclaw",
@@ -3549,7 +3549,7 @@
         "statusPage": false,
         "dashboard": false,
         "logs": true,
-        "autoUpdate": false,
+        "autoUpdate": true,
         "backup": true,
         "sso": false,
         "metrics": false
@@ -3664,11 +3664,11 @@
       "homepage": "https://owncast.online",
       "source": "https://github.com/owncast/owncast",
       "path": "apps/owncast",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "images": [
         {
           "name": "owncast/owncast",
-          "track": "patch"
+          "track": "minor"
         }
       ],
       "supports": {
