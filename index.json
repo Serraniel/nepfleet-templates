@@ -3120,7 +3120,7 @@
       "homepage": "https://n8n.io",
       "source": "https://github.com/n8n-io/n8n",
       "path": "apps/n8n",
-      "version": "0.3.6",
+      "version": "1.0.0",
       "images": [
         {
           "name": "n8nio/n8n",
@@ -3195,7 +3195,15 @@
           "backup": true
         }
       ],
-      "migrations": []
+      "migrations": [
+        {
+          "from": ">=0.1.0 <1.0.0",
+          "to": "1.0.0",
+          "description": "n8n 2.x → 3.x. Before you upgrade, open Settings → Migration Report in n8n and fix what it lists. Workflows with removed nodes (Function, Function Item, Item Lists, Cron, Interval, Read/Write Binary File, Read PDF, the legacy OpenAI node, AI Agent v1 and others) fail, and published ones stop triggering. Slack Trigger credentials need a signing secret. Changed defaults: unverified community nodes are off (N8N_UNVERIFIED_PACKAGES_ENABLED), Code node tasks time out after 60 seconds (N8N_RUNNERS_TASK_TIMEOUT), Chat Hub is off. The database is migrated on start; going back means restoring the backup.",
+          "backup": "required",
+          "rollback": "restore"
+        }
+      ]
     },
     {
       "name": "navidrome",

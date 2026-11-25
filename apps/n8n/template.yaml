@@ -9,7 +9,7 @@ metadata:
   homepage: https://n8n.io
   source: https://github.com/n8n-io/n8n
 spec:
-  version: 0.3.6
+  version: 1.0.0
   compose: compose.yaml
   botCheck: { service: n8n, port: 5678, allow: ["^/webhook/", "^/webhook-test/", "^/webhook-waiting/", "^/api/v1/"] }
   images:
@@ -42,3 +42,15 @@ spec:
   volumes:
     - { name: data, backup: true }
     - { name: db, backup: true }
+  migrations:
+    # n8n migrates its database forward on the first start and can't go back,
+    # so a failed upgrade restores the snapshot.
+    - from: ">=0.1.0 <1.0.0"
+      to: 1.0.0
+      description: "n8n 2.x → 3.x. Before you upgrade, open Settings → Migration Report in n8n and fix what it lists. Workflows with removed nodes (Function, Function Item, Item Lists, Cron, Interval, Read/Write Binary File, Read PDF, the legacy OpenAI node, AI Agent v1 and others) fail, and published ones stop triggering. Slack Trigger credentials need a signing secret. Changed defaults: unverified community nodes are off (N8N_UNVERIFIED_PACKAGES_ENABLED), Code node tasks time out after 60 seconds (N8N_RUNNERS_TASK_TIMEOUT), Chat Hub is off. The database is migrated on start; going back means restoring the backup."
+      backup: required
+      rollback: restore
+      steps:
+        - name: start n8n 3.x
+          deploy: true
+          wait: healthy
