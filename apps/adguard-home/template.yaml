@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: adguard-home
   title: AdGuard Home
-  description: "DNS ad and tracker blocking for the whole local network, and local DNS records. It starts set up, with the admin from the stack's inputs, so no setup wizard is offered. Point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address."
+  description: "DNS ad and tracker blocking for the whole local network, and local DNS records. It starts set up, with the admin from the stack's inputs, so no setup wizard is offered. Point your router's DNS at this host. For trusted names at home, add a DNS rewrite under Filters: *.home.example.org (Caddy's wildcard domain) to the server's LAN address. Only patch releases are applied by themselves: AdGuard Home's minor releases may break things, so NepFleet only reports them and you apply them by hand."
   tier: app
   category: networking
   homepage: https://adguard.com/adguard-home
@@ -15,7 +15,7 @@ spec:
   botCheck: { allow: ["^/dns-query", "^/control/"] }
   images:
     - name: adguard/adguardhome
-      track: minor
+      track: patch   # upstream: minor releases may be backward-incompatible
   supports: { arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
   inputs:
     - name: DOMAIN
