@@ -9,7 +9,7 @@ metadata:
   homepage: https://forgejo.org
   source: https://codeberg.org/forgejo/forgejo
 spec:
-  version: 0.8.0
+  version: 0.8.1
   compose: compose.yaml
   web: { service: forgejo, port: 3000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/[^/]+/[^/]+\\.git/", "^/[^/]+/[^/]+/(info/lfs|git-upload-pack|git-receive-pack)", "^/\\.well-known/"] }
@@ -58,23 +58,33 @@ spec:
     - name: MAIL_ENABLED
       type: bool
       title: Send mail (notifications, password resets)
+      description: Through the fleet's mail settings, or the mail server set below.
       default: "false"
     - name: SMTP_SERVER
       type: string
       title: Mail server
+      description: Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one.
     - name: SMTP_PORT
       type: int
-      title: Mail server port (STARTTLS)
-      default: "587"
+      title: Mail server port
+      description: Empty uses the fleet's port, else 587.
+    - name: MAIL_PROTOCOL
+      type: enum
+      title: Mail server encryption
+      description: "Empty picks it from the port: 587 STARTTLS, 25 none, 465 and others TLS. Set it for a STARTTLS server on another port."
+      options: [smtp+starttls, smtps, smtp]
     - name: SMTP_LOGIN
       type: string
       title: Mail login
+      description: Empty uses the fleet's mail user.
     - name: SMTP_PASSWORD
       type: secret
       title: Mail password
+      description: Empty uses the fleet's mail password.
     - name: SMTP_FROM_ADDRESS
       type: email
       title: Mail from address
+      description: Empty uses the fleet's sender address.
     - name: RUNNER_CAPACITY
       type: int
       title: Actions jobs that run at once
