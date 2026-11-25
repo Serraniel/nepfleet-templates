@@ -9,7 +9,7 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.2.1
+  version: 0.2.2
   compose: compose.yaml
   web: { service: web, port: 3000 }
   botCheck: { allow: ["^/api/", "^/oauth/"] }   # the mobile app and API keys
@@ -72,20 +72,23 @@ spec:
     - name: SMTP_ADDRESS
       type: hostname
       title: Mail server, for invites and password resets
+      description: Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one. Sure uses STARTTLS; a server that only takes TLS from the start (port 465) doesn't work.
     - name: SMTP_PORT
       type: int
       title: Mail server port
-      default: "587"
-      required: true
+      description: Empty uses the fleet's port, else 587.
     - name: SMTP_USERNAME
       type: string
       title: Mail server user
+      description: Empty uses the fleet's mail user.
     - name: SMTP_PASSWORD
       type: secret
       title: Mail server password
+      description: Empty uses the fleet's mail password.
     - name: EMAIL_SENDER
       type: email
       title: Mail from address
+      description: Empty uses the fleet's sender address.
     - name: MARKET_DATA
       type: enum
       title: Exchange rates and prices from

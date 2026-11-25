@@ -3,13 +3,13 @@ kind: Template
 metadata:
   name: mastodon
   title: Mastodon
-  description: "Fediverse server. The domain becomes part of every account's name and can never change after the first start. The owner account comes from the inputs and sign-ups start closed; to open them, set SMTP. Push notification keys are made on the first start."
+  description: "Fediverse server. The domain becomes part of every account's name and can never change after the first start. The owner account comes from the inputs and sign-ups start closed; to open them, it needs mail: the fleet's mail settings, or the stack's own. Push notification keys are made on the first start."
   tier: app
   category: social
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.3.0
+  version: 0.3.1
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon
@@ -45,19 +45,23 @@ spec:
     - name: SMTP_SERVER
       type: string
       title: Mail server
+      description: Empty uses the fleet's mail server. Set it, and set the fields below too, to use another one. Mastodon uses STARTTLS when the server offers it; a server that only takes TLS from the start (port 465) doesn't work.
     - name: SMTP_PORT
       type: int
       title: Mail server port
-      default: "587"
+      description: Empty uses the fleet's port, else 587.
     - name: SMTP_LOGIN
       type: string
       title: Mail login
+      description: Empty uses the fleet's mail user.
     - name: SMTP_PASSWORD
       type: secret
       title: Mail password
+      description: Empty uses the fleet's mail password.
     - name: SMTP_FROM_ADDRESS
       type: email
       title: Mail from address
+      description: Empty uses the fleet's sender address.
     - name: VAPID_PRIVATE_KEY
       type: secret
       title: Push notification private key

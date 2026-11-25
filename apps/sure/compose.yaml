@@ -31,13 +31,14 @@ x-sure-env: &sure-env
   OIDC_BUTTON_LABEL: ${OIDC_BUTTON_LABEL}
   AUTH_JIT_MODE: ${OIDC_NEW_ACCOUNTS}
   ALLOWED_OIDC_DOMAINS: ${OIDC_ALLOWED_DOMAINS}
-  # Mail for invites and password resets.
-  SMTP_ADDRESS: ${SMTP_ADDRESS}
-  SMTP_PORT: ${SMTP_PORT}
-  SMTP_USERNAME: ${SMTP_USERNAME}
-  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  # Mail for invites and password resets. Each field the stack leaves empty
+  # comes from the fleet's mail settings.
+  SMTP_ADDRESS: ${SMTP_ADDRESS:-${NEPFLEET_SMTP_HOST}}
+  SMTP_PORT: ${SMTP_PORT:-${NEPFLEET_SMTP_PORT:-587}}
+  SMTP_USERNAME: ${SMTP_USERNAME:-${NEPFLEET_SMTP_USER}}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-${NEPFLEET_SMTP_PASSWORD}}
   SMTP_TLS_ENABLED: "true"
-  EMAIL_SENDER: ${EMAIL_SENDER}
+  EMAIL_SENDER: ${EMAIL_SENDER:-${NEPFLEET_SMTP_FROM}}
   # Exchange rates and prices: each lookup tells the provider the currency or
   # ticker asked for.
   EXCHANGE_RATE_PROVIDER: ${MARKET_DATA}
