@@ -7,9 +7,11 @@
                                releases beyond each image's `track`; writes
                                JSON to stdout. --strict fails on missing tags.
 """
+import functools
 import json
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -24,6 +26,37 @@ ACCEPT = ", ".join([
     "application/vnd.docker.distribution.manifest.v2+json",
 ])
 _tokens = {}
+# Registries rate-limit (lscr.io answers 429 when several templates share an
+# image). Retry 429 and 5xx a few times, waiting what Retry-After asks for,
+# and requests that got no answer at all.
+RETRIES = 4
+MAX_WAIT = 60
+_sleep = time.sleep
+
+
+def _wait(e, attempt):
+    """Seconds to wait before retrying e, or None if it is not worth a retry."""
+    if attempt >= RETRIES:
+        return None
+    if not isinstance(e, urllib.error.HTTPError):
+        return 2 ** attempt  # no answer at all: DNS, connection, timeout
+    if not (e.code == 429 or 500 <= e.code < 600):
+        return None
+    after = (e.headers or {}).get("Retry-After", "")
+    wait = int(after) if after.strip().isdigit() else 2 ** attempt
+    return min(wait, MAX_WAIT)
+
+
+def _open(req):
+    for attempt in range(1, RETRIES + 1):
+        try:
+            return urllib.request.urlopen(req, timeout=30)
+        except (urllib.error.URLError, TimeoutError) as e:
+            wait = _wait(e, attempt)
+            if wait is None:
+                raise
+            print(f"{req.full_url}: {e}, retrying in {wait}s", file=sys.stderr)
+            _sleep(wait)
 
 
 def parse_ref(ref):
@@ -49,7 +82,7 @@ def _request(url, registry, repo, method="GET"):
         headers["Authorization"] = "Bearer " + _tokens[key]
     req = urllib.request.Request(url, headers=headers, method=method)
     try:
-        return urllib.request.urlopen(req, timeout=30)
+        return _open(req)
     except urllib.error.HTTPError as e:
         if e.code != 401 or key in _tokens:
             raise
@@ -59,7 +92,7 @@ def _request(url, registry, repo, method="GET"):
             raise
         q = {"service": params.get("service", ""), "scope": f"repository:{repo}:pull"}
         treq = urllib.request.Request(params["realm"] + "?" + urllib.parse.urlencode(q), headers={"User-Agent": UA})
-        with urllib.request.urlopen(treq, timeout=30) as r:
+        with _open(treq) as r:
             body = json.load(r)
         _tokens[key] = body.get("token") or body.get("access_token")
         return _request(url, registry, repo, method)
@@ -141,6 +174,35 @@ def images_of(tdir, text):
     return out
 
 
+@functools.cache
+def inspect(ref):
+    """Registry facts for ref, queried once per run: several templates pin the
+    same image (socket-proxy), and asking again only invites a 429."""
+    try:
+        if not exists(ref):
+            return {"missing": True}
+        _, _, tag, _ = parse_ref(ref)
+        m = VERSION.match(tag or "")
+        if not m:
+            return {}
+        cur = tuple(int(x) for x in m["num"].split("."))
+        # Fewer components than the pinned tag means another scheme
+        # (e.g. Jellyfin's 2026110213 date tags next to 10.11.11).
+        # Compared at the pinned tag's own precision: a floating
+        # tag (postgres:18) already follows 18.7, which comes as a
+        # rebuilt digest, not as an update to make.
+        newer = [v for t in list_tags(ref)
+                 if (v := version_of(t, m["prefix"], m["suffix"])) and len(v) >= len(cur)
+                 and v[:len(cur)] > cur]
+        if not newer:
+            return {}
+        latest = max(newer)
+        return {"cur": cur, "latest": latest,
+                "latestTag": m["prefix"] + ".".join(map(str, latest)) + m["suffix"]}
+    except Exception as e:  # report, keep going
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
 def check(strict):
     report, missing = [], []
     for tdir, text in templates():
@@ -150,30 +212,15 @@ def check(strict):
                 entry["builtHere"] = True  # published by this repo's images workflow
                 report.append(entry)
                 continue
-            try:
-                if not exists(ref):
-                    missing.append(ref)
-                    entry["error"] = "tag not found"
-                    report.append(entry)
-                    continue
-                _, _, tag, _ = parse_ref(ref)
-                m = VERSION.match(tag or "")
-                if m:
-                    cur = tuple(int(x) for x in m["num"].split("."))
-                    # Fewer components than the pinned tag means another scheme
-                    # (e.g. Jellyfin's 2026110213 date tags next to 10.11.11).
-                    # Compared at the pinned tag's own precision: a floating
-                    # tag (postgres:18) already follows 18.7, which comes as a
-                    # rebuilt digest, not as an update to make.
-                    newer = [v for t in list_tags(ref)
-                             if (v := version_of(t, m["prefix"], m["suffix"])) and len(v) >= len(cur)
-                             and v[:len(cur)] > cur]
-                    if newer:
-                        latest = max(newer)
-                        entry["latest"] = m["prefix"] + ".".join(map(str, latest)) + m["suffix"]
-                        entry["beyondTrack"] = beyond_track(cur, latest, track)
-            except Exception as e:  # report, keep going
-                entry["error"] = f"{type(e).__name__}: {e}"
+            info = inspect(ref)
+            if info.get("missing"):
+                missing.append(ref)
+                entry["error"] = "tag not found"
+            elif "error" in info:
+                entry["error"] = info["error"]
+            elif "latest" in info:
+                entry["latest"] = info["latestTag"]
+                entry["beyondTrack"] = beyond_track(info["cur"], info["latest"], track)
             report.append(entry)
     json.dump(report, sys.stdout, indent=2)
     print()
