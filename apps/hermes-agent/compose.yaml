@@ -12,6 +12,11 @@ services:
       TELEGRAM_ALLOWED_USERS: ${TELEGRAM_ALLOWED_USERS}
       DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
       DISCORD_ALLOWED_USERS: ${DISCORD_ALLOWED_USERS}
+      # Hermes denies everyone not listed above (or let in with a pairing
+      # code) unless an allow-all flag is set. Stated so it stays off.
+      GATEWAY_ALLOW_ALL_USERS: "false"
+      TELEGRAM_ALLOW_ALL_USERS: "false"
+      DISCORD_ALLOW_ALL_USERS: "false"
     volumes:
       - data:/opt/data
     labels:
