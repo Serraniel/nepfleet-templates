@@ -1,6 +1,6 @@
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.13.4
+    image: ghcr.io/open-webui/open-webui:v0.13.5
     restart: unless-stopped
     environment:
       WEBUI_URL: ${NEPFLEET_URL}
@@ -47,7 +47,7 @@ services:
       homepage.href: ${NEPFLEET_URL}
 
   ollama:
-    image: ollama/ollama:0.40.16
+    image: ollama/ollama:0.40.17
     profiles: [ollama]
     restart: unless-stopped
     # Serves, and once it answers pulls the models of OLLAMA_MODELS that it
