@@ -8,12 +8,13 @@ metadata:
   category: security
   homepage: https://github.com/dani-garcia/vaultwarden
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   images:
     - name: vaultwarden/server
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /identity/connect/oidc-signin }
   botCheck: { service: vaultwarden, port: 80, allow: ["^/api/", "^/identity/", "^/notifications/", "^/icons/", "^/alive$", "^/\\.well-known/"] }
   inputs:
     - name: DOMAIN

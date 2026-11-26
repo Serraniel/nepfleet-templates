@@ -11,6 +11,14 @@ services:
       ADMIN_TOKEN: ${ADMIN_TOKEN}
       OWNER_EMAIL: ${OWNER_EMAIL}
       OWNER_PASSWORD: ${OWNER_PASSWORD}
+      # Sign-in through the stack's sign-on, when it has one, next to the
+      # master password login. An account with the same (verified) email is
+      # linked; others can create one through the provider. The vault still
+      # needs its master password to unlock.
+      SSO_ENABLED: ${NEPFLEET_OIDC_ENABLED}
+      SSO_AUTHORITY: ${NEPFLEET_OIDC_ISSUER}
+      SSO_CLIENT_ID: ${NEPFLEET_OIDC_CLIENT_ID}
+      SSO_CLIENT_SECRET: ${NEPFLEET_OIDC_CLIENT_SECRET}
     volumes:
       - data:/data
       - ./owner.sh:/nepfleet/owner.sh:ro
