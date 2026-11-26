@@ -10,6 +10,17 @@ services:
       # domain never offers its first account to whoever comes first.
       WEBUI_ADMIN_EMAIL: ${ADMIN_EMAIL}
       WEBUI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Sign-in through the stack's sign-on, when it has one (the provider is
+      # only registered with a client ID). New accounts from it wait for the
+      # admin's approval (DEFAULT_USER_ROLE pending); an account with the same
+      # email, such as the admin, is linked.
+      OPENID_PROVIDER_URL: ${NEPFLEET_OIDC_ISSUER}/.well-known/openid-configuration
+      OAUTH_CLIENT_ID: ${NEPFLEET_OIDC_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${NEPFLEET_OIDC_CLIENT_SECRET}
+      OAUTH_SCOPES: ${NEPFLEET_OIDC_SCOPES}
+      OPENID_REDIRECT_URI: ${NEPFLEET_URL}/oauth/oidc/callback
+      ENABLE_OAUTH_SIGNUP: ${NEPFLEET_OIDC_ENABLED}
+      OAUTH_MERGE_ACCOUNTS_BY_EMAIL: "true"
       # Unused backends simply stay unreachable; Open WebUI shows them as offline.
       OLLAMA_BASE_URL: http://ollama:11434
       OPENAI_API_BASE_URL: http://litellm:4000/v1

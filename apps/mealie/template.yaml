@@ -9,14 +9,15 @@ metadata:
   homepage: https://mealie.io
   source: https://github.com/mealie-recipes/mealie
 spec:
-  version: 0.4.0
+  version: 0.5.0
   compose: compose.yaml
   web: { service: mealie, port: 9000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/"] }
   images:
     - name: ghcr.io/mealie-recipes/mealie
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /login }
   inputs:
     - name: DOMAIN
       type: hostname

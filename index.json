@@ -3036,7 +3036,7 @@
       "homepage": "https://mealie.io",
       "source": "https://github.com/mealie-recipes/mealie",
       "path": "apps/mealie",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "ghcr.io/mealie-recipes/mealie",
@@ -3053,7 +3053,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3099,6 +3099,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/login"
+      },
       "migrations": []
     },
     {
@@ -3406,7 +3409,7 @@
       "homepage": "https://openwebui.com",
       "source": "https://github.com/open-webui/open-webui",
       "path": "apps/open-webui",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "images": [
         {
           "name": "ghcr.io/open-webui/open-webui",
@@ -3431,7 +3434,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3517,6 +3520,9 @@
           "name": "ollama"
         }
       ],
+      "oidc": {
+        "redirect": "/oauth/oidc/callback"
+      },
       "migrations": []
     },
     {

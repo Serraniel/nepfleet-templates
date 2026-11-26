@@ -52,12 +52,12 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [kutt](apps/kutt) | [Kutt](https://github.com/thedevs-network/kutt) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [mastodon](apps/mastodon) | [Mastodon](https://joinmastodon.org) · [source](https://github.com/mastodon/mastodon) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [matrix](apps/matrix) | [Matrix](https://matrix.org) · [source](https://github.com/element-hq/synapse) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 🐝 💾 🦾 |
+| [mealie](apps/mealie) | [Mealie](https://mealie.io) · [source](https://github.com/mealie-recipes/mealie) | app | 🌐 📈 🏠 🐝 💾 🔑 🦾 |
 | [metube](apps/metube) | [MeTube (yt-dlp web UI)](https://github.com/alexta69/metube) | app | 🌐 📈 🏠 🐝 🦾 |
 | [n8n](apps/n8n) | [n8n](https://n8n.io) · [source](https://github.com/n8n-io/n8n) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [navidrome](apps/navidrome) | [Navidrome](https://www.navidrome.org) · [source](https://github.com/navidrome/navidrome) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [ntfy](apps/ntfy) | [ntfy](https://ntfy.sh) · [source](https://github.com/binwiederhier/ntfy) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 🐝 💾 |
+| [open-webui](apps/open-webui) | [Open WebUI (+ Ollama, LiteLLM)](https://openwebui.com) · [source](https://github.com/open-webui/open-webui) | app | 🌐 📈 🏠 🐝 💾 🔑 |
 | [openbao](apps/openbao) | [OpenBao](https://openbao.org) · [source](https://github.com/openbao/openbao) | app | 🌐 📈 🏠 💾 🦾 |
 | [openclaw](apps/openclaw) | [OpenClaw](https://openclaw.ai) · [source](https://github.com/openclaw/openclaw) | app | 🐝 💾 |
 | [opencloud](apps/opencloud) | [OpenCloud](https://opencloud.eu) · [source](https://github.com/opencloud-eu/opencloud) | app | 🌐 📈 🏠 🐝 💾 🦾 |
