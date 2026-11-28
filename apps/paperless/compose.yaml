@@ -47,7 +47,7 @@ services:
 
   # Read Office documents and turn them into PDFs. Sizable, so off unless asked for.
   tika:
-    image: apache/tika:3.3.3.0
+    image: apache/tika:3.3.3.1
     profiles: [office]
     restart: unless-stopped
 
