@@ -41,7 +41,7 @@ Legend: 🌐 ingress · 📈 monitoring · 📊 statusPage · 🏠 dashboard · 
 | [adguard-home](apps/adguard-home) | [AdGuard Home](https://adguard.com/adguard-home) · [source](https://github.com/AdguardTeam/AdGuardHome) | app | 🌐 📈 🏠 💾 🦾 |
 | [audiobookshelf](apps/audiobookshelf) | [Audiobookshelf](https://www.audiobookshelf.org) · [source](https://github.com/advplyr/audiobookshelf) | app | 🌐 📈 🏠 🐝 💾 🦾 |
 | [bookstack](apps/bookstack) | [BookStack](https://www.bookstackapp.com) · [source](https://github.com/BookStackApp/BookStack) | app | 🌐 📈 🏠 🐝 💾 🦾 |
-| [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🦾 |
+| [forgejo](apps/forgejo) | [Forgejo + Actions runner](https://forgejo.org) · [source](https://codeberg.org/forgejo/forgejo) | app | 🌐 📈 🏠 💾 🔑 🦾 |
 | [garage](apps/garage) | [Garage](https://garagehq.deuxfleurs.fr) · [source](https://git.deuxfleurs.fr/Deuxfleurs/garage) | app | 🌐 📈 🐝 💾 🦾 |
 | [hermes-agent](apps/hermes-agent) | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | app | 💾 |
 | [homeassistant](apps/homeassistant) | [Home Assistant](https://www.home-assistant.io) · [source](https://github.com/home-assistant/core) | app | 🌐 📈 🏠 💾 🦾 |
