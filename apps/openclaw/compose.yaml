@@ -19,7 +19,7 @@ services:
   # What `openclaw onboard` asked for by hand (files/setup.js): onboarding
   # without prompts on the first start, and Telegram from the stack's inputs.
   setup:
-    image: ghcr.io/openclaw/openclaw:2026.11.6
+    image: ghcr.io/openclaw/openclaw:2026.11.10
     restart: "no"
     init: true
     read_only: true
@@ -38,7 +38,7 @@ services:
       - ./setup:/setup:ro
 
   openclaw:
-    image: ghcr.io/openclaw/openclaw:2026.11.6
+    image: ghcr.io/openclaw/openclaw:2026.11.10
     restart: unless-stopped
     init: true
     read_only: true
