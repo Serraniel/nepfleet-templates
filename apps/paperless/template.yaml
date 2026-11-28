@@ -9,7 +9,7 @@ metadata:
   homepage: https://docs.paperless-ngx.com
   source: https://github.com/paperless-ngx/paperless-ngx
 spec:
-  version: 0.5.4
+  version: 0.6.0
   compose: compose.yaml
   web: { service: paperless, port: 8000 }   # also reachable on a LAN port (access mode port)
   botCheck: { allow: ["^/api/", "^/ws/"] }
@@ -24,7 +24,8 @@ spec:
       track: minor
     - name: gotenberg/gotenberg
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /accounts/oidc/sso/login/callback/ }
   inputs:
     - name: DOMAIN
       type: hostname

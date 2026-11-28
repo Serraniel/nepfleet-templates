@@ -26,6 +26,19 @@ x-mastodon: &mastodon
   # any other unknown value, such as "true", as auto.
   SMTP_TLS: ${SMTP_TLS:-${NEPFLEET_SMTP_IMPLICIT_TLS:-false}}
   SMTP_ENABLE_STARTTLS: ${SMTP_ENABLE_STARTTLS:-${NEPFLEET_SMTP_STARTTLS:-auto}}
+  # Sign-in through the stack's sign-on, when it has one, next to the local
+  # login. People get an account on their first sign-in. A local account,
+  # such as the owner's, is not linked by email: sign in to it, then use the
+  # provider once from the same browser to link it.
+  OIDC_ENABLED: ${NEPFLEET_OIDC_ENABLED}
+  OIDC_DISPLAY_NAME: SSO
+  OIDC_DISCOVERY: "true"
+  OIDC_ISSUER: ${NEPFLEET_OIDC_ISSUER}
+  OIDC_CLIENT_ID: ${NEPFLEET_OIDC_CLIENT_ID}
+  OIDC_CLIENT_SECRET: ${NEPFLEET_OIDC_CLIENT_SECRET}
+  OIDC_SCOPE: openid,profile,email
+  OIDC_UID_FIELD: sub
+  OIDC_REDIRECT_URI: ${NEPFLEET_URL}/auth/auth/openid_connect/callback
 
 services:
   # Sets up or upgrades the database, then ends. The web service waits for it.
