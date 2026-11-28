@@ -112,10 +112,12 @@ services:
         echo "identity provider $$OIDC_NAME set"
     environment:
       <<: *forgejo-env
-      OIDC_ISSUER: ${OIDC_ISSUER}
+      # The stack's own provider inputs win; empty, the fleet's sign-on
+      # (or none) fills them.
+      OIDC_ISSUER: ${OIDC_ISSUER:-${NEPFLEET_OIDC_ISSUER}}
       OIDC_NAME: ${OIDC_NAME}
-      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
-      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-${NEPFLEET_OIDC_CLIENT_ID}}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-${NEPFLEET_OIDC_CLIENT_SECRET}}
     volumes:
       - data:/data
     depends_on:

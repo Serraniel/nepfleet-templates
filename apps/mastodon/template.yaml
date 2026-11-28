@@ -9,7 +9,7 @@ metadata:
   homepage: https://joinmastodon.org
   source: https://github.com/mastodon/mastodon
 spec:
-  version: 0.3.2
+  version: 0.4.0
   compose: compose.yaml
   images:
     - name: ghcr.io/mastodon/mastodon
@@ -20,7 +20,8 @@ spec:
       track: minor   # within the 18 tag; a new major needs a dump and restore
     - name: redis
       track: minor
-  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true }
+  supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /auth/auth/openid_connect/callback }
   botCheck: { service: web, port: 3000, allow: ["^/api/", "^/oauth/", "^/\\.well-known/", "^/nodeinfo", "^/inbox$", "^/users/[^/]+/(inbox|outbox|followers|following|collections)", "^/system/", "^/health$"] }
   inputs:
     - name: DOMAIN

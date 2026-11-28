@@ -1852,7 +1852,7 @@
       "homepage": "https://forgejo.org",
       "source": "https://codeberg.org/forgejo/forgejo",
       "path": "apps/forgejo",
-      "version": "0.8.1",
+      "version": "0.9.0",
       "images": [
         {
           "name": "codeberg.org/forgejo/forgejo",
@@ -1881,7 +1881,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -1987,7 +1987,7 @@
           "name": "OIDC_ISSUER",
           "type": "url",
           "title": "Identity provider (OpenID Connect issuer), for signing in",
-          "description": "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. It must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off. Leave empty for none."
+          "description": "Leave empty to sign in as the stack's signOn setting says: through the fleet's provider, a custom one, or none. Setting it here, with the client ID and secret below, overrides that. For a provider set here, register a client with the redirect URL https://<domain>/user/oauth2/<name>/callback. The provider must be reachable when the stack is applied: Forgejo checks it then. People link it to their account; new accounts still need an admin, as registration stays off."
         },
         {
           "name": "OIDC_NAME",
@@ -2000,12 +2000,14 @@
         {
           "name": "OIDC_CLIENT_ID",
           "type": "string",
-          "title": "Identity provider client ID"
+          "title": "Identity provider client ID",
+          "description": "Empty uses the stack's sign-on."
         },
         {
           "name": "OIDC_CLIENT_SECRET",
           "type": "secret",
-          "title": "Identity provider client secret"
+          "title": "Identity provider client secret",
+          "description": "Empty uses the stack's sign-on."
         }
       ],
       "generate": [
@@ -2035,6 +2037,9 @@
           "name": "runner"
         }
       ],
+      "oidc": {
+        "redirect": "/user/oauth2/${OIDC_NAME}/callback"
+      },
       "migrations": []
     },
     {
@@ -2751,7 +2756,7 @@
       "homepage": "https://joinmastodon.org",
       "source": "https://github.com/mastodon/mastodon",
       "path": "apps/mastodon",
-      "version": "0.3.2",
+      "version": "0.4.0",
       "images": [
         {
           "name": "ghcr.io/mastodon/mastodon",
@@ -2780,7 +2785,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -2920,18 +2925,21 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/auth/auth/openid_connect/callback"
+      },
       "migrations": []
     },
     {
       "name": "matrix",
       "title": "Matrix",
-      "description": "Chat with Synapse and the Element web client. Public registration is off: you sign in with the admin from the stack's inputs, who adds further users. The domain becomes part of every user's name and can't change later.",
+      "description": "Chat with Synapse and the Element web client. Public registration is off: you sign in with the admin from the stack's inputs, who adds further users. With sign-on, people from the identity provider get an account on their first sign-in. The domain becomes part of every user's name and can't change later.",
       "tier": "app",
       "category": "communication",
       "homepage": "https://matrix.org",
       "source": "https://github.com/element-hq/synapse",
       "path": "apps/matrix",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "images": [
         {
           "name": "matrixdotorg/synapse",
@@ -2956,7 +2964,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3025,6 +3033,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/_synapse/client/oidc/callback"
+      },
       "migrations": []
     },
     {
@@ -3839,7 +3850,7 @@
       "homepage": "https://docs.paperless-ngx.com",
       "source": "https://github.com/paperless-ngx/paperless-ngx",
       "path": "apps/paperless",
-      "version": "0.5.4",
+      "version": "0.6.0",
       "images": [
         {
           "name": "ghcr.io/paperless-ngx/paperless-ngx",
@@ -3872,7 +3883,7 @@
         "logs": true,
         "autoUpdate": true,
         "backup": true,
-        "sso": false,
+        "sso": true,
         "metrics": false
       },
       "inputs": [
@@ -3962,6 +3973,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/accounts/oidc/sso/login/callback/"
+      },
       "migrations": []
     },
     {
@@ -4371,7 +4385,7 @@
       "homepage": "https://sure.am",
       "source": "https://github.com/we-promise/sure",
       "path": "apps/sure",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "images": [
         {
           "name": "ghcr.io/we-promise/sure",
@@ -4437,17 +4451,19 @@
           "name": "OIDC_ISSUER",
           "type": "url",
           "title": "Identity provider (OpenID Connect issuer), for signing in",
-          "description": "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/auth/openid_connect/callback. The provider must report the email as verified. Leave empty for none."
+          "description": "Leave empty to sign in as the stack's signOn setting says: through the fleet's provider, a custom one, or none. Setting it here, with the client ID and secret below, overrides that. For a provider set here, register a client with the redirect URL https://<domain>/auth/openid_connect/callback. The provider must report the email as verified."
         },
         {
           "name": "OIDC_CLIENT_ID",
           "type": "string",
-          "title": "Identity provider client ID"
+          "title": "Identity provider client ID",
+          "description": "Empty uses the stack's sign-on."
         },
         {
           "name": "OIDC_CLIENT_SECRET",
           "type": "secret",
-          "title": "Identity provider client secret"
+          "title": "Identity provider client secret",
+          "description": "Empty uses the stack's sign-on."
         },
         {
           "name": "OIDC_BUTTON_LABEL",
@@ -4587,6 +4603,9 @@
           "backup": true
         }
       ],
+      "oidc": {
+        "redirect": "/auth/openid_connect/callback"
+      },
       "migrations": []
     },
     {

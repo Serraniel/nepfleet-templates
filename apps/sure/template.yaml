@@ -9,7 +9,7 @@ metadata:
   homepage: https://sure.am
   source: https://github.com/we-promise/sure
 spec:
-  version: 0.2.3
+  version: 0.3.0
   compose: compose.yaml
   web: { service: web, port: 3000 }
   botCheck: { allow: ["^/api/", "^/oauth/"] }   # the mobile app and API keys
@@ -21,6 +21,7 @@ spec:
     - name: valkey/valkey
       track: minor
   supports: { swarm: true, arm64: true, ingress: true, monitoring: true, dashboard: true, logs: true, autoUpdate: true, backup: true, sso: true }
+  oidc: { redirect: /auth/openid_connect/callback }
   inputs:
     - name: DOMAIN
       type: hostname
@@ -46,13 +47,15 @@ spec:
     - name: OIDC_ISSUER
       type: url
       title: Identity provider (OpenID Connect issuer), for signing in
-      description: "Pocket ID, Authelia and others. Register a client with the redirect URL https://<domain>/auth/openid_connect/callback. The provider must report the email as verified. Leave empty for none."
+      description: "Leave empty to sign in as the stack's signOn setting says: through the fleet's provider, a custom one, or none. Setting it here, with the client ID and secret below, overrides that. For a provider set here, register a client with the redirect URL https://<domain>/auth/openid_connect/callback. The provider must report the email as verified."
     - name: OIDC_CLIENT_ID
       type: string
       title: Identity provider client ID
+      description: Empty uses the stack's sign-on.
     - name: OIDC_CLIENT_SECRET
       type: secret
       title: Identity provider client secret
+      description: Empty uses the stack's sign-on.
     - name: OIDC_BUTTON_LABEL
       type: string
       title: The provider's button on the sign-in page
