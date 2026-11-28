@@ -18,4 +18,7 @@ subscriptions:
     dispatcherId: 1
     # Not Dozzle's own logs: a failed delivery must not cause another alert.
     containerExpression: 'labels["com.docker.compose.service"] != "dozzle"'
-    logExpression: 'level == "fatal" || message matches "(?i)\\b(panic|fatal|out of memory|outofmemoryerror)\\b"'
+    # Not NepFleet's own line about an alert it took (older NepFleets named
+    # the rule in it, and that loops), and not supervisord's CRIT notice that
+    # its local socket has no password (Euro-Office logs it at every start).
+    logExpression: '(level == "fatal" || message matches "(?i)\\b(panic|fatal|out of memory|outofmemoryerror)\\b") && !(message contains "api: alert") && !(message contains "running without any HTTP authentication checking")'
